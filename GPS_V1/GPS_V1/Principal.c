@@ -1,12 +1,10 @@
 #include <gtk/gtk.h>
 
-
 /* on quitte l'application en fermant la fenêtre */
 void on_window_closed(GtkWidget *window, gpointer data)
 {
 	gtk_main_quit();
 }
-
 
 int main(int argc, char *argv[])
 {
