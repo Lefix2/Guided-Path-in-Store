@@ -57,4 +57,15 @@
       <Filter>Fichiers de ressources</Filter>
     </Library>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Section.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
