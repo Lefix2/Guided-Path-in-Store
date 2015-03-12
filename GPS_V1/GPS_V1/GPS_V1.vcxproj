@@ -101,6 +101,9 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="Section.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="ressources\caddie.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
