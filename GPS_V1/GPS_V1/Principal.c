@@ -14,7 +14,7 @@ void changer_texte(GtkWidget *window, gpointer data)
 	GtkWidget *label;
 	gchar *txtSchema;
 
-	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Itinéraire génial!</b></span>", -1, NULL, NULL, NULL);
+	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#FF5500\" size=\"xx-large\"><b>Coucou Clémence!</b></span>", -1, NULL, NULL, NULL);
 	gtk_label_set_text(GTK_LABEL(data), txtSchema);
 	gtk_label_set_use_markup(GTK_LABEL(data), TRUE);
 	g_free(txtSchema);
