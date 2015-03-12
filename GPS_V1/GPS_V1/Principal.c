@@ -3,7 +3,7 @@
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
-/* on quitte l'application en fermant la fenêtre */
+/* on quitte l'application en fermant la caca fenêtre */
 void on_window_closed(GtkWidget *window, gpointer data)
 {
 	gtk_main_quit();
