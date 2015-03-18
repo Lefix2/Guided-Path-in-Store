@@ -19,7 +19,7 @@ void changer_texte(GtkWidget *window, gpointer data)
 	GtkWidget *label;
 	gchar *txtSchema;
 
-	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#FF5500\" size=\"xx-large\"><b>Coucou Clémence!</b></span>", -1, NULL, NULL, NULL);
+	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#FF5500\" size=\"xx-large\"><b>On est des Ouf !</b></span>", -1, NULL, NULL, NULL);
 	gtk_label_set_text(GTK_LABEL(data), txtSchema);
 	gtk_label_set_use_markup(GTK_LABEL(data), TRUE);
 	g_free(txtSchema);
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
 	/* créer les widgets */
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Super schéma</b></span>",-1,NULL,NULL,NULL);
+	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Julius Caesar</b></span>",-1,NULL,NULL,NULL);
 	label = gtk_label_new(txtSchema);
 	gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
 	g_free(txtSchema);
