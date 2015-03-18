@@ -1,5 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <gtk/gtk.h>
-#include "common.h"
+
+#include "Common.h"
+#include "Item.h"
+#include "Section.h"
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
