@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
 	/* initialiser GTK+ */
 	gtk_init(&argc, &argv);
 
+	testSect();
 
 	/* créer la fenêtre avec son titre */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
