@@ -8,7 +8,7 @@
 void testSect(void);
 section * newSection(int id, type s_type);
 section * Section_init(section * s_source);
-int Section_empty(section * s_source);
+int Section_isEmpty(section * s_source);
 
 int Section_setId(section * s_source, int id);
 int Section_setType(section * s_source, type s_type);

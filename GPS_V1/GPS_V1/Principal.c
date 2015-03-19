@@ -3,7 +3,7 @@
 #include <gtk/gtk.h>
 
 #include "Common.h"
-#include "Item.h"
+#include "ItemList.h"
 #include "Section.h"
 
 #define MAIN_WINDOW_WIDTH 300

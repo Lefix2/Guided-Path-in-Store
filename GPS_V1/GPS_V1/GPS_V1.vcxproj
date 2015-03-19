@@ -80,7 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Item.c" />
+    <ClCompile Include="ItemList.c" />
     <ClCompile Include="Principal.c" />
     <ClCompile Include="Section.c" />
   </ItemGroup>
@@ -100,7 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
-    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemList.h" />
     <ClInclude Include="Section.h" />
   </ItemGroup>
   <ItemGroup>

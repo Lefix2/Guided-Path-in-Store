@@ -21,7 +21,7 @@ struct section{
 	int pos[2];
 	int size[2];
 	int nb_items;
-	item ** stock;
+	list * stock;
 };
 
 struct item{
@@ -33,7 +33,6 @@ struct item{
 	float cost;
 	boolean promotion;
 	section * i_section;
-	item * next_i;
 };
 
 struct nodeList{

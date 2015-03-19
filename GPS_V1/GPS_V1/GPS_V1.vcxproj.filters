@@ -21,7 +21,7 @@
     <ClCompile Include="Section.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Item.c">
+    <ClCompile Include="ItemList.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,7 +70,7 @@
     <ClInclude Include="Common.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h">
+    <ClInclude Include="ItemList.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

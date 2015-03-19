@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "Section.h"
-#include "Item.h"
+#include "List.h"
 
 char* sec_type[] = {"none", "wall", "section", "promo", "checkout", "entrance", "reception" };
 
@@ -17,6 +17,7 @@ void testSect(void)
 	itest.i_section = NULL;
 
 	section stest;
+	stest.stock = (list *)malloc(sizeof(list));
 	Section_init(&stest);
 	Section_setId(&stest, 1);
 	Section_setType(&stest, t_section);
@@ -32,6 +33,7 @@ section * newSection(int id, type s_type)
 {
 	section * s_new;
 	s_new = (section *)malloc(sizeof(section));
+	s_new->stock = (list *)malloc(sizeof(list));
 
 	Section_init(s_new);
 	s_new->id = id;
@@ -49,12 +51,12 @@ section * Section_init(section * s_source)
 	s_source->size[X] = 0;
 	s_source->size[Y] = 0;
 	s_source->nb_items = 0;
-	s_source->stock = NULL;
+	initList(s_source->stock);
 
 	return s_source;
 }
 
-int Section_empty(section * s_source)
+int Section_isEmpty(section * s_source)
 {
 	return (s_source->nb_items == 0);
 }
@@ -99,11 +101,7 @@ int Section_addItem(section * s_source, item * i_source)
 		return EXIT_FAILURE;
 	if (i_source->i_section != NULL)
 		return EXIT_FAILURE;
-	if (Section_empty(s_source))
-		s_source->stock = malloc(sizeof(item*));
-	else
-		s_source->stock = realloc(s_source->stock, (s_source->nb_items+1)*sizeof(item*));
-	*((s_source->stock) + s_source->nb_items) = i_source;
+	insertLast(s_source->stock, i_source);
 	i_source->i_section = s_source;
 	s_source->nb_items++;
 	return EXIT_SUCCESS;
@@ -115,8 +113,15 @@ int Section_removeItem(item * i_source)
 		return EXIT_FAILURE;
 	if (i_source->i_section == NULL)
 		return EXIT_FAILURE;
+
 	section * s_temp = i_source->i_section;
-	return 0;
+
+	if (!find(s_temp->stock, i_source))
+		return EXIT_FAILURE;
+	deleteCurrent(s_temp->stock);
+	s_temp->nb_items--;
+
+	return EXIT_SUCCESS;
 }
 
 int Section_getId(section * s_source)
@@ -162,12 +167,6 @@ void Section_print(section * s_source)
 	printf("            Y : %d -> %d (%d)\n", s_source->pos[Y], s_source->size[Y] + s_source->pos[Y], s_source->size[Y]);
 	if (s_source->s_type == t_section)
 	{
-		int i;
-		printf("%d items in stock :\n", s_source->nb_items);
-		Item_printHeader(true);
-		for (i = 0; i < s_source->nb_items; i++)
-		{
-			Item_print(*(s_source->stock + i));
-		}
+		printList(s_source->stock);
 	}
 }
