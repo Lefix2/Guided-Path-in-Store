@@ -3,41 +3,50 @@
 #include <string.h>
 
 #include "Section.h"
-#include "List.h"
+#include "ItemList.h"
 
 char* sec_type[] = {"none", "wall", "section", "promo", "checkout", "entrance", "reception" };
 
 void testSect(void)
 {
-	item itest;
-	itest.category = legumes_vert;
-	itest.id = 1;
-	strcpy(itest.name, "haricots");
-	itest.cost = 3.50;
-	itest.i_section = NULL;
+	item itest1;
+	itest1.category = legumes_vert;
+	itest1.id = 1;
+	strcpy(itest1.name, "haricots");
+	itest1.cost = 3.50;
+	itest1.i_section = NULL;
 
-	section stest;
-	stest.stock = (list *)malloc(sizeof(list));
-	Section_init(&stest);
-	Section_setId(&stest, 1);
-	Section_setType(&stest, t_section);
-	Section_setPos(&stest, 10, 15);
-	Section_setSize(&stest, 8, 2);
+	item itest2;
+	itest2.category = fromage;
+	itest2.id = 2;
+	strcpy(itest2.name, "lerdammer");
+	itest2.cost = 7.40;
+	itest2.i_section = NULL;
 
-	Section_addItem(&stest, &itest);
+	section * stest = newSection(1, t_section);
+	Section_setPos(stest, 10, 15);
+	Section_setSize(stest, 8, 2);
 
-	Section_print(&stest);
+	Section_addItem(stest, &itest1);
+	Section_addItem(stest, &itest2);
+
+	Section_print(stest);
 }
 
 section * newSection(int id, type s_type)
 {
 	section * s_new;
 	s_new = (section *)malloc(sizeof(section));
-	s_new->stock = (list *)malloc(sizeof(list));
 
 	Section_init(s_new);
 	s_new->id = id;
 	s_new->s_type = s_type;
+
+	if (Section_hasStock(s_new))
+	{
+		s_new->stock = (list *)malloc(sizeof(list));
+		initList(s_new->stock);
+	}
 
 	return s_new;
 }
@@ -51,7 +60,7 @@ section * Section_init(section * s_source)
 	s_source->size[X] = 0;
 	s_source->size[Y] = 0;
 	s_source->nb_items = 0;
-	initList(s_source->stock);
+	s_source->stock = NULL;
 
 	return s_source;
 }
@@ -59,6 +68,11 @@ section * Section_init(section * s_source)
 int Section_isEmpty(section * s_source)
 {
 	return (s_source->nb_items == 0);
+}
+
+int Section_hasStock(section * s_source)
+{
+	return(s_source->s_type == t_section || s_source->s_type == t_promo);
 }
 
 int Section_setId(section * s_source, int id)
@@ -161,11 +175,12 @@ int Section_getNbItems(section * s_source)
 
 void Section_print(section * s_source)
 {
-	printf("section ID    : %d\n", s_source->id);
-	printf("section type  : %s\n", sec_type[s_source->s_type]);
-	printf("section pos X : %d -> %d (%d)\n", s_source->pos[X], s_source->size[X] + s_source->pos[X], s_source->size[X]);
-	printf("            Y : %d -> %d (%d)\n", s_source->pos[Y], s_source->size[Y] + s_source->pos[Y], s_source->size[Y]);
-	if (s_source->s_type == t_section)
+	printf("***** Section*****\n");
+	printf("ID    : %d\n", s_source->id);
+	printf("type  : %s\n", sec_type[s_source->s_type]);
+	printf("pos X : %d -> %d (%d)\n", s_source->pos[X], s_source->size[X] + s_source->pos[X], s_source->size[X]);
+	printf("    Y : %d -> %d (%d)\n", s_source->pos[Y], s_source->size[Y] + s_source->pos[Y], s_source->size[Y]);
+	if (Section_hasStock(s_source))
 	{
 		printList(s_source->stock);
 	}

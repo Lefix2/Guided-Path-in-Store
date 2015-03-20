@@ -67,7 +67,7 @@ void printList(list * l)
 					   "|      id      |     name     |   category   |     cost     |  section id  |" };
 	int i;
 
-	printf("***** Stock : ");
+	printf("Stock : ");
 	if (empty(l)){
 		printf("vide\n");
 	}
@@ -86,6 +86,7 @@ void printList(list * l)
 			printf("| %12d | %12s | %12s | %11.2fE | %12d |\n", l->current->i->id, l->current->i->name, item_category[l->current->i->category], l->current->i->cost, l->current->i->i_section->id);
 			next(l);
 		}
+		printf("%s\n", header[0]);
 		printf("\n");
 	}
 

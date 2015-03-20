@@ -19,6 +19,7 @@ void changer_texte(GtkWidget *window, gpointer data)
 	GtkWidget *label;
 	gchar *txtSchema;
 
+	testSect();
 	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#FF5500\" size=\"xx-large\"><b>On est des Ouf !</b></span>", -1, NULL, NULL, NULL);
 	gtk_label_set_text(GTK_LABEL(data), txtSchema);
 	gtk_label_set_use_markup(GTK_LABEL(data), TRUE);
@@ -36,8 +37,6 @@ int main(int argc, char *argv[])
 	/* initialiser GTK+ */
 	gtk_init(&argc, &argv);
 
-	testSect();
-
 	/* créer la fenêtre avec son titre */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "Guided Path in Store");
@@ -47,11 +46,11 @@ int main(int argc, char *argv[])
 
 	/* créer les widgets */
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Julius Caesar</b></span>",-1,NULL,NULL,NULL);
+	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Petite superette</b></span>",-1,NULL,NULL,NULL);
 	label = gtk_label_new(txtSchema);
 	gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
 	g_free(txtSchema);
-	button = gtk_button_new_with_label("Calculer l'itineraire");
+	button = gtk_button_new_with_label("Afficher les stocks");
 
 	/* positionner les widgets */
 	gtk_box_pack_start(GTK_BOX(box), label, TRUE, TRUE, 0);
