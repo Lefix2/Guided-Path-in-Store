@@ -1,33 +1,33 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "Section.h"
+#include "Item.h"
 #include "ItemList.h"
-
-char* sec_type[] = {"none", "wall", "section", "promo", "checkout", "entrance", "reception" };
 
 void testSect(void)
 {
-	item itest1;
-	itest1.category = legumes_vert;
-	itest1.id = 1;
-	strcpy(itest1.name, "haricots");
-	itest1.cost = 3.50;
-	itest1.i_section = NULL;
+	item * itest1 = newItem(1, legumes_vert, "haricots");
+	itest1->cost = 3.50;
 
 	item itest2;
-	itest2.category = fromage;
+	itest2.i_category = fromage;
 	itest2.id = 2;
 	strcpy(itest2.name, "lerdammer");
 	itest2.cost = 7.40;
 	itest2.i_section = NULL;
 
+	item itest3;
+	 itest3.i_category = fromage;
+	 itest3.id = 2;
+	strcpy( itest3.name, "Grimmbergen");
+	 itest3.cost = 8.00;
+	 itest3.i_section = NULL;
+
 	section * stest = newSection(1, t_section);
 	Section_setPos(stest, 10, 15);
 	Section_setSize(stest, 8, 2);
 
-	Section_addItem(stest, &itest1);
+	Section_addItem(stest, itest1);
 	Section_addItem(stest, &itest2);
 
 	Section_print(stest);

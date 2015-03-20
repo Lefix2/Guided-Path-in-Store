@@ -24,6 +24,12 @@
     <ClCompile Include="ItemList.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Item.c">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\glib-2.0.lib">
@@ -72,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="ItemList.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Fichiers sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #define X 0
 #define Y 1
 
@@ -8,7 +11,15 @@
 
 typedef enum boolean{ false, true }boolean;
 typedef enum type{ t_none, t_wall, t_section, t_promo, t_checkout, t_entrance, t_reception }type;
-typedef enum category{ c_none, fromage, pain, legumes_vert }category;
+typedef enum category{ c_none, fromage, pain, legumes_vert, alcool }category;
+
+#ifdef SECTYPDEF
+char* sec_type[] = {"none", "wall", "section", "promo", "checkout", "entrance", "reception" };
+#endif
+
+#ifdef ITECATDEF
+char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
+#endif
 
 typedef struct section section;
 typedef struct item item;
@@ -27,10 +38,10 @@ struct section{
 struct item{
 	int id;
 	char name[MAX_ARRAY_OF_CHAR];
-	int category;
+	category i_category;
 	boolean fresh;
 	int fragility;
-	float cost;
+	double cost;
 	boolean promotion;
 	section * i_section;
 };
@@ -45,5 +56,7 @@ struct list{
 	nodeList *current;
 	nodeList *last;
 };
+
+boolean betwn(int a, int x, int b, boolean equal);
 
 #endif // !COMMON_H

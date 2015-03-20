@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "Itemlist.h"
-
-char* item_category[] = { "none", "fromage", "pain", "legumes vert" };
+#include "Item.h"
 
 nodeList * newNodeList(item *i, nodeList *n)
 {
@@ -83,7 +79,7 @@ void printList(list * l)
 
 		while (!outOfList(l))
 		{
-			printf("| %12d | %12s | %12s | %11.2fE | %12d |\n", l->current->i->id, l->current->i->name, item_category[l->current->i->category], l->current->i->cost, l->current->i->i_section->id);
+			Item_print(l->current->i);
 			next(l);
 		}
 		printf("%s\n", header[0]);
