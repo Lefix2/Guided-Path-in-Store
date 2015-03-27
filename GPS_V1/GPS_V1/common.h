@@ -43,6 +43,7 @@ struct item{
 	int fragility;
 	double cost;
 	boolean promotion;
+	int pos_s[2];
 	section * i_section;
 };
 
@@ -58,5 +59,6 @@ struct list{
 };
 
 boolean betwn(int a, int x, int b, boolean equal);
+boolean onBorder(int x, int y, int x_min, int x_max, int y_min, int y_max);
 
 #endif // !COMMON_H
