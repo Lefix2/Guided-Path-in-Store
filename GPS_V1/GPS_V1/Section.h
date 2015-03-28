@@ -4,12 +4,9 @@
 #define SECTYPDEF
 #include "Common.h"
 
-
-
-void testSect(void);
 section * newSection(int id, type s_type);
 section * Section_init(section * s_source);
-int Section_delete(section * s_source); //à coder
+section * Section_delete(section * s_source);
 
 int Section_isEmpty(section * s_source);
 int Section_hasStock(section * s_source);
@@ -27,9 +24,11 @@ int Section_getXSize(section * s_source);
 int Section_getYSize(section * s_source);
 int Section_getNbItems(section * s_source);
 
-int Section_addItem(section * s_source, item * i_source);
+int Section_addItem(section * s_source, item * i_source, int pos_x, int pos_y);
 int Section_removeItem(item * i_source);
 
 void Section_print(section * s_source);
+
+void testSect(void);
 
 #endif

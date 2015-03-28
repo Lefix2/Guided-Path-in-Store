@@ -1,26 +1,26 @@
 #include "Common.h"
 
-boolean betwn(int a, int x, int b, boolean equal)
+gboolean betwn(int a, int x, int b, gboolean equal)
 {
 	switch (equal)
 	{
-	case true :
+	case TRUE :
 		if (x >= a && x <= b)
-			return true;
+			return TRUE;
 		break;
-	case false :
+	case FALSE :
 		if (x > a && x < b)
-			return true;
+			return TRUE;
 		break;
 	}
-	return false;
+	return FALSE;
 }
 
-boolean onBorder(int x, int y, int x_min, int x_max, int y_min, int y_max)
+gboolean onBorder(int x, int y, int x_min, int x_max, int y_min, int y_max)
 {
-	if (betwn(x_min, x, x_max, true) && (y == y_min || y == y_max))
-		return true;
-	if (betwn(y_min, y, y_max, true) && (x == x_min || x == x_max))
-		return true;
-	return false;
+	if (betwn(x_min, x, x_max-1, TRUE) && (y == y_min || y == y_max-1))
+		return TRUE;
+	if (betwn(y_min, y, y_max-1, TRUE) && (x == x_min || x == x_max-1))
+		return TRUE;
+	return FALSE;
 }

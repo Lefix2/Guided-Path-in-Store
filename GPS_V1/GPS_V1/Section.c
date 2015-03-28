@@ -4,43 +4,14 @@
 #include "Item.h"
 #include "ItemList.h"
 
-void testSect(void)
-{
-	item * itest1 = newItem(1, legumes_vert, "haricots");
-	itest1->cost = 3.50;
-
-	item itest2;
-	itest2.i_category = fromage;
-	itest2.id = 2;
-	strcpy(itest2.name, "lerdammer");
-	itest2.cost = 7.40;
-	itest2.i_section = NULL;
-
-	item itest3;
-	 itest3.i_category = fromage;
-	 itest3.id = 2;
-	strcpy( itest3.name, "Grimmbergen");
-	 itest3.cost = 8.00;
-	 itest3.i_section = NULL;
-
-	section * stest = newSection(1, t_section);
-	Section_setPos(stest, 10, 15);
-	Section_setSize(stest, 8, 2);
-
-	Section_addItem(stest, itest1);
-	Section_addItem(stest, &itest2);
-
-	Section_print(stest);
-}
-
 section * newSection(int id, type s_type)
 {
 	section * s_new;
 	s_new = (section *)malloc(sizeof(section));
 
 	Section_init(s_new);
-	s_new->id = id;
-	s_new->s_type = s_type;
+	Section_setId(s_new, id);
+	Section_setType(s_new, s_type);
 
 	if (Section_hasStock(s_new))
 	{
@@ -49,6 +20,13 @@ section * newSection(int id, type s_type)
 	}
 
 	return s_new;
+}
+
+section * Section_delete(section * s_source)
+{
+	section * tmp = s_source;
+	free(s_source);
+	return tmp;
 }
 
 section * Section_init(section * s_source)
@@ -77,6 +55,8 @@ int Section_hasStock(section * s_source)
 
 int Section_setId(section * s_source, int id)
 {
+	if (s_source == NULL)
+		return EXIT_FAILURE;
 	if (id < 0)
 		return EXIT_FAILURE;
 	s_source->id = id;
@@ -85,6 +65,8 @@ int Section_setId(section * s_source, int id)
 
 int Section_setType(section * s_source, type s_type)
 {
+	if (s_source == NULL)
+		return EXIT_FAILURE;
 	if (s_type < 0)
 		return EXIT_FAILURE;
 	s_source->s_type = s_type;
@@ -109,14 +91,24 @@ int Section_setSize(section * s_source, int x_size, int y_size)
 	return EXIT_SUCCESS;
 }
 
-int Section_addItem(section * s_source, item * i_source)
+int Section_addItem(section * s_source, item * i_source, int pos_x, int pos_y)
 {
 	if (s_source == NULL || i_source == NULL)
 		return EXIT_FAILURE;
 	if (i_source->i_section != NULL)
 		return EXIT_FAILURE;
+
+	int x_max = s_source->size[X];
+	int y_max = s_source->size[Y];
+	if (!onBorder(pos_x, pos_y, 0, x_max, 0, y_max))
+	{
+		printf("error : Trying to put an item out of section borders\n");
+		return EXIT_FAILURE;
+	}
+
+	Item_setPos(i_source, pos_x, pos_y);
+	Item_setSection(i_source, s_source);
 	insertLast(s_source->stock, i_source);
-	i_source->i_section = s_source;
 	s_source->nb_items++;
 	return EXIT_SUCCESS;
 }
@@ -128,12 +120,13 @@ int Section_removeItem(item * i_source)
 	if (i_source->i_section == NULL)
 		return EXIT_FAILURE;
 
-	section * s_temp = i_source->i_section;
-
-	if (!find(s_temp->stock, i_source))
+	if (!find(i_source->i_section->stock, i_source))
 		return EXIT_FAILURE;
-	deleteCurrent(s_temp->stock);
-	s_temp->nb_items--;
+	deleteCurrent(i_source->i_section->stock);
+	i_source->i_section->nb_items--;
+
+	Item_setSection(i_source, NULL);
+	Item_setPos(i_source, 0, 0);
 
 	return EXIT_SUCCESS;
 }
@@ -184,4 +177,35 @@ void Section_print(section * s_source)
 	{
 		printList(s_source->stock);
 	}
+}
+
+void testSect(void)
+{
+	item * itest1 = newItem(1, legumes_vert, "haricots");
+	Item_setCost(itest1, 3.50);
+
+	item * itest2 = newItem(2, fromage, "lerdammer");
+	Item_setCost(itest2, 7.40);
+
+	item * itest3 = newItem(3, alcool, "Grimbergen");
+	Item_setCost(itest3, 8.00);
+
+	section * stest = newSection(1, t_section);
+	Section_setPos(stest, 10, 15);
+	Section_setSize(stest, 8, 2);
+
+	Section_addItem(stest, itest1, 0, 0);
+	Section_addItem(stest, itest2, 0, 0);
+	Section_addItem(stest, itest3, 1, 5);//cet item ne peut être ajouté au millieu de la section
+
+	Section_print(stest);
+
+	Item_print(itest3);
+
+	//delete function may only be used in Store functions
+	Item_delete(itest1);
+	Item_delete(itest2);
+	Item_delete(itest3);
+
+	Section_delete(stest);
 }

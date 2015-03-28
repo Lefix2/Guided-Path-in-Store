@@ -62,6 +62,7 @@ void printList(list * l)
 	char* header[] = { "----------------------------------------------------------------------------",
 					   "|      id      |     name     |   category   |     cost     |  section id  |" };
 	int i;
+	item * tmp;
 
 	printf("Stock : ");
 	if (empty(l)){
@@ -79,7 +80,13 @@ void printList(list * l)
 
 		while (!outOfList(l))
 		{
-			Item_print(l->current->i);
+			tmp = l->current->i;
+			printf("| %12d | %12s | %12s | %11.2fE | %12d |\n",Item_getId(tmp),
+															   Item_getName(tmp),
+															   Item_getCategoryString(tmp),
+															   Item_getCost(tmp),
+															   Item_getSection(tmp)->id
+			);
 			next(l);
 		}
 		printf("%s\n", header[0]);
