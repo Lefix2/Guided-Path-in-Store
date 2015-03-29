@@ -3,6 +3,25 @@
 
 #include "Common.h"
 
+/**
+* \struct nodeItemList
+* \brief Structure for a node of a itemList of items
+*/
+struct nodeItemList{
+	item * i;						/*!< pointer to an item */
+	struct nodeItemList * nextItem;	/*!< pointer to the nextItem nodeItemList*/
+};
+
+/**
+* \struct itemList
+* \brief list of pointer to items
+*/
+struct itemList{
+	nodeItemList *firstItem;		/*!< first item of the list */
+	nodeItemList *current;			/*!< current item of the list*/
+	nodeItemList *lastItem;			/*!< last item of the list*/
+};
+
 nodeItemList * newNodeItemList(item *i, nodeItemList *n);
 
 itemList * newItemList(void);

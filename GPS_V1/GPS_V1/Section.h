@@ -4,6 +4,22 @@
 #define SECTYPDEF
 #include "Common.h"
 
+/**
+* \struct section
+* \brief Structure image of a section
+*
+*Can be a wall, a section, an entrance etc.
+*
+*/
+struct section{
+	int id;							/*!< section's identifiant */
+	type s_type;					/*!< section's type (wall, section etc...*/
+	int pos[2];						/*!< section's position in store in X and Y */
+	int size[2];					/*!< section's size in X and Y */
+	int nb_items;					/*!< number of items stored in the section of type section */
+	itemList * stock;				/*!< itemList of item pointers pointing to a Store allocated_Stock */
+};
+
 section * newSection(int id, type s_type);
 section * Section_init(section * s_source);
 section Section_delete(section * s_source);
@@ -18,6 +34,7 @@ int Section_setSize(section * s_source, int x_size, int y_size);
 
 int Section_getId(section * s_source);
 type Section_getType(section * s_source);
+char * Section_getTypeString(section * s_source);
 int Section_getXPos(section * s_source);
 int Section_getYPos(section * s_source);
 int Section_getXSize(section * s_source);

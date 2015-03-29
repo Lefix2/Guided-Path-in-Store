@@ -2,6 +2,7 @@
 
 #include "Store.h"
 #include "Section.h"
+#include "SectionList.h"
 #include "Item.h"
 #include "ItemList.h"
 
@@ -58,6 +59,7 @@ int Store_setSize(store * st_source, int x_size, int y_size)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
+	Store_freeCartography(st_source);
 	st_source->size[X] = x_size;
 	st_source->size[Y] = y_size;
 	return EXIT_SUCCESS;
@@ -103,6 +105,30 @@ int Store_computeCartography(store * st_source)
 	return EXIT_SUCCESS;
 }
 
+int Store_addItem(store * st_source, int id, category i_category, char * name)
+{
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	item * new_i = newItem(id, i_category, name);
+	insertSortItem(st_source->allocated_stock, new_i);
+	return EXIT_SUCCESS;
+}
+
+int Store_addSection(store * st_source, int id, type s_type)
+{
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	section * new_s = newSection(id, s_type);
+	insertSortSection(st_source->allocated_stock, new_s);
+	return EXIT_SUCCESS;
+}
+
+int Store_deleteItem(store * st_source, item * i_source)
+{
+
+}
+
+
 void testStore(void)
 {
 	store * sttest = newStore(0, "Carrefour - rennes", 100, 100);
@@ -110,3 +136,5 @@ void testStore(void)
 	Store_freeCartography(sttest);
 	Store_delete(sttest);
 }
+
+int Store_deleteSection(store * st_source, section * s_source);

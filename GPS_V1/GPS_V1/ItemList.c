@@ -1,5 +1,6 @@
 #include "Itemlist.h"
 #include "Item.h"
+#include "Section.h"
 
 nodeItemList * newNodeItemList(item *i, nodeItemList *n)
 {
@@ -87,7 +88,7 @@ void printItemList(itemList * l)
 
 	printf("Stock : ");
 	if (emptyItemList(l)){
-		printf("vide\n");
+		printf("empty\n");
 	}
 	else{
 		printf("\n");
@@ -120,21 +121,21 @@ int insertfirstItem(itemList * l, item * i)
 {
 	nodeItemList* n = newNodeItemList(i, l->firstItem);
 	if (n == NULL)
-		return 0;
+		return EXIT_FAILURE;
 
 	if (emptyItemList(l))
 	{
 		l->lastItem = l->current = n;
 	}
 	l->firstItem = n;
-	return 1;
+	return EXIT_SUCCESS;
 }
 
 int insertlastItem(itemList * l, item * i)
 {
 	nodeItemList* n = newNodeItemList(i, NULL);
 	if (n == NULL)
-		return 0;
+		return EXIT_FAILURE;
 
 	if (emptyItemList(l))
 	{
@@ -143,7 +144,7 @@ int insertlastItem(itemList * l, item * i)
 	else
 		l->lastItem->nextItem = n;
 	l->lastItem = n;
-	return 1;
+	return EXIT_SUCCESS;
 }
 
 int insertBeforeCurrentItem(itemList * l, item * i)
@@ -151,7 +152,7 @@ int insertBeforeCurrentItem(itemList * l, item * i)
 	nodeItemList* n;
 	n = newNodeItemList(i, l->current);
 	if (n == NULL)
-		return 0;
+		return EXIT_FAILURE;
 
 	if (emptyItemList(l))
 	{
@@ -164,7 +165,7 @@ int insertBeforeCurrentItem(itemList * l, item * i)
 	else if (outOfItemList(l))
 	{
 		printf("error: trying to write out of the itemList!");
-		return 0;
+		return EXIT_FAILURE;
 	}
 	else
 	{
@@ -176,7 +177,7 @@ int insertBeforeCurrentItem(itemList * l, item * i)
 		}
 		l->current->nextItem = n;
 	}
-	return 1;
+	return EXIT_SUCCESS;
 }
 
 int insertAfterCurrentItem(itemList * l, item * i)
@@ -184,7 +185,7 @@ int insertAfterCurrentItem(itemList * l, item * i)
 	nodeItemList* n;
 	n = newNodeItemList(i, l->current->nextItem);
 	if (n == NULL)
-		return 0;
+		return EXIT_FAILURE;
 
 	if (emptyItemList(l))
 	{
@@ -193,10 +194,10 @@ int insertAfterCurrentItem(itemList * l, item * i)
 	else if (outOfItemList(l))
 	{
 		printf("error: trying to write out of the itemList!");
-		return 0;
+		return EXIT_FAILURE;
 	}
 	l->current->nextItem = n;
-	return 1;
+	return EXIT_SUCCESS;
 }
 
 void deletfirstItem(itemList * l)
@@ -263,11 +264,11 @@ int findItem(itemList * l, item * i)
 	while (l->current != l->lastItem)
 	{
 		if (l->current->i == i)
-			return 1;
+			return EXIT_SUCCESS;
 		nextItem(l);
 	}
 
-	return 0;
+	return EXIT_FAILURE;
 }
 
 int insertSortItem(itemList * l, item * i)
@@ -276,7 +277,7 @@ int insertSortItem(itemList * l, item * i)
 	if (emptyItemList(l))
 	{
 		insertfirstItem(l, i);
-		return 1;
+		return EXIT_SUCCESS;
 	}
 
 	setOnfirstItem(l);
@@ -296,5 +297,5 @@ int insertSortItem(itemList * l, item * i)
 		insertlastItem(l, i);
 
 	l->current = tmp;
-	return 1;
+	return EXIT_SUCCESS;
 }

@@ -3,6 +3,19 @@
 
 #include "Common.h"
 
+/**
+* \struct store
+* \brief Structure image of a store
+*/
+struct store{
+	int id;							/*!< Store's identifiant */
+	char name[MAX_ARRAY_OF_CHAR];	/*!< Store's name */
+	int size[2];					/*!< size in X and Y of the store */
+	itemList * allocated_stock;		/*!< itemList of item allocated in memory */
+	sectionList * sections_list;	/*!< list of sections of the store */
+	int ** cartography;				/*!< array image of the store's cartography */
+};
+
 store * newStore(int id, char * name, int x_size, int y_size);
 store * Store_init(store * st_source);
 store Store_delete(store * st_source);
@@ -16,7 +29,13 @@ char * Store_getName(store * st_source);
 int Store_getXSize(store * st_source);
 int Store_getYSize(store * st_source);
 
+int Store_freeCartography(store * st_source);
 int Store_computeCartography(store * st_source);
+
+int Store_addItem(store * st_source, int id, category i_category, char * name);
+int Store_deleteItem(store * st_source, item * i_source);
+int Store_addSection(store * st_source, int id, type s_type);
+int Store_deleteSection(store * st_source, section * s_source);
 
 void testStore(void);
 

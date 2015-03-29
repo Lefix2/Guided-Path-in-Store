@@ -148,6 +148,11 @@ type Section_getType(section * s_source)
 	return s_source->s_type;
 }
 
+char * Section_getTypeString(section * s_source)
+{
+	return sec_type[s_source->s_type];
+}
+
 int Section_getXPos(section * s_source)
 {
 	return s_source->pos[X];

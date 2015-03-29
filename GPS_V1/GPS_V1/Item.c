@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "Item.h"
+#include "Section.h"
 
 item * newItem(int id, category i_category, char * name)
 {
