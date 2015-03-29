@@ -4,6 +4,10 @@
 #include "Common.h"
 
 nodeList * newNodeList(item *i, nodeList *n);
+
+list * newList(void);
+int deleteList(list * l);
+
 void initList(list * l);
 int empty(list * l);
 int first(list * l);

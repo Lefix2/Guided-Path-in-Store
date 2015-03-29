@@ -15,13 +15,6 @@ item * newItem(int id, category i_category, char * name)
 	return i_new;
 }
 
-item * Item_delete(item * i_source)
-{
-	item * tmp = i_source;
-	free(i_source);
-	return tmp;
-}
-
 item * Item_init(item * i_source)
 {
 	i_source->id = 0;
@@ -36,6 +29,13 @@ item * Item_init(item * i_source)
 	i_source->i_section = NULL;
 
 	return i_source;
+}
+
+item Item_delete(item * i_source)
+{
+	item tmp = * i_source;
+	free(i_source);
+	return tmp;
 }
 
 gboolean Item_HasSection(item * i_source)
@@ -105,12 +105,12 @@ int Item_setPromotion(item * i_source, gboolean promotion)
 	return EXIT_SUCCESS;
 }
 
-int Item_setPos(item * i_source, int pos_x, int pos_y)
+int Item_setPos(item * i_source, int x_pos, int y_pos)
 {
 	if (i_source == NULL)
 		return EXIT_FAILURE;
-	i_source->pos_s[X] = pos_x;
-	i_source->pos_s[Y] = pos_y;
+	i_source->pos_s[X] = x_pos;
+	i_source->pos_s[Y] = y_pos;
 	return EXIT_SUCCESS;
 }
 
@@ -177,32 +177,39 @@ section * Item_getSection(item * i_source)
 	return i_source->i_section;
 }
 
-void Item_print(item * i_source)
+void Item_print(item * i_source, gboolean minimal)
 {
-	char i_fresh_string[] = "Yes";
-	char i_promo_string[] = "Yes";
-
-	if (i_source->fresh == FALSE)
-		strcpy(i_fresh_string, "No");
-	if (i_source->promotion == FALSE)
-		strcpy(i_promo_string, "No");
-
-	printf("****** Item ******\n");
-	printf("ID               : %d\n", Item_getId(i_source));
-	printf("Name             : %s\n", Item_getName(i_source));
-	printf("Category         : %s\n", item_category[Item_getCategory(i_source)]);
-	printf("Fresh product    : %s\n", i_fresh_string);
-	printf("Promotion        : %s\n", i_promo_string);
-	printf("Cost             : %.2f\n", Item_getCost(i_source));
-	printf("Fragility coeff  : %d\n", Item_getFragility(i_source));
-	if (Item_HasSection(i_source))
+	if (minimal)
 	{
-		printf("Section ID       : %d\n", Item_getSection(i_source)->id);
-		printf("pos X in Section : %d\n", Item_getXPos(i_source));
-		printf("    Y in Section : %d\n", Item_getYPos(i_source));
+		printf("* Item %d : %s\n", i_source->id, i_source->name);
 	}
 	else
-		printf("No Section defined for this Item.");
+	{
+		char i_fresh_string[] = "Yes";
+		char i_promo_string[] = "Yes";
+
+		if (i_source->fresh == FALSE)
+			strcpy(i_fresh_string, "No");
+		if (i_source->promotion == FALSE)
+			strcpy(i_promo_string, "No");
+
+		printf("****** Item ******\n");
+		printf("ID               : %d\n", Item_getId(i_source));
+		printf("Name             : %s\n", Item_getName(i_source));
+		printf("Category         : %s\n", item_category[Item_getCategory(i_source)]);
+		printf("Fresh product    : %s\n", i_fresh_string);
+		printf("Promotion        : %s\n", i_promo_string);
+		printf("Cost             : %.2f\n", Item_getCost(i_source));
+		printf("Fragility coeff  : %d\n", Item_getFragility(i_source));
+		if (Item_HasSection(i_source))
+		{
+			printf("Section ID       : %d\n", Item_getSection(i_source)->id);
+			printf("pos X in Section : %d\n", Item_getXPos(i_source));
+			printf("    Y in Section : %d\n", Item_getYPos(i_source));
+		}
+		else
+			printf("No Section defined for this Item.");
+	}
 }
 
 void testItem(void)
@@ -220,5 +227,5 @@ void testItem(void)
 	Item_setSection(item1, &testSec);
 	Item_setPos(item1, 19, 1);
 
-	Item_print(item1);
+	Item_print(item1, FALSE);
 }

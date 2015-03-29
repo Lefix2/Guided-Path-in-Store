@@ -12,6 +12,26 @@ nodeList * newNodeList(item *i, nodeList *n)
 	return newn;
 }
 
+list * newList(void)
+{
+	list * newl;
+	newl = (list *)malloc(sizeof(list));
+
+	return newl;
+}
+
+int deleteList(list * l)
+{
+	if (l == NULL)
+		return EXIT_FAILURE;
+	while (!empty(l))
+	{
+		deletFirst(l);
+	}
+	free(l);
+	return EXIT_SUCCESS;
+}
+
 void initList(list * l)
 {
 	l->first = l->last = l->current = NULL;

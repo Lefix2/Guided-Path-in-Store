@@ -17,7 +17,6 @@ gboolean changer_texte(GtkWidget *window, gpointer data)
 	GtkWidget *label;
 	gchar *txtSchema;
 
-	testItem();
 	testSect();
 	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#FF5500\" size=\"xx-large\"><b>On est des Ouf !</b></span>", -1, NULL, NULL, NULL);
 	gtk_label_set_text(GTK_LABEL(data), txtSchema);

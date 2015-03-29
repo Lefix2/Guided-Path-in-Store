@@ -15,18 +15,11 @@ section * newSection(int id, type s_type)
 
 	if (Section_hasStock(s_new))
 	{
-		s_new->stock = (list *)malloc(sizeof(list));
+		s_new->stock = newList();
 		initList(s_new->stock);
 	}
 
 	return s_new;
-}
-
-section * Section_delete(section * s_source)
-{
-	section * tmp = s_source;
-	free(s_source);
-	return tmp;
 }
 
 section * Section_init(section * s_source)
@@ -41,6 +34,14 @@ section * Section_init(section * s_source)
 	s_source->stock = NULL;
 
 	return s_source;
+}
+
+section Section_delete(section * s_source)
+{
+	section tmp = *s_source;
+	deleteList(s_source->stock);
+	free(s_source);
+	return tmp;
 }
 
 int Section_isEmpty(section * s_source)
@@ -91,22 +92,28 @@ int Section_setSize(section * s_source, int x_size, int y_size)
 	return EXIT_SUCCESS;
 }
 
-int Section_addItem(section * s_source, item * i_source, int pos_x, int pos_y)
+int Section_addItem(section * s_source, item * i_source, int x_pos, int y_pos)
 {
 	if (s_source == NULL || i_source == NULL)
 		return EXIT_FAILURE;
 	if (i_source->i_section != NULL)
-		return EXIT_FAILURE;
-
-	int x_max = s_source->size[X];
-	int y_max = s_source->size[Y];
-	if (!onBorder(pos_x, pos_y, 0, x_max, 0, y_max))
 	{
-		printf("error : Trying to put an item out of section borders\n");
+		printf("error : Trying to add an item already stored in a section\n");
+		Item_print(i_source, TRUE);
+		Section_print(s_source, TRUE);
 		return EXIT_FAILURE;
 	}
 
-	Item_setPos(i_source, pos_x, pos_y);
+	int x_max = s_source->size[X];
+	int y_max = s_source->size[Y];
+	if (!onBorder(x_pos, y_pos, 0, x_max, 0, y_max))
+	{
+		printf("error : Trying to put an item out of section borders\n");
+		Item_print(i_source, TRUE);
+		return EXIT_FAILURE;
+	}
+
+	Item_setPos(i_source, x_pos, y_pos);
 	Item_setSection(i_source, s_source);
 	insertLast(s_source->stock, i_source);
 	s_source->nb_items++;
@@ -166,8 +173,12 @@ int Section_getNbItems(section * s_source)
 	return s_source->nb_items;
 }
 
-void Section_print(section * s_source)
+void Section_print(section * s_source, gboolean minimal)
 {
+	if (minimal)
+	{
+		printf("* Section %d\n", s_source->id);
+	}
 	printf("***** Section*****\n");
 	printf("ID    : %d\n", s_source->id);
 	printf("type  : %s\n", sec_type[s_source->s_type]);
@@ -192,15 +203,13 @@ void testSect(void)
 
 	section * stest = newSection(1, t_section);
 	Section_setPos(stest, 10, 15);
-	Section_setSize(stest, 8, 2);
+	Section_setSize(stest, 8, 3);
 
 	Section_addItem(stest, itest1, 0, 0);
-	Section_addItem(stest, itest2, 0, 0);
-	Section_addItem(stest, itest3, 1, 5);//cet item ne peut être ajouté au millieu de la section
+	Section_addItem(stest, itest2, 2, 1);//cet item ne peut être ajouté au millieu de la section
+	Section_addItem(stest, itest3, 1, 2);
 
-	Section_print(stest);
-
-	Item_print(itest3);
+	Section_print(stest, FALSE);
 
 	//delete function may only be used in Store functions
 	Item_delete(itest1);
