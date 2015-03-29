@@ -86,7 +86,7 @@
     <ClCompile Include="myAlloc.c" />
     <ClCompile Include="Principal.c" />
     <ClCompile Include="Section.c" />
-    <ClCompile Include="Store.c" />
+    <ClCompile Include="Store1.c" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\atk-1.0.lib" />
@@ -108,7 +108,7 @@
     <ClInclude Include="ItemList.h" />
     <ClInclude Include="myAlloc.h" />
     <ClInclude Include="Section.h" />
-    <ClInclude Include="Store.h" />
+    <ClInclude Include="Store1.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ressources\caddie.jpg" />
