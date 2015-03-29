@@ -1,7 +1,7 @@
 #ifndef STORE_H
 #define STORE_H
 
-#include "Common.h"
+#include "Common1.h"
 
 store * newStore(int id, char * name, int x_size, int y_size);
 store * Store_init(store * st_source);

@@ -103,7 +103,7 @@
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\gtk-win32-3.0.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common.h" />
+    <ClInclude Include="Common1.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemList.h" />
     <ClInclude Include="myAlloc.h" />
