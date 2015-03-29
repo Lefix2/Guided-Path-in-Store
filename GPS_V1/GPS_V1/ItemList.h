@@ -3,29 +3,29 @@
 
 #include "Common.h"
 
-nodeList * newNodeList(item *i, nodeList *n);
+nodeItemList * newNodeItemList(item *i, nodeItemList *n);
 
-list * newList(void);
-int deleteList(list * l);
+itemList * newItemList(void);
+int deleteItemList(itemList * l);
 
-void initList(list * l);
-int empty(list * l);
-int first(list * l);
-int last(list * l);
-int outOfList(list * l);
-void setOnFirst(list * l);
-void setOnLast(list * l);
-void next(list * l);
-item * getCurrentItem(list * l);
-void printList(list * l);
-int insertFirst(list * l, item * i);
-int insertLast(list * l, item * i);
-int insertBeforeCurrent(list * l, item * i);
-int insertAfterCurrent(list * l, item * i);
-void deletFirst(list * l);
-void deleteLast(list * l);
-void deleteCurrent(list * l);
-int find(list * l, item * i);
-int insertSort(list * l, item * i);
+void initItemList(itemList * l);
+int emptyItemList(itemList * l);
+int firstItem(itemList * l);
+int lastItem(itemList * l);
+int outOfItemList(itemList * l);
+void setOnfirstItem(itemList * l);
+void setOnlastItem(itemList * l);
+void nextItem(itemList * l);
+item * getCurrentItem(itemList * l);
+void printItemList(itemList * l);
+int insertfirstItem(itemList * l, item * i);
+int insertlastItem(itemList * l, item * i);
+int insertBeforeCurrentItem(itemList * l, item * i);
+int insertAfterCurrentItem(itemList * l, item * i);
+void deletfirstItem(itemList * l);
+void deletelastItem(itemList * l);
+void deleteCurrentItem(itemList * l);
+int findItem(itemList * l, item * i);
+int insertSortItem(itemList * l, item * i);
 
 #endif // !ITEMLIST_H

@@ -8,7 +8,7 @@ section * newSection(int id, type s_type);
 section * Section_init(section * s_source);
 section Section_delete(section * s_source);
 
-int Section_isEmpty(section * s_source);
+int Section_isemptyItemList(section * s_source);
 int Section_hasStock(section * s_source);
 
 int Section_setId(section * s_source, int id);

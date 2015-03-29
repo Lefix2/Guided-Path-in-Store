@@ -18,6 +18,7 @@
 #ifdef MEMCHECK
 
 #define malloc(x) myMalloc((x), __FILE__, __FUNCTION__, __LINE__)
+#define calloc(x,y) myCalloc((x),(y), __FILE__, __FUNCTION__, __LINE__)
 #define free(x) myFree((x), __FILE__, __FUNCTION__, __LINE__)
 
 #endif

@@ -15,8 +15,8 @@ section * newSection(int id, type s_type)
 
 	if (Section_hasStock(s_new))
 	{
-		s_new->stock = newList();
-		initList(s_new->stock);
+		s_new->stock = newItemList();
+		initItemList(s_new->stock);
 	}
 
 	return s_new;
@@ -39,12 +39,12 @@ section * Section_init(section * s_source)
 section Section_delete(section * s_source)
 {
 	section tmp = *s_source;
-	deleteList(s_source->stock);
+	deleteItemList(s_source->stock);
 	free(s_source);
 	return tmp;
 }
 
-int Section_isEmpty(section * s_source)
+int Section_isemptyItemList(section * s_source)
 {
 	return (s_source->nb_items == 0);
 }
@@ -115,7 +115,7 @@ int Section_addItem(section * s_source, item * i_source, int x_pos, int y_pos)
 
 	Item_setPos(i_source, x_pos, y_pos);
 	Item_setSection(i_source, s_source);
-	insertLast(s_source->stock, i_source);
+	insertlastItem(s_source->stock, i_source);
 	s_source->nb_items++;
 	return EXIT_SUCCESS;
 }
@@ -127,9 +127,9 @@ int Section_removeItem(item * i_source)
 	if (i_source->i_section == NULL)
 		return EXIT_FAILURE;
 
-	if (!find(i_source->i_section->stock, i_source))
+	if (!findItem(i_source->i_section->stock, i_source))
 		return EXIT_FAILURE;
-	deleteCurrent(i_source->i_section->stock);
+	deleteCurrentItem(i_source->i_section->stock);
 	i_source->i_section->nb_items--;
 
 	Item_setSection(i_source, NULL);
@@ -186,7 +186,7 @@ void Section_print(section * s_source, gboolean minimal)
 	printf("    Y : %d -> %d (%d)\n", s_source->pos[Y], s_source->size[Y] + s_source->pos[Y], s_source->size[Y]);
 	if (Section_hasStock(s_source))
 	{
-		printList(s_source->stock);
+		printItemList(s_source->stock);
 	}
 }
 

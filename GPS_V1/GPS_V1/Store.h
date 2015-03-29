@@ -16,5 +16,8 @@ char * Store_getName(store * st_source);
 int Store_getXSize(store * st_source);
 int Store_getYSize(store * st_source);
 
-int ** Store_computeCartography(store * st_source);
+int Store_computeCartography(store * st_source);
+
+void testStore(void);
+
 #endif //!STORE_H

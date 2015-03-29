@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <glib.h>
 
-//uncomment next line to check memory allocation
+//uncomment nextItem line to check memory allocation
 //#define MEMCHECK
 #include "myAlloc.h"
 
@@ -48,8 +48,8 @@ char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
 typedef struct store store;
 typedef struct section section;
 typedef struct item item;
-typedef struct nodeList nodeList;
-typedef struct list list;
+typedef struct nodeItemList nodeItemList;
+typedef struct itemList itemList;
 
 /**
 * \struct store
@@ -58,7 +58,7 @@ typedef struct list list;
 struct store{
 	int id;							/*!< Store's identifiant */
 	char name[MAX_ARRAY_OF_CHAR];	/*!< Store's name */
-	list * allocated_stock;			/*!< List of item allocated in memory */
+	itemList * allocated_stock;			/*!< itemList of item allocated in memory */
 	int size[2];					/*!< size in X and Y of the store */
 	int ** cartography;				/*!< tab image of the store's cartography */
 };
@@ -76,7 +76,7 @@ struct section{
 	int pos[2];						/*!< section's position in store in X and Y */
 	int size[2];					/*!< section's size in X and Y */
 	int nb_items;					/*!< number of items stored in the section of type section */
-	list * stock;					/*!< list of item pointers pointing to a Store allocated_Stock */
+	itemList * stock;					/*!< itemList of item pointers pointing to a Store allocated_Stock */
 };
 
 #define ITEM_FRAGILITY_MIN 0
@@ -98,22 +98,22 @@ struct item{
 };
 
 /**
-* \struct nodeList
-* \brief Structure for a node of a list of items
+* \struct nodeItemList
+* \brief Structure for a node of a itemList of items
 */
-struct nodeList{
+struct nodeItemList{
 	item * i;						/*!< pointer to an item */
-	struct nodeList * next;			/*!< pointer to the next nodelist*/
+	struct nodeItemList * nextItem;			/*!< pointer to the nextItem nodeItemList*/
 };
 
 /**
-* \struct list
+* \struct itemList
 * \brief list of pointer to items
 */
-struct list{
-	nodeList *first;
-	nodeList *current;
-	nodeList *last;
+struct itemList{
+	nodeItemList *firstItem;
+	nodeItemList *current;
+	nodeItemList *lastItem;
 };
 
 gboolean betwn(int a, int x, int b, gboolean equal);

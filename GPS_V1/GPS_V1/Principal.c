@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "ItemList.h"
 #include "Section.h"
+#include "Store.h"
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
@@ -16,14 +17,34 @@ gboolean changer_texte(GtkWidget *window, gpointer data)
 {
 	GtkWidget *label;
 	gchar *txtSchema;
+	gchar utf8_chain[256];
 
-	testSect();
-	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#FF5500\" size=\"xx-large\"><b>On est des Ouf !</b></span>", -1, NULL, NULL, NULL);
+	sprintf(utf8_chain, "<span face=\"Verdana\" foreground=\"#%02X%02X%02X\" size=\"xx-large\"><b>Console cleared</b></span>", rand() % (0xFF), rand() % (0xFF), rand() % (0xFF));
+	txtSchema = g_locale_to_utf8(utf8_chain, -1, NULL, NULL, NULL);
 	gtk_label_set_text(GTK_LABEL(data), txtSchema);
 	gtk_label_set_use_markup(GTK_LABEL(data), TRUE);
 	g_free(txtSchema);
 	gtk_widget_show_all(window);
+	system("cls");
 
+	return FALSE;
+}
+
+gboolean button1_callback(GtkWidget *window, gpointer data)
+{
+	testItem();
+	return FALSE;
+}
+
+gboolean button2_callback(GtkWidget *window, gpointer data)
+{
+	testSect();
+	return FALSE;
+}
+
+gboolean button3_callback(GtkWidget *window, gpointer data)
+{
+	testStore();
 	return FALSE;
 }
 
@@ -31,7 +52,7 @@ int main(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
-	GtkWidget *window, *label, *v_box, *h_box, *button1, *button2, *button3;
+	GtkWidget *window, *label, *v_box, *h_box,*button, *button1, *button2, *button3;
 	gchar *txtSchema = NULL;
 
 	/* initialiser GTK+ */
@@ -51,23 +72,28 @@ int main(int argc, char *argv[])
 	label = gtk_label_new(txtSchema);
 	gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
 	g_free(txtSchema);
-	button1 = gtk_button_new_with_label("Afficher les stocks");
-	button2 = gtk_button_new_with_label("Test bouton 1");
-	button3 = gtk_button_new_with_label("Test bouton 2");
+	button = gtk_button_new_with_label("Pimp my text");
+	button1 = gtk_button_new_with_label("Test Item");
+	button2 = gtk_button_new_with_label("Test Section");
+	button3 = gtk_button_new_with_label("Test Store");
 
 	/* positionner les widgets */
 	gtk_container_add(GTK_CONTAINER(window), h_box);
 
-	gtk_box_pack_start(GTK_BOX(v_box), button1, FALSE, FALSE, 10);
-	gtk_box_pack_start(GTK_BOX(v_box), button2, FALSE, FALSE, 10);
-	gtk_box_pack_start(GTK_BOX(v_box), button3, FALSE, FALSE, 10);
+	gtk_box_pack_start(GTK_BOX(v_box), button, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(v_box), button1, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(v_box), button2, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(v_box), button3, FALSE, FALSE, 5);
 
 	gtk_box_pack_start(GTK_BOX(h_box), label, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(h_box), GTK_BOX(v_box), FALSE, FALSE, 0);
 
 	/* connecter le bouton à une fonction de callback */
-  g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
-	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(changer_texte), label);
+	g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(changer_texte), label);
+	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(button1_callback), NULL);
+	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button2_callback), NULL);
+	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button3_callback), NULL);
 
 
 	/* afficher la fenêtre */

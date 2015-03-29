@@ -46,6 +46,38 @@ void* myMalloc(unsigned int size, char* file,  char * func, int line)
 }
 
 /*!
+* \fn  void* myCalloc(unsigned int size, char* file,  char * func, int line)
+* \brief Redefines the calloc function behavior
+* In addition of the memory allocation, this function increases the counter
+* of allocated blocks.
+* \param[in] count the number of block to be allocated
+* \param[in] size the size of the block to be allocated
+* \param[in] file the file name where the memory allocation is required
+* \param[in] func the function name where the memory allocation is required
+* \param[in] line the line number where the memory allocation is required
+* \return void * the address of the allocated block
+*/
+void* myCalloc(unsigned int count, unsigned int size, char* file, char * func, int line)
+{
+	void * allocated_block;
+
+	allocated_block = calloc(count, size);
+
+	if (allocated_block != NULL)
+	{
+
+		nb_block++;
+		printf("In file %s,\n\t function %s,\n\t\t line %d :\n\t\t\t %d allocated block at memory address: %p\n", file, func, line, count, allocated_block);
+	}
+
+	/*
+	printList(&l);
+	printf("**** ending myAlloc\n");
+	*/
+	return allocated_block;
+}
+
+/*!
  * \fn  void myFree(void* block, char* file,  char * func, int line)
  * \brief Redefines the free function behavior
  * In addition of the memory deallocation, this function decreases the counter

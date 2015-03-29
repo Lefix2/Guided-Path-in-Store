@@ -13,7 +13,7 @@ store * newStore(int id, char * name, int x_size, int y_size)
 	Store_setId(st_new, id);
 	Store_setName(st_new, name);
 	Store_setSize(st_new, x_size, y_size);
-	st_new = newList();
+	st_new->allocated_stock = newItemList();
 
 	return st_new;
 }
@@ -33,7 +33,7 @@ store * Store_init(store * st_source)
 store Store_delete(store * st_source)
 {
 	store tmp = *st_source;
-	deleteList(st_source->allocated_stock);
+	deleteItemList(st_source->allocated_stock);
 	free(st_source);
 	return tmp;
 }
@@ -82,19 +82,31 @@ int Store_getYSize(store * st_source)
 {
 	return st_source->size[Y];
 }
-/*
+
 int Store_freeCartography(store * st_source)
 {
 	for (int i = 0; i < st_source->size[X]; i++)
 	{
-		*(st_source->cartography + i) = free(st_source->size[Y], sizeof(int));
+		free(*(st_source->cartography+i));
 	}
+	free(st_source->cartography);
+	return EXIT_SUCCESS;
 }
 
 int Store_computeCartography(store * st_source)
 {
+	st_source->cartography = (int**)calloc(st_source->size[X], sizeof(int*));
 	for (int i = 0; i < st_source->size[X]; i++)
 	{
 		*(st_source->cartography + i) = (int*)calloc(st_source->size[Y], sizeof(int));
 	}
-}*/
+	return EXIT_SUCCESS;
+}
+
+void testStore(void)
+{
+	store * sttest = newStore(0, "Carrefour - rennes", 100, 100);
+	Store_computeCartography(sttest);
+	Store_freeCartography(sttest);
+	Store_delete(sttest);
+}

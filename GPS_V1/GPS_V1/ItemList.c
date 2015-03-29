@@ -1,83 +1,84 @@
 #include "Itemlist.h"
 #include "Item.h"
 
-nodeList * newNodeList(item *i, nodeList *n)
+nodeItemList * newNodeItemList(item *i, nodeItemList *n)
 {
-	nodeList * newn;
-	newn = (nodeList*)malloc(sizeof(nodeList));
+	nodeItemList * newn;
+	newn = (nodeItemList*)malloc(sizeof(nodeItemList));
 
-	newn->next = n;
+	newn->nextItem = n;
 	newn->i = i;
 
 	return newn;
 }
 
-list * newList(void)
+itemList * newItemList(void)
 {
-	list * newl;
-	newl = (list *)malloc(sizeof(list));
+	itemList * newl;
+	newl = (itemList *)malloc(sizeof(itemList));
+	initItemList(newl);
 
 	return newl;
 }
 
-int deleteList(list * l)
+int deleteItemList(itemList * l)
 {
 	if (l == NULL)
 		return EXIT_FAILURE;
-	while (!empty(l))
+	while (!emptyItemList(l))
 	{
-		deletFirst(l);
+		deletfirstItem(l);
 	}
 	free(l);
 	return EXIT_SUCCESS;
 }
 
-void initList(list * l)
+void initItemList(itemList * l)
 {
-	l->first = l->last = l->current = NULL;
+	l->firstItem = l->lastItem = l->current = NULL;
 }
 
-int empty(list * l)
+int emptyItemList(itemList * l)
 {
-	return l->first == NULL;
+	return l->firstItem == NULL;
 }
 
-int first(list * l)
+int firstItem(itemList * l)
 {
-	return l->current == l->first;
+	return l->current == l->firstItem;
 }
 
-int last(list * l)
+int lastItem(itemList * l)
 {
-	return l->current == l->last;
+	return l->current == l->lastItem;
 }
 
-int outOfList(list * l)
+int outOfItemList(itemList * l)
 {
 	return l->current == NULL;
 }
 
-void setOnFirst(list * l)
+void setOnfirstItem(itemList * l)
 {
-	l->current = l->first;
+	l->current = l->firstItem;
 }
 
-void setOnLast(list * l)
+void setOnlastItem(itemList * l)
 {
-	l->current = l->last;
+	l->current = l->lastItem;
 }
 
-void next(list * l)
+void nextItem(itemList * l)
 {
-	l->current = l->current->next;
+	l->current = l->current->nextItem;
 }
 
-item * getCurrentItem(list * l)
+item * getCurrentItem(itemList * l)
 {
 	return l->current->i;
 }
 
-void printList(list * l)
+void printItemList(itemList * l)
 {
 	char* header[] = { "----------------------------------------------------------------------------",
 					   "|      id      |     name     |   category   |     cost     |  section id  |" };
@@ -85,12 +86,12 @@ void printList(list * l)
 	item * tmp;
 
 	printf("Stock : ");
-	if (empty(l)){
+	if (emptyItemList(l)){
 		printf("vide\n");
 	}
 	else{
 		printf("\n");
-		setOnFirst(l);
+		setOnfirstItem(l);
 
 		for (i = 0; i < 2; i++)
 		{
@@ -98,7 +99,7 @@ void printList(list * l)
 		}
 		printf("%s\n", header[0]);
 
-		while (!outOfList(l))
+		while (!outOfItemList(l))
 		{
 			tmp = l->current->i;
 			printf("| %12d | %12s | %12s | %11.2fE | %12d |\n",Item_getId(tmp),
@@ -107,7 +108,7 @@ void printList(list * l)
 															   Item_getCost(tmp),
 															   Item_getSection(tmp)->id
 			);
-			next(l);
+			nextItem(l);
 		}
 		printf("%s\n", header[0]);
 		printf("\n");
@@ -115,184 +116,184 @@ void printList(list * l)
 
 }
 
-int insertFirst(list * l, item * i)
+int insertfirstItem(itemList * l, item * i)
 {
-	nodeList* n = newNodeList(i, l->first);
+	nodeItemList* n = newNodeItemList(i, l->firstItem);
 	if (n == NULL)
 		return 0;
 
-	if (empty(l))
+	if (emptyItemList(l))
 	{
-		l->last = l->current = n;
+		l->lastItem = l->current = n;
 	}
-	l->first = n;
+	l->firstItem = n;
 	return 1;
 }
 
-int insertLast(list * l, item * i)
+int insertlastItem(itemList * l, item * i)
 {
-	nodeList* n = newNodeList(i, NULL);
+	nodeItemList* n = newNodeItemList(i, NULL);
 	if (n == NULL)
 		return 0;
 
-	if (empty(l))
+	if (emptyItemList(l))
 	{
-		l->first = l->current = n;
+		l->firstItem = l->current = n;
 	}
 	else
-		l->last->next = n;
-	l->last = n;
+		l->lastItem->nextItem = n;
+	l->lastItem = n;
 	return 1;
 }
 
-int insertBeforeCurrent(list * l, item * i)
+int insertBeforeCurrentItem(itemList * l, item * i)
 {
-	nodeList* n;
-	n = newNodeList(i, l->current);
+	nodeItemList* n;
+	n = newNodeItemList(i, l->current);
 	if (n == NULL)
 		return 0;
 
-	if (empty(l))
+	if (emptyItemList(l))
 	{
-		l->last = l->current = l->last = n;
+		l->lastItem = l->current = l->lastItem = n;
 	}
-	else if (first(l))
+	else if (firstItem(l))
 	{
-		insertFirst(l, i);
+		insertfirstItem(l, i);
 	}
-	else if (outOfList(l))
+	else if (outOfItemList(l))
 	{
-		printf("error: trying to write out of the list!");
+		printf("error: trying to write out of the itemList!");
 		return 0;
 	}
 	else
 	{
-		nodeList* tmp = l->current;
-		setOnFirst(l);
-		while (l->current->next != tmp)
+		nodeItemList* tmp = l->current;
+		setOnfirstItem(l);
+		while (l->current->nextItem != tmp)
 		{
-			next(l);
+			nextItem(l);
 		}
-		l->current->next = n;
+		l->current->nextItem = n;
 	}
 	return 1;
 }
 
-int insertAfterCurrent(list * l, item * i)
+int insertAfterCurrentItem(itemList * l, item * i)
 {
-	nodeList* n;
-	n = newNodeList(i, l->current->next);
+	nodeItemList* n;
+	n = newNodeItemList(i, l->current->nextItem);
 	if (n == NULL)
 		return 0;
 
-	if (empty(l))
+	if (emptyItemList(l))
 	{
-		l->last = l->current = l->last = n;
+		l->lastItem = l->current = l->lastItem = n;
 	}
-	else if (outOfList(l))
+	else if (outOfItemList(l))
 	{
-		printf("error: trying to write out of the list!");
+		printf("error: trying to write out of the itemList!");
 		return 0;
 	}
-	l->current->next = n;
+	l->current->nextItem = n;
 	return 1;
 }
 
-void deletFirst(list * l)
+void deletfirstItem(itemList * l)
 {
-	if (empty(l)){
-		printf("error: trying to delete node in an empty list in %s\n", __FUNCTION__);
+	if (emptyItemList(l)){
+		printf("error: trying to delete node in an emptyItemList itemList in %s\n", __FUNCTION__);
 	}
 
 	else{
-		nodeList * n = l->first;
-		l->first = n->next;
-		if (l->first == NULL)
-			initList(l);
+		nodeItemList * n = l->firstItem;
+		l->firstItem = n->nextItem;
+		if (l->firstItem == NULL)
+			initItemList(l);
 		free((void*)n);
 	}
 }
 
-void deleteLast(list * l)
+void deletelastItem(itemList * l)
 {
-	if (empty(l)){
-		printf("error: trying to delete node in an empty list in %s\n", __FUNCTION__);
+	if (emptyItemList(l)){
+		printf("error: trying to delete node in an emptyItemList itemList in %s\n", __FUNCTION__);
 	}
 
 	else{
-		nodeList* n = l->last;
-		setOnFirst(l);
+		nodeItemList* n = l->lastItem;
+		setOnfirstItem(l);
 		do
 		{
-			l->current = l->current->next;
-		} while (l->current->next != n);
-		l->last = l->current;
+			l->current = l->current->nextItem;
+		} while (l->current->nextItem != n);
+		l->lastItem = l->current;
 
-		if (l->last == NULL)
-			initList(l);
+		if (l->lastItem == NULL)
+			initItemList(l);
 		free((void*)n);
 	}
 
 }
 
-void deleteCurrent(list * l)
+void deleteCurrentItem(itemList * l)
 {
-	if (empty(l)){
-		printf("error: trying to delete node in an empty list in %s\n", __FUNCTION__);
+	if (emptyItemList(l)){
+		printf("error: trying to delete node in an emptyItemList itemList in %s\n", __FUNCTION__);
 	}
 
 
-	nodeList* n = l->current;
-	setOnFirst(l);
+	nodeItemList* n = l->current;
+	setOnfirstItem(l);
 
 	do
 	{
-		next(l);
-	} while (l->current->next != n);
-	l->current->next = n->next;
+		nextItem(l);
+	} while (l->current->nextItem != n);
+	l->current->nextItem = n->nextItem;
 
 	if (l->current == NULL)
-		initList(l);
+		initItemList(l);
 	free((void*)n);
 }
 
-int find(list * l, item * i)
+int findItem(itemList * l, item * i)
 {
-	setOnFirst(l);
-	while (l->current != l->last)
+	setOnfirstItem(l);
+	while (l->current != l->lastItem)
 	{
 		if (l->current->i == i)
 			return 1;
-		next(l);
+		nextItem(l);
 	}
 
 	return 0;
 }
 
-int insertSort(list * l, item * i)
+int insertSortItem(itemList * l, item * i)
 {
-	nodeList * tmp = l->current;
-	if (empty(l))
+	nodeItemList * tmp = l->current;
+	if (emptyItemList(l))
 	{
-		insertFirst(l, i);
+		insertfirstItem(l, i);
 		return 1;
 	}
 
-	setOnFirst(l);
+	setOnfirstItem(l);
 
 	do
 	{
 		if (l->current->i->id <= i->id)
-			next(l);
+			nextItem(l);
 		else
 		{
-			insertBeforeCurrent(l, i);
-			setOnFirst(l);
+			insertBeforeCurrentItem(l, i);
+			setOnfirstItem(l);
 			break;
 		}
-	} while (!outOfList(l));
-	if (outOfList(l))
-		insertLast(l, i);
+	} while (!outOfItemList(l));
+	if (outOfItemList(l))
+		insertlastItem(l, i);
 
 	l->current = tmp;
 	return 1;
