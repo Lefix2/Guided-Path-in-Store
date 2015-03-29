@@ -33,9 +33,6 @@
     <ClCompile Include="myAlloc.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Store1.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Store.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -91,13 +88,10 @@
     <ClInclude Include="myAlloc.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Store1.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Common1.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Store.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

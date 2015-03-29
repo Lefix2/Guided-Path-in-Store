@@ -2,7 +2,7 @@
 #define SECTION_H
 
 #define SECTYPDEF
-#include "Common1.h"
+#include "Common.h"
 
 section * newSection(int id, type s_type);
 section * Section_init(section * s_source);

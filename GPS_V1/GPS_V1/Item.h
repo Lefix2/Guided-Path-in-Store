@@ -2,7 +2,7 @@
 #define ITEM_H
 
 #define ITECATDEF
-#include "Common1.h"
+#include "Common.h"
 
 item * newItem(int id, category i_category, char * name);
 item * Item_init(item * i_source);
