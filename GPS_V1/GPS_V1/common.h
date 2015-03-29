@@ -9,7 +9,6 @@
 #define Y 1
 
 #define MAX_ARRAY_OF_CHAR 256
-#define MAX_STORE_SIZE 128
 
 typedef enum type{ t_none, t_wall, t_section, t_promo, t_checkout, t_entrance, t_reception }type;
 typedef enum category{ c_none, fromage, pain, legumes_vert, alcool }category;
