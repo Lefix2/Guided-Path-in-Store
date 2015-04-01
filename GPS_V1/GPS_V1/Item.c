@@ -32,11 +32,12 @@ item * Item_init(item * i_source)
 	return i_source;
 }
 
-item Item_delete(item * i_source)
+int Item_delete(item * i_source)
 {
-	item tmp = * i_source;
+	if (i_source == NULL)
+		return EXIT_FAILURE;
 	free(i_source);
-	return tmp;
+	return EXIT_SUCCESS;
 }
 
 gboolean Item_HasSection(item * i_source)

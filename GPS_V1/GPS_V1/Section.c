@@ -15,8 +15,7 @@ section * newSection(int id, type s_type)
 
 	if (Section_hasStock(s_new))
 	{
-		s_new->stock = newItemList();
-		initItemList(s_new->stock);
+		s_new->stock = newItemPointerList();
 	}
 
 	return s_new;
@@ -36,15 +35,16 @@ section * Section_init(section * s_source)
 	return s_source;
 }
 
-section Section_delete(section * s_source)
+int Section_delete(section * s_source)
 {
-	section tmp = *s_source;
-	deleteItemList(s_source->stock);
+	if (s_source == NULL)
+		return EXIT_FAILURE;
+	deleteItemPointerList(s_source->stock);
 	free(s_source);
-	return tmp;
+	return EXIT_SUCCESS;
 }
 
-int Section_isemptyItemList(section * s_source)
+int Section_isemptyItemPointerList(section * s_source)
 {
 	return (s_source->nb_items == 0);
 }
@@ -101,6 +101,7 @@ int Section_addItem(section * s_source, item * i_source, int x_pos, int y_pos)
 		printf("error : Trying to add an item already stored in a section\n");
 		Item_print(i_source, TRUE);
 		Section_print(s_source, TRUE);
+		printf("\n");
 		return EXIT_FAILURE;
 	}
 
@@ -110,12 +111,13 @@ int Section_addItem(section * s_source, item * i_source, int x_pos, int y_pos)
 	{
 		printf("error : Trying to put an item out of section borders\n");
 		Item_print(i_source, TRUE);
+		printf("\n");
 		return EXIT_FAILURE;
 	}
 
 	Item_setPos(i_source, x_pos, y_pos);
 	Item_setSection(i_source, s_source);
-	insertlastItem(s_source->stock, i_source);
+	insertlastItemPointer(s_source->stock, i_source);
 	s_source->nb_items++;
 	return EXIT_SUCCESS;
 }
@@ -127,9 +129,9 @@ int Section_removeItem(item * i_source)
 	if (i_source->i_section == NULL)
 		return EXIT_FAILURE;
 
-	if (!findItem(i_source->i_section->stock, i_source))
+	if (!findItemPointer(i_source->i_section->stock, i_source))
 		return EXIT_FAILURE;
-	deleteCurrentItem(i_source->i_section->stock);
+	deleteCurrentItemPointer(i_source->i_section->stock);
 	i_source->i_section->nb_items--;
 
 	Item_setSection(i_source, NULL);
@@ -184,15 +186,20 @@ void Section_print(section * s_source, gboolean minimal)
 	{
 		printf("* Section %d\n", s_source->id);
 	}
-	printf("***** Section*****\n");
-	printf("ID    : %d\n", s_source->id);
-	printf("type  : %s\n", sec_type[s_source->s_type]);
-	printf("pos X : %d -> %d (%d)\n", s_source->pos[X], s_source->size[X] + s_source->pos[X], s_source->size[X]);
-	printf("    Y : %d -> %d (%d)\n", s_source->pos[Y], s_source->size[Y] + s_source->pos[Y], s_source->size[Y]);
-	if (Section_hasStock(s_source))
+	else
 	{
-		printItemList(s_source->stock);
+		printf("***** Section*****\n");
+		printf("ID    : %d\n", s_source->id);
+		printf("type  : %s\n", sec_type[s_source->s_type]);
+		printf("pos X : %d -> %d (%d)\n", s_source->pos[X], s_source->size[X] + s_source->pos[X], s_source->size[X]);
+		printf("    Y : %d -> %d (%d)\n", s_source->pos[Y], s_source->size[Y] + s_source->pos[Y], s_source->size[Y]);
+		if (Section_hasStock(s_source))
+		{
+			printf("Stock : ");
+			printItemList(s_source->stock, FALSE);
+		}
 	}
+
 }
 
 void testSect(void)

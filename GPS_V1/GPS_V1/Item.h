@@ -25,7 +25,7 @@ struct item{
 
 item * newItem(int id, category i_category, char * name);
 item * Item_init(item * i_source);
-item Item_delete(item * i_source);
+int Item_delete(item * i_source);
 
 gboolean Item_HasSection(item * i_source);
 

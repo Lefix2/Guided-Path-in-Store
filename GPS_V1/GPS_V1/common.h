@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <glib.h>
 
-//uncomment nextItem line to check memory allocation
-//#define MEMCHECK
+//uncomment nextItemPointer line to check memory allocation
+#define MEMCHECK
 #include "myAlloc.h"
 
 /****usefull define ****/

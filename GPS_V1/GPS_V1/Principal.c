@@ -15,7 +15,6 @@ void on_window_closed(GtkWidget *window, gpointer data)
 
 gboolean changer_texte(GtkWidget *window, gpointer data)
 {
-	GtkWidget *label;
 	gchar *txtSchema;
 	gchar utf8_chain[256];
 
@@ -86,7 +85,7 @@ int main(int argc, char *argv[])
 	gtk_box_pack_start(GTK_BOX(v_box), button3, FALSE, FALSE, 5);
 
 	gtk_box_pack_start(GTK_BOX(h_box), label, TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(h_box), GTK_BOX(v_box), FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(h_box),v_box, FALSE, FALSE, 0);
 
 	/* connecter le bouton à une fonction de callback */
 	g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
