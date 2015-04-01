@@ -230,4 +230,6 @@ void testItem(void)
 	Item_setPos(item1, 19, 1);
 
 	Item_print(item1, FALSE);
+
+	Item_delete(item1);
 }

@@ -36,6 +36,7 @@ int Store_delete(store * st_source)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
+	Store_freeCartography(st_source);
 	Store_deleteAllocatedStock(st_source);
 	Store_deleteAllocatedSections(st_source);
 	free(st_source);
@@ -172,6 +173,7 @@ int Store_deleteAllocatedStock(store * st_source)
 	{
 		Item_delete(deleteFirstItemPointer(st_source->allocated_stock));
 	}
+	free(st_source->allocated_stock);
 	return EXIT_SUCCESS;
 }
 
@@ -190,6 +192,7 @@ int Store_deleteAllocatedSections(store * st_source)
 	{
 		Section_delete(deletFirstSectionPointer(st_source->allocated_sections));
 	}
+	free(st_source->allocated_sections);
 	return EXIT_SUCCESS;
 }
 
@@ -197,23 +200,13 @@ void testStore(void)
 {
 	store * sttest = newStore(0, "Carrefour - rennes", 100, 100);
 
-	printf("bloc alloué : %d\n", myCheck());
-
 	Store_addSection(sttest, 01, t_section, 5, 5, 10, 3);
-	printf("bloc alloué : %d\n", myCheck());
 	Store_addSection(sttest, 02, t_section, 20, 20, 10, 3);
-	printf("bloc alloué : %d\n", myCheck());
 	Store_addSection(sttest, 02, t_wall, 100, 1, 0, 0);
-	printf("bloc alloué : %d\n", myCheck());
 	Store_addSection(sttest, 03, t_wall, 0, 99, 100, 1);
-	printf("bloc alloué : %d\n", myCheck());
 	Store_addSection(sttest, 04, t_wall, 0, 0, 100, 1);
-	printf("bloc alloué : %d\n", myCheck());
 	Store_addSection(sttest, 06, t_wall, 0, 0, 1, 100);
-	printf("bloc alloué : %d\n", myCheck());
 	Store_addSection(sttest, 05, t_wall, 99, 0, 1, 100);
-
-	printf("bloc alloué : %d\n", myCheck());
 
 	Store_addItem(sttest, 22, legumes_vert, "salade");
 	Store_addItem(sttest, 23, legumes_vert, "haricot vert");
@@ -228,9 +221,6 @@ void testStore(void)
 	Store_addItem(sttest, 32, fromage, "bleu");
 	Store_addItem(sttest, 22, legumes_vert, "asperge");
 
-
-	printf("bloc alloué : %d\n", myCheck());
-
 	Section_addItem(findSectionPointerId(sttest->allocated_sections, 01), findItemPointerId(sttest->allocated_stock, 22), 9, 2);
 	Section_addItem(findSectionPointerId(sttest->allocated_sections, 01), findItemPointerId(sttest->allocated_stock, 23), 9, 2);
 	Section_addItem(findSectionPointerId(sttest->allocated_sections, 01), findItemPointerId(sttest->allocated_stock, 24), 9, 2);
@@ -244,18 +234,12 @@ void testStore(void)
 	Section_addItem(findSectionPointerId(sttest->allocated_sections, 01), findItemPointerId(sttest->allocated_stock, 32), 9, 2);
 	Section_addItem(findSectionPointerId(sttest->allocated_sections, 01), findItemPointerId(sttest->allocated_stock, 22), 9, 2);
 
-	printf("bloc alloué : %d\n", myCheck());
 
 	Section_removeItem(findItemPointerId(findSectionPointerId(sttest->allocated_sections, 01)->stock, 31));
 
-	printf("bloc alloué : %d\n", myCheck());
-
 	Store_computeCartography(sttest);
-	printf("bloc alloué : %d\n", myCheck());
-	Store_freeCartography(sttest);
-	printf("bloc alloué : %d\n", myCheck());
 	Store_print(sttest);
 	Store_delete(sttest);
 
-	printf("bloc alloué : %d\n", myCheck());
+	printf("bloc alloue : %d\n", myCheck());
 }
