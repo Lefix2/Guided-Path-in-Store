@@ -261,8 +261,7 @@ int insertSortItemPointer(itemList * l, item * i)
 	nodeItemList * tmp = l->currentItem;
 	if (emptyItemPointerList(l))
 	{
-		insertFirstItemPointer(l, i);
-		return EXIT_SUCCESS;
+		return insertFirstItemPointer(l, i);
 	}
 
 	setOnFirstItemPointer(l);

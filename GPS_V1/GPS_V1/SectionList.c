@@ -202,8 +202,7 @@ int insertSortSectionPointer(sectionList * l, section * s)
 	nodeSectionList * tmp = l->currentSection;
 	if (emptySectionPointerList(l))
 	{
-		insertFirstSectionPointer(l, s);
-		return EXIT_SUCCESS;
+		return insertFirstSectionPointer(l, s);
 	}
 
 	setOnFirstSectionPointer(l);

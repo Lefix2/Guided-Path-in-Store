@@ -116,6 +116,7 @@ int Store_computeCartography(store * st_source)
 	{
 		*(st_source->cartography + i) = (int*)calloc(st_source->size[Y], sizeof(int));
 	}
+	//code calculant pour la position (x,y)  la valeur 0(vide) ou 1(obstacle) en fonction des sections
 	return EXIT_SUCCESS;
 }
 
@@ -150,6 +151,7 @@ int Store_addSection(store * st_source, int id, type s_type, int x_pos, int y_po
 		printf("\n");
 		return EXIT_FAILURE;
 	}
+	//vérifier que ca rentre comme papa dans maman
 	section * new_s = newSection(id, s_type);
 	Section_setPos(new_s, x_pos, y_pos);
 	Section_setSize(new_s, x_size, y_size);
