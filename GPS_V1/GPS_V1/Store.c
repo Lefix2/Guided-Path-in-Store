@@ -16,6 +16,7 @@ store * newStore(int id, char * name, int x_size, int y_size)
 	Store_setSize(st_new, x_size, y_size);
 	st_new->allocated_stock = newItemPointerList();
 	st_new->allocated_sections = newSectionPointerList();
+	Store_computeCartography(st_new);
 
 	return st_new;
 }
@@ -91,12 +92,29 @@ int Store_getYSize(store * st_source)
 
 void Store_print(store * st_source)
 {
+	int i, j;
 	printf("***** Store  *****\n");
 	printf("ID    : %d\n", st_source->id);
 	printf("name  : %s\n", st_source->name);
 	printf("size X : %d\n", st_source->size[X]);
 	printf("     Y : %d\n", st_source->size[Y]);
 	printSectionPointerList(st_source->allocated_sections);
+	printf("Cartography :\n");
+	for (i = 0; i < st_source->size[Y]+2; i++){
+		printf("X");
+	}
+	printf("\n");
+	for (i = 0; i < st_source->size[X]; i++){
+		printf("X");
+		for (j = 0; j < st_source->size[Y]; j++){
+			printf("%d", st_source->cartography[i][j]);
+		}
+		printf("X\n");
+	}
+	for (i = 0; i < st_source->size[Y]+2; i++){
+		printf("X");
+	}
+	printf("\n\n");
 }
 
 int Store_freeCartography(store * st_source)
@@ -140,6 +158,7 @@ int Store_addItem(store * st_source, int id, category i_category, char * name)
 
 int Store_addSection(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size)
 {
+	int i, j;
 	if (st_source == NULL)
 		return EXIT_FAILURE;
 	section * tmp = findSectionPointerId(st_source->allocated_sections, id);
@@ -150,10 +169,27 @@ int Store_addSection(store * st_source, int id, type s_type, int x_pos, int y_po
 		printf("\n");
 		return EXIT_FAILURE;
 	}
+	if (((x_size + x_pos) > st_source->size[X]) || ((y_size + y_pos) > st_source->size[Y])){
+		printf("Error : Trying to add a section out of the store\n");
+		return EXIT_FAILURE;
+	}
+	for (i = 0; i < x_size; i++){
+		for (j = 0; j < y_size; j++){
+			if (st_source->cartography[x_pos + i][y_pos + j] != 0){
+				printf("error : Trying to add a section on an existing section\n");
+				return EXIT_FAILURE;
+			}
+		}
+	}
 	section * new_s = newSection(id, s_type);
 	Section_setPos(new_s, x_pos, y_pos);
 	Section_setSize(new_s, x_size, y_size);
 	insertSortSectionPointer(st_source->allocated_sections, new_s);
+	for (i = 0; i < x_size; i++){
+		for (j = 0; j < y_size; j++){
+			(st_source->cartography[x_pos + i][y_pos + j]) = 1;
+		}
+	}
 	return EXIT_SUCCESS;
 }
 
@@ -198,7 +234,7 @@ int Store_deleteAllocatedSections(store * st_source)
 
 void testStore(void)
 {
-	store * sttest = newStore(0, "Carrefour - rennes", 100, 100);
+	store * sttest = newStore(0, "Carrefour - rennes", 100, 70);
 
 	Store_addSection(sttest, 01, t_section, 5, 5, 10, 3);
 	Store_addSection(sttest, 02, t_section, 20, 20, 10, 3);
@@ -207,6 +243,7 @@ void testStore(void)
 	Store_addSection(sttest, 04, t_wall, 0, 0, 100, 1);
 	Store_addSection(sttest, 06, t_wall, 0, 0, 1, 100);
 	Store_addSection(sttest, 05, t_wall, 99, 0, 1, 100);
+	Store_addSection(sttest, 07, t_wall, 18, 18, 5, 5);
 
 	Store_addItem(sttest, 22, legumes_vert, "salade");
 	Store_addItem(sttest, 23, legumes_vert, "haricot vert");
@@ -237,7 +274,6 @@ void testStore(void)
 
 	Section_removeItem(findItemPointerId(findSectionPointerId(sttest->allocated_sections, 01)->stock, 31));
 
-	Store_computeCartography(sttest);
 	Store_print(sttest);
 	Store_delete(sttest);
 
