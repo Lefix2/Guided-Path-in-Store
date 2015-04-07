@@ -237,8 +237,6 @@ void * list_delete_current(list *list)
 
 void list_for_each(list *list, listIterator iterator)
 {
-	assert(iterator != NULL);
-
 	gboolean result = TRUE;
 	list_set_on_first(list);
 	while (!list_is_out_of(list) && result) {
