@@ -51,6 +51,8 @@ int Item_getXPos(item * i_source);
 int Item_getYPos(item * i_source);
 section * Item_getSection(item * i_source);
 
+int Item_compare_id(void *element1, void *element2);
+
 void Item_print(item * i_source, gboolean minimal);
 
 void testItem(void);

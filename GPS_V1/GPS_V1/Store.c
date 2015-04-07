@@ -100,19 +100,13 @@ void Store_print(store * st_source)
 	printf("     Y : %d\n", st_source->size[Y]);
 	printSectionPointerList(st_source->allocated_sections);
 	printf("Cartography :\n");
-	for (i = 0; i < st_source->size[Y]+2; i++){
-		printf("X");
-	}
+
 	printf("\n");
 	for (i = 0; i < st_source->size[X]; i++){
-		printf("X");
 		for (j = 0; j < st_source->size[Y]; j++){
 			printf("%d", st_source->cartography[i][j]);
 		}
-		printf("X\n");
-	}
-	for (i = 0; i < st_source->size[Y]+2; i++){
-		printf("X");
+		printf("\n");
 	}
 	printf("\n\n");
 }
@@ -239,8 +233,7 @@ void testStore(void)
 
 	Store_addSection(sttest, 01, t_section, 5, 5, 10, 3);
 	Store_addSection(sttest, 02, t_section, 20, 20, 10, 3);
-	Store_addSection(sttest, 02, t_wall, 100, 1, 0, 0);
-	Store_addSection(sttest, 03, t_wall, 0, 99, 100, 1);
+	Store_addSection(sttest, 03, t_wall, 0, 98, 100, 1);
 	Store_addSection(sttest, 04, t_wall, 0, 0, 100, 1);
 	Store_addSection(sttest, 06, t_wall, 0, 0, 1, 100);
 	Store_addSection(sttest, 05, t_wall, 99, 0, 1, 100);

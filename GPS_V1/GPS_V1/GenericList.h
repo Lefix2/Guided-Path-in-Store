@@ -6,9 +6,13 @@
 // a common function used to free malloc'd objects
 typedef void(*freeFunction)(void *);
 
-typedef gboolean(*listIterator)(void *);
+//a function that return information about classment of elements
+//-1 if element2 < element1
+// 0 if element2 = element1
+// 1 if element2 > element1
+typedef int(*sortFunction)(void*, void*);
 
-typedef gboolean(*sortFunction)(void*, void*);
+typedef gboolean(*listIterator)(void *);
 
 typedef struct listNode {
 	void *data;
@@ -22,11 +26,12 @@ typedef struct list{
 	listNode *current;
 	listNode *last;
 	freeFunction freeFn;
+	sortFunction dataCompFn;
 };
 
-listNode * node_new(void * element, listNode * next);
+listNode * node_new(void * element, int elementSize, listNode * next);
 
-list * list_new( int elementSize, freeFunction freeFn);
+list * list_new( int elementSize, freeFunction freeFn, sortFunction dataCompFn);
 void list_destroy(list *list);
 
 void list_init(list * list);
@@ -45,25 +50,13 @@ void list_add_first(list *list, void *element);
 void list_add_last(list *list, void *element);
 void list_add_before_current(list *list, void *element);
 void list_add_after_current(list *list, void *element);
-void list_add_sort(list *list, void *element, sortFunction sortFN);
+void list_add_sort(list *list, void *element);
 
 void * list_delete_first(list *list);
-void * list_delete_first(list *list);
+void * list_delete_last(list *list);
 void * list_delete_current(list *list);
 
 void list_for_each(list *list, listIterator iterator);
-void list_head(list *list, void *element, gboolean removeFromList);
-void list_tail(list *list, void *element);
-
+void * list_find(list *list, void *element);
 
 #endif // !GENERICLIST_H
-
-//
-//item * deletefirstitempointer(itemlist * l);
-//item * deletelastitempointer(itemlist * l);
-//item * deletecurrentitempointer(itemlist * l);
-//item * deletesingleitempointer(itemlist * l, item * i);
-//
-//item * getcurrentitempointer(itemlist * l);
-//item * finditempointer(itemlist * l, item * i);
-//item * finditempointerid(itemlist * l, int id);

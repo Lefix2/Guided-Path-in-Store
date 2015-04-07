@@ -205,18 +205,9 @@ int insertlastItemPointer(itemList * l, item * i)
 
 int insertBeforeCurrentItemPointer(itemList * l, item * i)
 {
-	nodeItemList* n;
-	n = newNodeItemPointer(i, l->currentItem);
-	if (n == NULL)
-		return EXIT_FAILURE;
-
-	if (emptyItemPointerList(l))
+	if (emptyItemPointerList(l) || firstItemPointer(l))
 	{
-		l->lastItemPointer = l->currentItem = l->lastItemPointer = n;
-	}
-	else if (firstItemPointer(l))
-	{
-		insertFirstItemPointer(l, i);
+		return insertFirstItemPointer(l, i);
 	}
 	else if (outOfItemPointerList(l))
 	{
@@ -225,6 +216,7 @@ int insertBeforeCurrentItemPointer(itemList * l, item * i)
 	}
 	else
 	{
+		nodeItemList* n = newNodeItemPointer(i, l->currentItem);
 		nodeItemList* tmp = l->currentItem;
 		setOnFirstItemPointer(l);
 		while (l->currentItem->nextItemPointer != tmp)
@@ -232,28 +224,30 @@ int insertBeforeCurrentItemPointer(itemList * l, item * i)
 			nextItemPointer(l);
 		}
 		l->currentItem->nextItemPointer = n;
+		return EXIT_SUCCESS;
 	}
-	return EXIT_SUCCESS;
+	return EXIT_FAILURE;
 }
 
 int insertAfterCurrentItemPointer(itemList * l, item * i)
 {
-	nodeItemList* n;
-	n = newNodeItemPointer(i, l->currentItem->nextItemPointer);
-	if (n == NULL)
-		return EXIT_FAILURE;
 
 	if (emptyItemPointerList(l))
 	{
-		l->lastItemPointer = l->currentItem = l->lastItemPointer = n;
+		return insertFirstItemPointer(l, i);
 	}
 	else if (outOfItemPointerList(l))
 	{
 		printf("error: trying to write out of the itemList!");
 		return EXIT_FAILURE;
 	}
-	l->currentItem->nextItemPointer = n;
-	return EXIT_SUCCESS;
+	else
+	{
+		nodeItemList* n = newNodeItemPointer(i, l->currentItem->nextItemPointer);
+		l->currentItem->nextItemPointer = n;
+		return EXIT_SUCCESS;
+	}
+	return EXIT_FAILURE;
 }
 
 int insertSortItemPointer(itemList * l, item * i)
