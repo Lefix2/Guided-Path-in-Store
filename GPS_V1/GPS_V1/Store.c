@@ -105,20 +105,15 @@ void Store_print(store * st_source)
 void Store_print_carto(store * st_source){
 	int i, j;
 	printf("Cartography :\n");
-	for (i = 0; i < st_source->size[X] + 2; i++){
-		printf("X");
-	}
+
 	printf("\n");
-	for (i = 0; i < st_source->size[Y]; i++){
-		printf("X");
-		for (j = 0; j < st_source->size[X]; j++){
+	for (i = 0; i < st_source->size[X]; i++){
+		for (j = 0; j < st_source->size[Y]; j++){
 			printf("%d", st_source->cartography[i][j]);
 		}
-		printf("X\n");
+		printf("\n");
 	}
-	for (i = 0; i < st_source->size[X] + 2; i++){
-		printf("X");
-	}
+	printf("\n\n");
 }
 
 
@@ -139,6 +134,7 @@ int Store_computeCartography(store * st_source)
 	{
 		*(st_source->cartography + i) = (int*)calloc(st_source->size[Y], sizeof(int));
 	}
+	//code calculant pour la position (x,y)  la valeur 0(vide) ou 1(obstacle) en fonction des sections
 	return EXIT_SUCCESS;
 }
 
@@ -243,8 +239,7 @@ void testStore(void)
 
 	Store_addSection(sttest, 01, t_section, 5, 5, 10, 3);
 	Store_addSection(sttest, 02, t_section, 20, 20, 10, 3);
-	Store_addSection(sttest, 02, t_wall, 100, 1, 0, 0);
-	Store_addSection(sttest, 03, t_wall, 0, 99, 100, 1);
+	Store_addSection(sttest, 03, t_wall, 0, 98, 100, 1);
 	Store_addSection(sttest, 04, t_wall, 0, 0, 100, 1);
 	Store_addSection(sttest, 06, t_wall, 0, 0, 1, 100);
 	Store_addSection(sttest, 05, t_wall, 99, 0, 1, 100);

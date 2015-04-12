@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common.c" />
+    <ClCompile Include="GenericList.c" />
     <ClCompile Include="Item.c" />
     <ClCompile Include="ItemList.c" />
     <ClCompile Include="myAlloc.c" />
@@ -105,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="GenericList.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemList.h" />
     <ClInclude Include="myAlloc.h" />

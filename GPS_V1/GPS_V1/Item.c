@@ -179,6 +179,11 @@ section * Item_getSection(item * i_source)
 	return i_source->i_section;
 }
 
+int Item_compare_id(void *element1, void *element2)
+{
+	return (((item*)element2)->id - ((item*)element1)->id);
+}
+
 void Item_print(item * i_source, gboolean minimal)
 {
 	if (minimal)

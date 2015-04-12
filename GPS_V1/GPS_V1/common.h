@@ -55,6 +55,9 @@ typedef struct itemList itemList;
 typedef struct nodeSectionList nodeSectionList;
 typedef struct sectionList sectionList;
 
+typedef struct listNode listNode;
+typedef struct list list;
+
 gboolean betwn(int a, int x, int b, gboolean equal);
 gboolean onBorder(int x, int y, int x_min, int x_max, int y_min, int y_max);
 

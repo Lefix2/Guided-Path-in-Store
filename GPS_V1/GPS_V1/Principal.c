@@ -47,7 +47,7 @@ gboolean button3_callback(GtkWidget *window, gpointer data)
 	return FALSE;
 }
 
-int maini(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
@@ -103,9 +103,4 @@ int maini(int argc, char *argv[])
 
 
 	return EXIT_SUCCESS;
-}
-
-void main(){
-	testStore();
-	system("pause");
 }
