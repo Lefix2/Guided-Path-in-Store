@@ -92,13 +92,18 @@ int Store_getYSize(store * st_source)
 
 void Store_print(store * st_source)
 {
-	int i, j;
 	printf("***** Store  *****\n");
 	printf("ID    : %d\n", st_source->id);
 	printf("name  : %s\n", st_source->name);
 	printf("size X : %d\n", st_source->size[X]);
 	printf("     Y : %d\n", st_source->size[Y]);
 	printSectionPointerList(st_source->allocated_sections);
+	Store_print_carto(st_source);
+	printf("\n\n");
+}
+
+void Store_print_carto(store * st_source){
+	int i, j;
 	printf("Cartography :\n");
 
 	printf("\n");
@@ -110,6 +115,7 @@ void Store_print(store * st_source)
 	}
 	printf("\n\n");
 }
+
 
 int Store_freeCartography(store * st_source)
 {
@@ -173,7 +179,7 @@ int Store_addSection(store * st_source, int id, type s_type, int x_pos, int y_po
 			if (st_source->cartography[x_pos + i][y_pos + j] != 0){
 				printf("error : Trying to add a section on an existing section\n");
 				return EXIT_FAILURE;
-	}
+			}
 		}
 	}
 	section * new_s = newSection(id, s_type);
@@ -229,7 +235,7 @@ int Store_deleteAllocatedSections(store * st_source)
 
 void testStore(void)
 {
-	store * sttest = newStore(0, "Carrefour - rennes", 100, 70);
+	store * sttest = newStore(0, "Carrefour - rennes", 70, 100);
 
 	Store_addSection(sttest, 01, t_section, 5, 5, 10, 3);
 	Store_addSection(sttest, 02, t_section, 20, 20, 10, 3);

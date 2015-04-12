@@ -30,6 +30,7 @@ int Store_getXSize(store * st_source);
 int Store_getYSize(store * st_source);
 
 void Store_print(store * st_source);
+void Store_print_carto(store * st_source);
 
 int Store_freeCartography(store * st_source);
 int Store_computeCartography(store * st_source);

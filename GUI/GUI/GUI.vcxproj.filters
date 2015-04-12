@@ -68,5 +68,8 @@
     <ClCompile Include="GUI.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="jules.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
