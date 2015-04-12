@@ -41,8 +41,8 @@ int Section_getXSize(section * s_source);
 int Section_getYSize(section * s_source);
 int Section_getNbItems(section * s_source);
 
-int Section_addItem(section * s_source, item * i_source, int x_pos, int y_pos);
-int Section_removeItem(item * i_source);
+int Section_addItem(section * s_source, item * item, int x_pos, int y_pos);
+int Section_removeItem(item * item);
 
 void Section_print(section * s_source, gboolean minimal);
 

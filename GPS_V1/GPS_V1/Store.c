@@ -14,7 +14,7 @@ store * newStore(int id, char * name, int x_size, int y_size)
 	Store_setId(st_new, id);
 	Store_setName(st_new, name);
 	Store_setSize(st_new, x_size, y_size);
-	st_new->allocated_stock = newItemPointerList();
+	st_new->allocated_stock = item_newPointerList();
 	st_new->allocated_sections = newSectionPointerList();
 	Store_computeCartography(st_new);
 
@@ -132,19 +132,19 @@ int Store_computeCartography(store * st_source)
 	return EXIT_SUCCESS;
 }
 
-int Store_addItem(store * st_source, int id, category i_category, char * name)
+int Store_addItem(store * st_source, int id, category category, char * name)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
-	item * new_i = newItem(id, i_category, name);
+	item * new_i = item_new(id, category, name);
 	item * tmp = findItemPointerId(st_source->allocated_stock, id);
 	if (tmp != NULL)
 	{
 		printf("error : Trying to add an Item with existing id in Store\n");
-		printf("existing : "); Item_print(tmp, TRUE);
-		printf("new : "); Item_print(new_i, TRUE);
+		printf("existing : "); item_print(tmp, TRUE);
+		printf("new : "); item_print(new_i, TRUE);
 		printf("\n");
-		Item_delete(new_i);
+		item_delete(new_i);
 		return EXIT_FAILURE;
 	}
 	insertSortItemPointer(st_source->allocated_stock, new_i);
@@ -188,12 +188,12 @@ int Store_addSection(store * st_source, int id, type s_type, int x_pos, int y_po
 	return EXIT_SUCCESS;
 }
 
-int Store_deleteItem(store * st_source, item * i_source)
+int Store_deleteItem(store * st_source, item * item)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
-	Section_removeItem(i_source->i_section, i_source);
-	return Item_delete(deleteSingleItemPointer(st_source->allocated_stock, i_source));
+	Section_removeItem(item->section, item);
+	return item_delete(deleteSingleItemPointer(st_source->allocated_stock, item));
 }
 
 int Store_deleteAllocatedStock(store * st_source)
@@ -202,7 +202,7 @@ int Store_deleteAllocatedStock(store * st_source)
 		return EXIT_FAILURE;
 	while (!emptyItemPointerList(st_source->allocated_stock))
 	{
-		Item_delete(deleteFirstItemPointer(st_source->allocated_stock));
+		item_delete(deleteFirstItemPointer(st_source->allocated_stock));
 	}
 	free(st_source->allocated_stock);
 	return EXIT_SUCCESS;

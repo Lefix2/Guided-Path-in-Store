@@ -34,8 +34,8 @@ void Store_print(store * st_source);
 int Store_freeCartography(store * st_source);
 int Store_computeCartography(store * st_source);
 
-int Store_addItem(store * st_source, int id, category i_category, char * name);
-int Store_deleteItem(store * st_source, item * i_source);
+int Store_addItem(store * st_source, int id, category category, char * name);
+int Store_deleteItem(store * st_source, item * item);
 int Store_deleteAllocatedStock(store * st_source);
 int Store_addSection(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size);
 int Store_deleteSection(store * st_source, section * s_source);

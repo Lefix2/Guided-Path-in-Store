@@ -15,7 +15,7 @@ section * newSection(int id, type s_type)
 
 	if (Section_hasStock(s_new))
 	{
-		s_new->stock = newItemPointerList();
+		s_new->stock = item_newPointerList();
 	}
 
 	return s_new;
@@ -92,14 +92,14 @@ int Section_setSize(section * s_source, int x_size, int y_size)
 	return EXIT_SUCCESS;
 }
 
-int Section_addItem(section * s_source, item * i_source, int x_pos, int y_pos)
+int Section_addItem(section * s_source, item * item, int x_pos, int y_pos)
 {
-	if (s_source == NULL || i_source == NULL)
+	if (s_source == NULL || item == NULL)
 		return EXIT_FAILURE;
-	if (i_source->i_section != NULL)
+	if (item->section != NULL)
 	{
 		printf("error : Trying to add an item already stored in a section\n");
-		Item_print(i_source, TRUE);
+		item_print(item, TRUE);
 		Section_print(s_source, TRUE);
 		printf("\n");
 		return EXIT_FAILURE;
@@ -110,32 +110,32 @@ int Section_addItem(section * s_source, item * i_source, int x_pos, int y_pos)
 	if (!onBorder(x_pos, y_pos, 0, x_max, 0, y_max))
 	{
 		printf("error : Trying to put an item out of section borders\n");
-		Item_print(i_source, TRUE);
+		item_print(item, TRUE);
 		printf("\n");
 		return EXIT_FAILURE;
 	}
 
-	Item_setPos(i_source, x_pos, y_pos);
-	Item_setSection(i_source, s_source);
-	insertlastItemPointer(s_source->stock, i_source);
+	item_set_pos(item, x_pos, y_pos);
+	item_set_section(item, s_source);
+	insertlastItemPointer(s_source->stock, item);
 	s_source->nb_items++;
 	return EXIT_SUCCESS;
 }
 
-int Section_removeItem(item * i_source)
+int Section_removeItem(item * item)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	if (i_source->i_section == NULL)
+	if (item->section == NULL)
 		return EXIT_FAILURE;
 
-	if (!findItemPointer(i_source->i_section->stock, i_source))
+	if (!findItemPointer(item->section->stock, item))
 		return EXIT_FAILURE;
-	deleteCurrentItemPointer(i_source->i_section->stock);
-	i_source->i_section->nb_items--;
+	deleteCurrentItemPointer(item->section->stock);
+	item->section->nb_items--;
 
-	Item_setSection(i_source, NULL);
-	Item_setPos(i_source, 0, 0);
+	item_set_section(item, NULL);
+	item_set_pos(item, 0, 0);
 
 	return EXIT_SUCCESS;
 }
@@ -204,14 +204,14 @@ void Section_print(section * s_source, gboolean minimal)
 
 void testSect(void)
 {
-	item * itest1 = newItem(1, legumes_vert, "haricots");
-	Item_setCost(itest1, 3.50);
+	item * itest1 = item_new(1, legumes_vert, "haricots");
+	item_set_cost(itest1, 3.50);
 
-	item * itest2 = newItem(2, fromage, "lerdammer");
-	Item_setCost(itest2, 7.40);
+	item * itest2 = item_new(2, fromage, "lerdammer");
+	item_set_cost(itest2, 7.40);
 
-	item * itest3 = newItem(3, alcool, "Grimbergen");
-	Item_setCost(itest3, 8.00);
+	item * itest3 = item_new(3, alcool, "Grimbergen");
+	item_set_cost(itest3, 8.00);
 
 	section * stest = newSection(1, t_section);
 	Section_setPos(stest, 10, 15);
@@ -224,9 +224,9 @@ void testSect(void)
 	Section_print(stest, FALSE);
 
 	//delete function may only be used in Store functions
-	Item_delete(itest1);
-	Item_delete(itest2);
-	Item_delete(itest3);
+	item_delete(itest1);
+	item_delete(itest2);
+	item_delete(itest3);
 
 	Section_delete(stest);
 }

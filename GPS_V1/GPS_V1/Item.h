@@ -14,46 +14,48 @@
 struct item{
 	int id;							/*!< item's identifiant */
 	char name[MAX_ARRAY_OF_CHAR];	/*!< item's name */
-	category i_category;			/*!< item's category */
+	category category;			/*!< item's category */
 	gboolean fresh;					/*!< Value set to true if the product must be stored in a freezer */
 	int fragility;					/*!< image of the fragility of the item */
 	double cost;					/*!< item's cost */
 	gboolean promotion;				/*!< Values set to true if the product is in promotion */
-	int pos_s[2];					/*!< position of the item in the section in X and Y */
-	section * i_section;			/*!< pointer to the associated section i the store */
+	int posInSec[2];					/*!< position of the item in the section in X and Y */
+	section * section;			/*!< pointer to the associated section i the store */
 };
 
-item * newItem(int id, category i_category, char * name);
-item * Item_init(item * i_source);
-int Item_delete(item * i_source);
+item * item_new(int id, category category, char * name);
+item * item_init(item * item);
+int item_delete(item * item);
 
-gboolean Item_HasSection(item * i_source);
+gboolean item_has_section(item * item);
 
-int Item_setId(item * i_source, int id);
-int Item_setName(item * i_source, char * name);
-int Item_setCategory(item * i_source, category i_category);
-char * Item_getCategoryString(item * i_source);
-int Item_setFresh(item * i_source, gboolean fresh);
-int Item_setFragility(item * i_source, int fragility);
-int Item_setCost(item * i_source, double cost);
-int Item_setPromotion(item * i_source, gboolean promotion);
-int Item_setPos(item * i_source, int x_pos, int y_pos);
-int Item_setSection(item * i_source, section * i_section);
+int item_set_Id(item * item, int id);
+int item_set_name(item * item, char * name);
+int item_set_category(item * item, category category);
+int item_set_fresh(item * item, gboolean fresh);
+int item_set_fragility(item * item, int fragility);
+int item_set_cost(item * item, double cost);
+int item_set_promotion(item * item, gboolean promotion);
+int item_set_pos(item * item, int x_pos, int y_pos);
+int item_set_section(item * item, section * section);
 
-int Item_getId(item * i_source);
-char * Item_getName(item * i_source);
-category Item_getCategory(item * i_source);
-gboolean Item_isFresh(item * i_source);
-int Item_getFragility(item * i_source);
-double Item_getCost(item * i_source);
-gboolean Item_isInPromotion(item * i_source);
-int Item_getXPos(item * i_source);
-int Item_getYPos(item * i_source);
-section * Item_getSection(item * i_source);
+int item_get_id(item * item);
+char * item_get_name(item * item);
+category item_get_category(item * item);
+char * item_get_category_string(item * item);
+gboolean item_is_fresh(item * item);
+int item_get_fragility(item * item);
+double item_get_cost(item * item);
+gboolean item_is_in_promotion(item * item);
+int item_get_X_pos(item * item);
+int item_get_Y_pos(item * item);
+section * item_get_section(item * item);
 
-int Item_compare_id(void *element1, void *element2);
+//fonction pour liste générique
+int item_compare_id(void *element1, void *element2);
 
-void Item_print(item * i_source, gboolean minimal);
+
+void item_print(item * item, gboolean minimal);
 
 void testItem(void);
 

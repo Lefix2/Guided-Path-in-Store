@@ -24,7 +24,7 @@ struct itemList{
 
 nodeItemList * newNodeItemPointer(item *i, nodeItemList *n);
 
-itemList * newItemPointerList(void);
+itemList * item_newPointerList(void);
 int deleteItemPointerList(itemList * l);
 
 void initItemPointerList(itemList * l);

@@ -7,9 +7,6 @@
 typedef void(*freeFunction)(void *);
 
 //a function that return information about classment of elements
-//-1 if element2 < element1
-// 0 if element2 = element1
-// 1 if element2 > element1
 typedef int(*sortFunction)(void*, void*);
 
 typedef gboolean(*listIterator)(void *);

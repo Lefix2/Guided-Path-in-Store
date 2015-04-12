@@ -3,216 +3,216 @@
 #include "Item.h"
 #include "Section.h"
 
-item * newItem(int id, category i_category, char * name)
+item * item_new(int id, category category, char * name)
 {
 	item * i_new;
 	i_new = (item *)malloc(sizeof(item));
 
-	Item_init(i_new);
+	item_init(i_new);
 	i_new->id = id;
-	i_new->i_category = i_category;
+	i_new->category = category;
 	strcpy(i_new->name, name);
 
 	return i_new;
 }
 
-item * Item_init(item * i_source)
+item * item_init(item * item)
 {
-	i_source->id = 0;
-	i_source->name[0] = 0;
-	i_source->i_category = c_none;
-	i_source->fresh = FALSE;
-	i_source->fragility = 0;
-	i_source->cost = 0;
-	i_source->promotion = FALSE;
-	i_source->pos_s[X] = 0;
-	i_source->pos_s[Y] = 0;
-	i_source->i_section = NULL;
+	item->id = 0;
+	item->name[0] = 0;
+	item->category = c_none;
+	item->fresh = FALSE;
+	item->fragility = 0;
+	item->cost = 0;
+	item->promotion = FALSE;
+	item->posInSec[X] = 0;
+	item->posInSec[Y] = 0;
+	item->section = NULL;
 
-	return i_source;
+	return item;
 }
 
-int Item_delete(item * i_source)
+int item_delete(item * item)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	free(i_source);
+	free(item);
 	return EXIT_SUCCESS;
 }
 
-gboolean Item_HasSection(item * i_source)
+gboolean item_has_section(item * item)
 {
-	return (i_source->i_section != NULL);
+	return (item->section != NULL);
 }
 
-int Item_setId(item * i_source, int id)
+int item_set_Id(item * item, int id)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
 	if (id < 0)
 		return EXIT_FAILURE;
-	i_source->id = id;
+	item->id = id;
 	return EXIT_SUCCESS;
 }
 
-int Item_setName(item * i_source, char * name)
+int item_set_name(item * item, char * name)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	strcpy(i_source->name, name);
+	strcpy(item->name, name);
 	return EXIT_SUCCESS;
 }
 
-int Item_setCategory(item * i_source, category i_category)
+int item_set_category(item * item, category category)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	if (i_category < 0)
+	if (category < 0)
 		return EXIT_FAILURE;
-	i_source->i_category = i_category;
+	item->category = category;
 	return EXIT_SUCCESS;
 }
 
-int Item_setFresh(item * i_source, gboolean fresh)
+int item_set_fresh(item * item, gboolean fresh)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	i_source->fresh = fresh;
+	item->fresh = fresh;
 	return EXIT_SUCCESS;
 }
 
-int Item_setFragility(item * i_source, int fragility)
+int item_set_fragility(item * item, int fragility)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
 	if (fragility < ITEM_FRAGILITY_MIN || fragility > ITEM_FRAGILITY_MAX)
 		return EXIT_FAILURE;
-	i_source->fragility = fragility;
+	item->fragility = fragility;
 	return EXIT_SUCCESS;
 }
 
-int Item_setCost(item * i_source, double cost)
+int item_set_cost(item * item, double cost)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	i_source->cost = cost;
+	item->cost = cost;
 	return EXIT_SUCCESS;
 }
 
-int Item_setPromotion(item * i_source, gboolean promotion)
+int item_set_promotion(item * item, gboolean promotion)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	i_source->promotion = promotion;
+	item->promotion = promotion;
 	return EXIT_SUCCESS;
 }
 
-int Item_setPos(item * i_source, int x_pos, int y_pos)
+int item_set_pos(item * item, int x_pos, int y_pos)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	i_source->pos_s[X] = x_pos;
-	i_source->pos_s[Y] = y_pos;
+	item->posInSec[X] = x_pos;
+	item->posInSec[Y] = y_pos;
 	return EXIT_SUCCESS;
 }
 
-int Item_setSection(item * i_source, section * i_section)
+int item_set_section(item * item, section * section)
 {
-	if (i_source == NULL)
+	if (item == NULL)
 		return EXIT_FAILURE;
-	i_source->i_section = i_section;
+	item->section = section;
 	return EXIT_SUCCESS;
 }
 
-int Item_getId(item * i_source)
+int item_get_id(item * item)
 {
-	 return i_source->id;
+	 return item->id;
 }
 
-char * Item_getName(item * i_source)
+char * item_get_name(item * item)
 {
-	return i_source->name;
+	return item->name;
 }
 
-category Item_getCategory(item * i_source)
+category item_get_category(item * item)
 {
-	return i_source->i_category;
+	return item->category;
 }
 
-char * Item_getCategoryString(item * i_source)
+char * item_get_category_string(item * item)
 {
-	return item_category[i_source->i_category];
+	return item_category[item->category];
 }
 
-gboolean Item_isFresh(item * i_source)
+gboolean item_is_fresh(item * item)
 {
-	return i_source->fresh;
+	return item->fresh;
 }
 
-int Item_getFragility(item * i_source)
+int item_get_fragility(item * item)
 {
-	return i_source->fragility;
+	return item->fragility;
 }
 
-double Item_getCost(item * i_source)
+double item_get_cost(item * item)
 {
-	return i_source->cost;
+	return item->cost;
 }
 
-gboolean Item_isInPromotion(item * i_source)
+gboolean item_is_in_promotion(item * item)
 {
-	return i_source->promotion;
+	return item->promotion;
 }
 
-int Item_getXPos(item * i_source)
+int item_get_X_pos(item * item)
 {
-	return i_source->pos_s[X];
+	return item->posInSec[X];
 }
 
-int Item_getYPos(item * i_source)
+int item_get_Y_pos(item * item)
 {
-	return i_source->pos_s[Y];
+	return item->posInSec[Y];
 }
 
-section * Item_getSection(item * i_source)
+section * item_get_section(item * item)
 {
-	return i_source->i_section;
+	return item->section;
 }
 
-int Item_compare_id(void *element1, void *element2)
+int item_compare_id(void *element1, void *element2)
 {
 	return (((item*)element2)->id - ((item*)element1)->id);
 }
 
-void Item_print(item * i_source, gboolean minimal)
+void item_print(item * item, gboolean minimal)
 {
 	if (minimal)
 	{
-		printf("* Item %d : %s\n", i_source->id, i_source->name);
+		printf("* Item %d : %s\n", item->id, item->name);
 	}
 	else
 	{
 		char i_fresh_string[] = "Yes";
 		char i_promo_string[] = "Yes";
 
-		if (i_source->fresh == FALSE)
+		if (item->fresh == FALSE)
 			strcpy(i_fresh_string, "No");
-		if (i_source->promotion == FALSE)
+		if (item->promotion == FALSE)
 			strcpy(i_promo_string, "No");
 
 		printf("****** Item ******\n");
-		printf("ID               : %d\n", Item_getId(i_source));
-		printf("Name             : %s\n", Item_getName(i_source));
-		printf("Category         : %s\n", item_category[Item_getCategory(i_source)]);
+		printf("ID               : %d\n", item_get_id(item));
+		printf("Name             : %s\n", item_get_name(item));
+		printf("Category         : %s\n", item_category[item_get_category(item)]);
 		printf("Fresh product    : %s\n", i_fresh_string);
 		printf("Promotion        : %s\n", i_promo_string);
-		printf("Cost             : %.2f\n", Item_getCost(i_source));
-		printf("Fragility coeff  : %d\n", Item_getFragility(i_source));
-		if (Item_HasSection(i_source))
+		printf("Cost             : %.2f\n", item_get_cost(item));
+		printf("Fragility coeff  : %d\n", item_get_fragility(item));
+		if (item_has_section(item))
 		{
-			printf("Section ID       : %d\n", Item_getSection(i_source)->id);
-			printf("pos X in Section : %d\n", Item_getXPos(i_source));
-			printf("    Y in Section : %d\n", Item_getYPos(i_source));
+			printf("Section ID       : %d\n", item_get_section(item)->id);
+			printf("pos X in Section : %d\n", item_get_X_pos(item));
+			printf("    Y in Section : %d\n", item_get_Y_pos(item));
 		}
 		else
 			printf("No Section defined for this Item.");
@@ -226,15 +226,15 @@ void testItem(void)
 	testSec.size[X] = 20;
 	testSec.size[Y] = 3;
 
-	item * item1 = newItem(10, legumes_vert, "endives");
-	Item_setCost(item1, 12.20);
-	Item_setFragility(item1, 3);
-	Item_setFresh(item1, FALSE);
-	Item_setPromotion(item1, FALSE);
-	Item_setSection(item1, &testSec);
-	Item_setPos(item1, 19, 1);
+	item * item1 = item_new(10, legumes_vert, "endives");
+	item_set_cost(item1, 12.20);
+	item_set_fragility(item1, 3);
+	item_set_fresh(item1, FALSE);
+	item_set_promotion(item1, FALSE);
+	item_set_section(item1, &testSec);
+	item_set_pos(item1, 19, 1);
 
-	Item_print(item1, FALSE);
+	item_print(item1, FALSE);
 
-	Item_delete(item1);
+	item_delete(item1);
 }

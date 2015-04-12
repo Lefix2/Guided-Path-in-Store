@@ -15,7 +15,7 @@ nodeItemList * newNodeItemPointer(item *i, nodeItemList *n)
 	return newn;
 }
 
-itemList * newItemPointerList(void)
+itemList * item_newPointerList(void)
 {
 	itemList * newl;
 	newl = (itemList *)malloc(sizeof(itemList));
@@ -149,20 +149,20 @@ void printItemList(itemList * l, gboolean minimal)
 			while (!outOfItemPointerList(l))
 			{
 				tmp = l->currentItem->i;
-				if (Item_HasSection(tmp))
+				if (item_has_section(tmp))
 					printf("| %12d | %12s | %12s | %11.2fE | %12d |\n",
-						Item_getId(tmp),
-						Item_getName(tmp),
-						Item_getCategoryString(tmp),
-						Item_getCost(tmp),
-						Item_getSection(tmp)->id
+						item_get_id(tmp),
+						item_get_name(tmp),
+						item_get_category_string(tmp),
+						item_get_cost(tmp),
+						item_get_section(tmp)->id
 						);
 				else
 					printf("| %12d | %12s | %12s | %11.2fE | %12s |\n",
-						Item_getId(tmp),
-						Item_getName(tmp),
-						Item_getCategoryString(tmp),
-						Item_getCost(tmp),
+						item_get_id(tmp),
+						item_get_name(tmp),
+						item_get_category_string(tmp),
+						item_get_cost(tmp),
 						"No section"
 						);
 				nextItemPointer(l);
