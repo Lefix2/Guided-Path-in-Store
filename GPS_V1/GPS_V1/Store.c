@@ -92,30 +92,35 @@ int Store_getYSize(store * st_source)
 
 void Store_print(store * st_source)
 {
-	int i, j;
 	printf("***** Store  *****\n");
 	printf("ID    : %d\n", st_source->id);
 	printf("name  : %s\n", st_source->name);
 	printf("size X : %d\n", st_source->size[X]);
 	printf("     Y : %d\n", st_source->size[Y]);
 	printSectionPointerList(st_source->allocated_sections);
+	Store_print_carto(st_source);
+	printf("\n\n");
+}
+
+void Store_print_carto(store * st_source){
+	int i, j;
 	printf("Cartography :\n");
-	for (i = 0; i < st_source->size[Y]+2; i++){
+	for (i = 0; i < st_source->size[X] + 2; i++){
 		printf("X");
 	}
 	printf("\n");
-	for (i = 0; i < st_source->size[X]; i++){
+	for (i = 0; i < st_source->size[Y]; i++){
 		printf("X");
-		for (j = 0; j < st_source->size[Y]; j++){
+		for (j = 0; j < st_source->size[X]; j++){
 			printf("%d", st_source->cartography[i][j]);
 		}
 		printf("X\n");
 	}
-	for (i = 0; i < st_source->size[Y]+2; i++){
+	for (i = 0; i < st_source->size[X] + 2; i++){
 		printf("X");
 	}
-	printf("\n\n");
 }
+
 
 int Store_freeCartography(store * st_source)
 {
@@ -234,7 +239,7 @@ int Store_deleteAllocatedSections(store * st_source)
 
 void testStore(void)
 {
-	store * sttest = newStore(0, "Carrefour - rennes", 100, 70);
+	store * sttest = newStore(0, "Carrefour - rennes", 70, 100);
 
 	Store_addSection(sttest, 01, t_section, 5, 5, 10, 3);
 	Store_addSection(sttest, 02, t_section, 20, 20, 10, 3);
