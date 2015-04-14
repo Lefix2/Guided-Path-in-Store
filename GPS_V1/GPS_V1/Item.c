@@ -25,8 +25,8 @@ item * item_init(item * item)
 	item->fragility = 0;
 	item->cost = 0;
 	item->promotion = FALSE;
-	item->posInSec[X] = 0;
-	item->posInSec[Y] = 0;
+	item->posInSec.x = 0;
+	item->posInSec.y = 0;
 	item->section = NULL;
 
 	return item;
@@ -111,8 +111,8 @@ int item_set_pos(item * item, int x_pos, int y_pos)
 {
 	if (item == NULL)
 		return EXIT_FAILURE;
-	item->posInSec[X] = x_pos;
-	item->posInSec[Y] = y_pos;
+	item->posInSec.x = x_pos;
+	item->posInSec.y = y_pos;
 	return EXIT_SUCCESS;
 }
 
@@ -166,12 +166,12 @@ gboolean item_is_in_promotion(item * item)
 
 int item_get_X_pos(item * item)
 {
-	return item->posInSec[X];
+	return item->posInSec.x;
 }
 
 int item_get_Y_pos(item * item)
 {
-	return item->posInSec[Y];
+	return item->posInSec.y;
 }
 
 section * item_get_section(item * item)
@@ -223,8 +223,8 @@ void testItem(void)
 {
 	section testSec;
 	testSec.id = 1;
-	testSec.size[X] = 20;
-	testSec.size[Y] = 3;
+	testSec.size.x = 20;
+	testSec.size.y = 3;
 
 	item * item1 = item_new(10, legumes_vert, "endives");
 	item_set_cost(item1, 12.20);

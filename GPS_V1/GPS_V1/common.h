@@ -20,8 +20,6 @@
 
 /****usefull define ****/
 #define MAX_ARRAY_OF_CHAR 256
-#define X 0
-#define Y 1
 
 
 /**
@@ -58,7 +56,13 @@ typedef struct sectionList sectionList;
 typedef struct listNode listNode;
 typedef struct list list;
 
+typedef struct coord coord;
+struct coord{
+	int x;
+	int y;
+};
 gboolean betwn(int a, int x, int b, gboolean equal);
-gboolean onBorder(int x, int y, int x_min, int x_max, int y_min, int y_max);
+gboolean on_border(int x, int y, int x_min, int x_max, int y_min, int y_max);
+int manhattan_distance(coord p1, coord p2);
 
 #endif // !COMMON_H

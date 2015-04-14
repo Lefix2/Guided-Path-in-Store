@@ -14,8 +14,8 @@
 struct section{
 	int id;							/*!< section's identifiant */
 	type s_type;					/*!< section's type (wall, section etc...*/
-	int pos[2];						/*!< section's position in store in X and Y */
-	int size[2];					/*!< section's size in X and Y */
+	coord pos;						/*!< section's position in store in X and Y */
+	coord size;					/*!< section's size in X and Y */
 	int nb_items;					/*!< number of items stored in the section of type section */
 	itemList * stock;				/*!< itemList of item pointers pointing to a Store allocatedStock */
 };

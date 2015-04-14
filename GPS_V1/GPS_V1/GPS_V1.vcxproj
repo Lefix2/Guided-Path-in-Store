@@ -80,6 +80,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Astar.c" />
+    <ClCompile Include="AstarList.c" />
     <ClCompile Include="Common.c" />
     <ClCompile Include="GenericList.c" />
     <ClCompile Include="Item.c" />
@@ -105,6 +107,8 @@
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\gtk-win32-3.0.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Astar.h" />
+    <ClInclude Include="AstarList.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="GenericList.h" />
     <ClInclude Include="Item.h" />

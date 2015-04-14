@@ -1,5 +1,10 @@
 #include "Common.h"
 
+int manhattan_distance(coord p1, coord p2)
+{
+	return (abs(p1.x - p2.x) + abs(p1.y - p2.y));
+}
+
 gboolean betwn(int a, int x, int b, gboolean equal)
 {
 	switch (equal)
@@ -16,7 +21,7 @@ gboolean betwn(int a, int x, int b, gboolean equal)
 	return FALSE;
 }
 
-gboolean onBorder(int x, int y, int x_min, int x_max, int y_min, int y_max)
+gboolean on_border(int x, int y, int x_min, int x_max, int y_min, int y_max)
 {
 	if (betwn(x_min, x, x_max-1, TRUE) && (y == y_min || y == y_max-1))
 		return TRUE;

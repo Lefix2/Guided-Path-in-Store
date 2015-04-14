@@ -19,7 +19,7 @@ struct item{
 	int fragility;					/*!< image of the fragility of the item */
 	double cost;					/*!< item's cost */
 	gboolean promotion;				/*!< Values set to true if the product is in promotion */
-	int posInSec[2];					/*!< position of the item in the section in X and Y */
+	coord posInSec;				/*!< position of the item in the section in X and Y */
 	section * section;			/*!< pointer to the associated section i the store */
 };
 

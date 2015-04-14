@@ -5,6 +5,7 @@
 #include "SectionList.h"
 #include "Item.h"
 #include "ItemList.h"
+#include "Astar.h"
 
 store * store_new(int id, char * name, int x_size, int y_size)
 {
@@ -25,8 +26,8 @@ store * store_init(store * st_source)
 {
 	st_source->id = 0;
 	st_source->name[0] = 0;
-	st_source->size[X] = 0;
-	st_source->size[Y] = 0;
+	st_source->size.x = 0;
+	st_source->size.y = 0;
 	st_source->allocatedStock = NULL;
 	st_source->cartography = NULL;
 	
@@ -65,8 +66,8 @@ int store_set_size(store * st_source, int x_size, int y_size)
 	if (st_source == NULL)
 		return EXIT_FAILURE;
 	store_free_carto(st_source);
-	st_source->size[X] = x_size;
-	st_source->size[Y] = y_size;
+	st_source->size.x = x_size;
+	st_source->size.y = y_size;
 	return EXIT_SUCCESS;
 }
 
@@ -82,12 +83,12 @@ char * store_get_name(store * st_source)
 
 int store_get_x_size(store * st_source)
 {
-	return st_source->size[X];
+	return st_source->size.x;
 }
 
 int store_get_y_size(store * st_source)
 {
-	return st_source->size[Y];
+	return st_source->size.y;
 }
 
 void store_print(store * st_source)
@@ -95,8 +96,8 @@ void store_print(store * st_source)
 	printf("***** Store  *****\n");
 	printf("ID    : %d\n", st_source->id);
 	printf("name  : %s\n", st_source->name);
-	printf("size X : %d\n", st_source->size[X]);
-	printf("     Y : %d\n", st_source->size[Y]);
+	printf("size X : %d\n", st_source->size.x);
+	printf("     Y : %d\n", st_source->size.y);
 	printSectionPointerList(st_source->allocatedSections);
 	store_print_carto(st_source);
 	printf("\n\n");
@@ -107,8 +108,8 @@ void store_print_carto(store * st_source){
 	printf("Cartography :\n");
 
 	printf("\n");
-	for (y = st_source->size[Y]-1; y >=0; y--){
-		for (x = 0; x < st_source->size[X]; x++){
+	for (y = st_source->size.y-1; y >=0; y--){
+		for (x = 0; x < st_source->size.x; x++){
 			printf("%d", st_source->cartography[x][y]);
 		}
 		printf("\n");
@@ -119,11 +120,12 @@ void store_print_carto(store * st_source){
 
 int store_free_carto(store * st_source)
 {
-	for (int i = 0; i < st_source->size[X]; i++)
+	for (int i = 0; i < st_source->size.x; i++)
 	{
 		free(*(st_source->cartography+i));
 	}
 	free(st_source->cartography);
+	st_source->cartography = NULL;
 	return EXIT_SUCCESS;
 }
 
@@ -132,10 +134,10 @@ int Store_computeCartography(store * st_source)
 	//allocation de la mémoire
 	if (st_source->cartography != NULL)
 		store_free_carto(st_source);
-	st_source->cartography = (int**)calloc(st_source->size[X], sizeof(int*));
-	for (int i = 0; i < st_source->size[X]; i++)
+	st_source->cartography = (int**)calloc(st_source->size.x, sizeof(int*));
+	for (int i = 0; i < st_source->size.x; i++)
 	{
-		*(st_source->cartography + i) = (int*)calloc(st_source->size[Y], sizeof(int));
+		*(st_source->cartography + i) = (int*)calloc(st_source->size.y, sizeof(int));
 	}
 
 	//code calculant pour la position (x,y)  la valeur 0(vide) ou 1(obstacle) en fonction des sections
@@ -146,10 +148,10 @@ int Store_computeCartography(store * st_source)
 	setOnFirstSectionPointer(st_source->allocatedSections);
 	while (!outOfSectionPointerList(st_source->allocatedSections))
 	{
-		x_pos = st_source->allocatedSections->currentSection->s->pos[X];
-		y_pos = st_source->allocatedSections->currentSection->s->pos[Y];
-		x_size = st_source->allocatedSections->currentSection->s->size[X];
-		y_size = st_source->allocatedSections->currentSection->s->size[Y];
+		x_pos = st_source->allocatedSections->currentSection->s->pos.x;
+		y_pos = st_source->allocatedSections->currentSection->s->pos.y;
+		x_size = st_source->allocatedSections->currentSection->s->size.x;
+		y_size = st_source->allocatedSections->currentSection->s->size.y;
 
 		for (x = 0; x < x_size; x++){
 			for (y = 0; y < y_size; y++){
@@ -193,7 +195,7 @@ int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_p
 		printf("\n");
 		return EXIT_FAILURE;
 	}
-	if (((x_size + x_pos) > st_source->size[X]) || ((y_size + y_pos) > st_source->size[Y])){
+	if (((x_size + x_pos) > st_source->size.x) || ((y_size + y_pos) > st_source->size.y)){
 		printf("Error : Trying to add a section out of the store\n");
 		return EXIT_FAILURE;
 	}
@@ -309,6 +311,11 @@ void testStore(void)
 	Section_removeItem(findItemPointerId(findSectionPointerId(sttest->allocatedSections, 01)->stock, 31));
 
 	Store_computeCartography(sttest);
+	store_print(sttest);
+	//store_set_size(sttest, magsizex + 3, magsizey + 3);
+	//Store_computeCartography(sttest);
+	//store_print(sttest);
+	//findpath(sttest, 1, 1, 3, 1);
 	store_print(sttest);
 	store_delete(sttest);
 
