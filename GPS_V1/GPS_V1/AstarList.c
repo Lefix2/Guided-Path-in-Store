@@ -2,350 +2,248 @@
 
 #include "AstarList.h"
 #include "Astar.h"
-/*
-nodeItemList * newNodeItemPointer(item *i, nodeItemList *n)
-{
-	nodeItemList * newn;
-	newn = (nodeItemList*)malloc(sizeof(nodeItemList));
 
-	newn->nextItemPointer = n;
-	newn->i = i;
+nodeAstar * nodeAstar_new(coord pos, nodeAstar *parent)
+{
+	nodeAstar * newn;
+	newn = (nodeAstar*)malloc(sizeof(nodeAstar));
+
+	newn->pos = pos;
+	newn->h = 0;
+	newn->g = 0;
+	newn->f = 0;
+	newn->parent = parent;
 
 	return newn;
 }
 
-itemList * item_newPointerList(void)
+astarList * astarList_new(void)
 {
-	itemList * newl;
-	newl = (itemList *)malloc(sizeof(itemList));
-	initItemPointerList(newl);
+	astarList * newl;
+	newl = (astarList *)malloc(sizeof(astarList));
+	astarList_init(newl);
 
 	return newl;
 }
 
-int deleteItemPointerList(itemList * l)
+int astarList_delete(astarList * l)
 {
 	if (l == NULL)
 		return EXIT_FAILURE;
-	while (!emptyItemPointerList(l))
+	while (!astarList_is_empty(l))
 	{
-		deleteFirstItemPointer(l);
+		astarList_delete_first(l);
 	}
 	free(l);
 	return EXIT_SUCCESS;
 }
 
-void initItemPointerList(itemList * l)
+void astarList_init(astarList * l)
 {
-	l->firstItemPointer = l->lastItemPointer = l->currentItem = NULL;
+	l->first = l->last = l->current = NULL;
 }
 
-int emptyItemPointerList(itemList * l)
+int astarList_is_empty(astarList * l)
 {
-	return l->firstItemPointer == NULL;
+	return l->first == NULL;
 }
 
-int firstItemPointer(itemList * l)
+int astarList_is_on_first(astarList * l)
 {
-	return l->currentItem == l->firstItemPointer;
+	return l->current == l->first;
 }
 
-int lastItemPointer(itemList * l)
+int astarList_is_on_last(astarList * l)
 {
-	return l->currentItem == l->lastItemPointer;
+	return l->current == l->last;
 }
 
-int outOfItemPointerList(itemList * l)
+int astarList_is_out_of(astarList * l)
 {
-	return l->currentItem == NULL;
+	return l->current == NULL;
 }
 
-void setOnFirstItemPointer(itemList * l)
+void astarList_set_on_first(astarList * l)
 {
-	l->currentItem = l->firstItemPointer;
+	l->current = l->first;
 }
 
-void setOnLastItemPointer(itemList * l)
+void astarList_set_on_last(astarList * l)
 {
-	l->currentItem = l->lastItemPointer;
+	l->current = l->last;
 }
 
-void nextItemPointer(itemList * l)
+void next(astarList * l)
 {
-	l->currentItem = l->currentItem->nextItemPointer;
+	l->current = l->current->next;
 }
 
-void printItemList(itemList * l, gboolean minimal)
+void astarList_print(astarList * l, gboolean minimal)
 {
-	char* header[] = { "----------------------------------------------------------------------------",
-		"|      id      |     name     |   category   |     cost     |  section id  |",
-		"|      |-------------------------------------------------------------------|",
-		"|      |*empty section                                                     |"
-	};
-	int i;
-
-	if (minimal)
-	{
-		item * tmp;
-		char buffer[MAX_ARRAY_OF_CHAR] = { 0 };
-		const int tablen = strlen(header[0]);
-
-		printf("%s\n", header[2]);
-		if (emptyItemPointerList(l)){
-			printf("%s\n", header[3]);
-		}
-		else
-		{
-			setOnFirstItemPointer(l);
-
-			strcat(buffer, "|      |");
-			while (!outOfItemPointerList(l))
-			{
-				tmp = l->currentItem->i;
-				if (strlen(buffer) + strlen(tmp->name) >= tablen)
-				{
-					while (strlen(buffer) < tablen - 1)
-					{
-						strcat(buffer, " ");
-					}
-					strcat(buffer, "|\n");
-					printf("%s", buffer);
-					buffer[8] = 0;
-				}
-				strcat(buffer, " ");
-				strcat(buffer, tmp->name);
-				strcat(buffer, ",");
-				nextItemPointer(l);
-			}
-			if (strlen(buffer) < tablen)
-			{
-				while (strlen(buffer) < tablen - 1)
-				{
-					strcat(buffer, " ");
-				}
-				strcat(buffer, "|\n");
-				printf("%s", buffer);
-			}
-		}
-	}
-	else
-	{
-		item * tmp;
-
-		if (emptyItemPointerList(l)){
-			printf("empty\n");
-		}
-		else{
-			printf("\n");
-			setOnFirstItemPointer(l);
-
-			for (i = 0; i < 2; i++)
-			{
-				printf("%s\n", header[i]);
-			}
-			printf("%s\n", header[0]);
-
-			while (!outOfItemPointerList(l))
-			{
-				tmp = l->currentItem->i;
-				if (item_has_section(tmp))
-					printf("| %12d | %12s | %12s | %11.2fE | %12d |\n",
-					item_get_id(tmp),
-					item_get_name(tmp),
-					item_get_category_string(tmp),
-					item_get_cost(tmp),
-					item_get_section(tmp)->id
-					);
-				else
-					printf("| %12d | %12s | %12s | %11.2fE | %12s |\n",
-					item_get_id(tmp),
-					item_get_name(tmp),
-					item_get_category_string(tmp),
-					item_get_cost(tmp),
-					"No section"
-					);
-				nextItemPointer(l);
-			}
-			printf("%s\n", header[0]);
-			printf("\n");
-		}
-	}
+	
 }
 
-int insertFirstItemPointer(itemList * l, item * i)
+int astarList_insert_first(astarList * l, coord pos)
 {
-	nodeItemList* n = newNodeItemPointer(i, l->firstItemPointer);
+	nodeAstar* n = nodeAstar_new(pos, l->first);
 	if (n == NULL)
 		return EXIT_FAILURE;
 
-	if (emptyItemPointerList(l))
+	if (astarList_is_empty(l))
 	{
-		l->lastItemPointer = l->currentItem = n;
+		l->last = l->current = n;
 	}
-	l->firstItemPointer = n;
+	l->first = n;
 	return EXIT_SUCCESS;
 }
 
-int insertlastItemPointer(itemList * l, item * i)
+int astarList_insert_last(astarList * l, coord pos)
 {
-	nodeItemList* n = newNodeItemPointer(i, NULL);
+	nodeAstar* n = nodeAstar_new(pos, NULL);
 	if (n == NULL)
 		return EXIT_FAILURE;
 
-	if (emptyItemPointerList(l))
+	if (astarList_is_empty(l))
 	{
-		l->firstItemPointer = l->currentItem = n;
+		l->first = l->current = n;
 	}
 	else
-		l->lastItemPointer->nextItemPointer = n;
-	l->lastItemPointer = n;
+		l->last->next = n;
+	l->last = n;
 	return EXIT_SUCCESS;
 }
 
-int insertBeforeCurrentItemPointer(itemList * l, item * i)
+int astarList_insert_before_current(astarList * l, coord pos)
 {
-	if (emptyItemPointerList(l) || firstItemPointer(l))
+	if (astarList_is_empty(l) || astarList_is_on_first(l))
 	{
-		return insertFirstItemPointer(l, i);
+		return astarList_insert_first(l, pos);
 	}
-	else if (outOfItemPointerList(l))
+	else if (astarList_is_out_of(l))
 	{
-		printf("error: trying to write out of the itemList!");
+		printf("error: trying to write out of the astarList!");
 		return EXIT_FAILURE;
 	}
 	else
 	{
-		nodeItemList* n = newNodeItemPointer(i, l->currentItem);
-		nodeItemList* tmp = l->currentItem;
-		setOnFirstItemPointer(l);
-		while (l->currentItem->nextItemPointer != tmp)
+		nodeAstar* n = nodeAstar_new(pos, l->current);
+		nodeAstar* tmp = l->current;
+		astarList_set_on_first(l);
+		while (l->current->next != tmp)
 		{
-			nextItemPointer(l);
+			next(l);
 		}
-		l->currentItem->nextItemPointer = n;
+		l->current->next = n;
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
 
-int insertAfterCurrentItemPointer(itemList * l, item * i)
+int astarList_insert_after_current(astarList * l, coord pos)
 {
 
-	if (emptyItemPointerList(l))
+	if (astarList_is_empty(l))
 	{
-		return insertFirstItemPointer(l, i);
+		return astarList_insert_first(l, pos);
 	}
-	else if (outOfItemPointerList(l))
+	else if (astarList_is_out_of(l))
 	{
-		printf("error: trying to write out of the itemList!");
+		printf("error: trying to write out of the astarList!");
 		return EXIT_FAILURE;
 	}
 	else
 	{
-		nodeItemList* n = newNodeItemPointer(i, l->currentItem->nextItemPointer);
-		l->currentItem->nextItemPointer = n;
+		nodeAstar* n = nodeAstar_new(pos, l->current->next);
+		l->current->next = n;
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
 
-int insertSortItemPointer(itemList * l, item * i)
+int astarList_insert_sort(astarList * l, coord pos)
 {
-	nodeItemList * tmp = l->currentItem;
-	if (emptyItemPointerList(l))
+	nodeAstar * tmp = l->current;
+	if (astarList_is_empty(l))
 	{
-		return insertFirstItemPointer(l, i);
+		return astarList_insert_first(l, pos);
 	}
 
-	setOnFirstItemPointer(l);
+	astarList_set_on_first(l);
 
-	do
-	{
-		if (l->currentItem->i->id <= i->id)
-			nextItemPointer(l);
-		else
-		{
-			insertBeforeCurrentItemPointer(l, i);
-			setOnFirstItemPointer(l);
-			break;
-		}
-	} while (!outOfItemPointerList(l));
-	if (outOfItemPointerList(l))
-		insertlastItemPointer(l, i);
-
-	l->currentItem = tmp;
+//à faire en fonction des coordonnées
+	l->current = tmp;
 	return EXIT_SUCCESS;
 }
 
-item * deleteFirstItemPointer(itemList * l)
+nodeAstar * astarList_delete_first(astarList * l)
 {
-	if (emptyItemPointerList(l)){
-		printf("error: trying to delete node in an emptyItemPointerList itemList in %s\n", __FUNCTION__);
+	if (astarList_is_empty(l)){
+		printf("error: trying to delete node in an astarList_is_empty astarList in %s\n", __FUNCTION__);
 		return NULL;
 	}
 
 	else{
-		nodeItemList * n = l->firstItemPointer;
-		item * ret = n->i;
-		l->firstItemPointer = n->nextItemPointer;
-		if (l->firstItemPointer == NULL)
-			initItemPointerList(l);
-		setOnFirstItemPointer(l);
-		free((nodeItemList*)n);
+		nodeAstarList * n = l->first;
+		nodeAstar * ret = n->a;
+		l->first = n->next;
+		if (l->first == NULL)
+			astarList_init(l);
+		astarList_set_on_first(l);
+		free((nodeAstarList*)n);
 		return ret;
 	}
 	return NULL;
 }
 
-item * deleteLastItemPointer(itemList * l)
+nodeAstar * astarList_delete_last(astarList * l)
 {
-	if (emptyItemPointerList(l)){
-		printf("error: trying to delete node in an emptyItemPointerList itemList in %s\n", __FUNCTION__);
+	if (astarList_is_empty(l)){
+		printf("error: trying to delete node in an astarList_is_empty astarList in %s\n", __FUNCTION__);
 		return NULL;
 	}
-	else if (l->firstItemPointer == l->lastItemPointer)
+	else if (l->first == l->last)
 	{
-		return deleteFirstItemPointer(l);
+		return astarList_delete_first(l);
 	}
 	else{
-		nodeItemList* n = l->lastItemPointer;
-		item * ret = n->i;
-		setOnFirstItemPointer(l);
-		while (l->currentItem->nextItemPointer != n)
+		nodeAstarList* n = l->last;
+		nodeAstar * ret = n->a;
+		astarList_set_on_first(l);
+		while (l->current->next != n)
 		{
-			nextItemPointer(l);
+			next(l);
 		}
-		l->lastItemPointer = l->currentItem;
-		free((void*)n);
+		l->last = l->current;
+		free((nodeAstarList*)n);
 		return ret;
 	}
 	return NULL;
 }
 
-item * deleteCurrentItemPointer(itemList * l)
+nodeAstar * astarList_delete_current(astarList * l)
 {
-	if (emptyItemPointerList(l)){
-		printf("error: trying to delete node in an emptyItemPointerList itemList in %s\n", __FUNCTION__);
+	if (astarList_is_empty(l)){
+		printf("error: trying to delete node in an astarList_is_empty astarList in %s\n", __FUNCTION__);
 		return NULL;
 	}
-	if (firstItemPointer(l))
+	if (astarList_is_on_first(l))
 	{
-		return deleteFirstItemPointer(l);
+		return astarList_delete_first(l);
 	}
-	else if (lastItemPointer(l))
+	else if (astarList_is_on_last(l))
 	{
-		return deleteLastItemPointer(l);
+		return astarList_delete_last(l);
 	}
 	else
 	{
-		nodeItemList* n = l->currentItem;
-		item * ret = n->i;
-		setOnFirstItemPointer(l);
-		while (l->currentItem->nextItemPointer != n)
+		nodeAstarList* n = l->last;
+		nodeAstar * ret = n->a;
+		astarList_set_on_first(l);
+		while (l->current->next != n)
 		{
-			nextItemPointer(l);
+			next(l);
 		}
-		l->currentItem->nextItemPointer = n->nextItemPointer;
+		free((nodeAstarList*)n);
 
 		free((void*)n);
 		return ret;
@@ -353,40 +251,27 @@ item * deleteCurrentItemPointer(itemList * l)
 	return NULL;
 }
 
-item * deleteSingleItemPointer(itemList * l, item * i)
+nodeAstar * astarList_delete_single(astarList * l, nodeAstar * a)
 {
-	item * tmp = findItemPointer(l, i);
+	nodeAstar * tmp = astarList_find(l, a);
 	if (tmp != NULL)
-		deleteCurrentItemPointer(l);
+		astarList_delete_current(l);
 	return tmp;
 }
 
-item * getCurrentItemPointer(itemList * l)
+nodeAstar * astarList_get_current(astarList * l)
 {
-	return l->currentItem->i;
+	return l->current->a;
 }
 
-item * findItemPointer(itemList * l, item * i)
+nodeAstar * astarList_find(astarList * l, nodeAstar * a)
 {
-	setOnFirstItemPointer(l);
-	while (l->currentItem != NULL)
+	astarList_set_on_first(l);
+	while (l->current != NULL)
 	{
-		if (l->currentItem->i == i)
-			return l->currentItem->i;
-		nextItemPointer(l);
+		if (l->current->a == a)
+			return l->current->a;
+		next(l);
 	}
 	return NULL;
 }
-
-item * findItemPointerId(itemList * l, int id)
-{
-	setOnFirstItemPointer(l);
-	while (l->currentItem != NULL)
-	{
-		if (l->currentItem->i->id == id)
-			return l->currentItem->i;
-		nextItemPointer(l);
-	}
-	return NULL;
-}
-*/

@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <glib.h>
 
-//uncomment nextItemPointer line to check memory allocation
+//uncomment itemPointerList_next line to check memory allocation
 #define MEMCHECK
 #include "myAlloc.h"
 
@@ -46,6 +46,7 @@ char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
 typedef struct store store;
 typedef struct section section;
 typedef struct item item;
+typedef struct nodeAstar nodeAstar;
 
 typedef struct nodeItemList nodeItemList;
 typedef struct itemList itemList;
@@ -55,6 +56,9 @@ typedef struct sectionList sectionList;
 
 typedef struct listNode listNode;
 typedef struct list list;
+
+typedef struct nodeAstarList nodeAstarList;
+typedef struct astarList astarList;
 
 typedef struct coord coord;
 struct coord{

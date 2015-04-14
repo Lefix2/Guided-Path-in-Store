@@ -9,7 +9,7 @@
 */
 struct nodeItemList{
 	item * i;						/*!< pointer to an item */
-	struct nodeItemList * nextItemPointer;	/*!< pointer to the nextItemPointer nodeItemList*/
+	struct nodeItemList * itemPointerList_next;	/*!< pointer to the itemPointerList_next nodeItemList*/
 };
 
 /**
@@ -17,42 +17,42 @@ struct nodeItemList{
 * \brief list of pointer to items
 */
 struct itemList{
-	nodeItemList *firstItemPointer;		/*!< first item of the list */
-	nodeItemList *currentItem;			/*!< current item of the list*/
-	nodeItemList *lastItemPointer;			/*!< last item of the list*/
+	nodeItemList *first;		/*!< first item of the list */
+	nodeItemList *current;			/*!< current item of the list*/
+	nodeItemList *last;			/*!< last item of the list*/
 };
 
-nodeItemList * newNodeItemPointer(item *i, nodeItemList *n);
+nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n);
 
-itemList * item_newPointerList(void);
-int deleteItemPointerList(itemList * l);
+itemList * itemPointerList_new(void);
+int itemPointerList_delete(itemList * l);
 
-void initItemPointerList(itemList * l);
-int emptyItemPointerList(itemList * l);
+void itemPointerList_init(itemList * l);
+int itemPointerList_is_empty(itemList * l);
 
-int firstItemPointer(itemList * l);
-int lastItemPointer(itemList * l);
-int outOfItemPointerList(itemList * l);
+int itemPointerList_is_on_first(itemList * l);
+int itemPointerList_is_on_last(itemList * l);
+int itemPointerList_is_out_of(itemList * l);
 
-void setOnFirstItemPointer(itemList * l);
-void setOnLastItemPointer(itemList * l);
-void nextItemPointer(itemList * l);
+void itemPointerList_set_on_first(itemList * l);
+void itemPointerList_set_on_last(itemList * l);
+void itemPointerList_next(itemList * l);
 
-void printItemList(itemList * l, gboolean minimal);
+void itemPointerList_print(itemList * l, gboolean minimal);
 
-int insertFirstItemPointer(itemList * l, item * i);
-int insertlastItemPointer(itemList * l, item * i);
-int insertBeforeCurrentItemPointer(itemList * l, item * i);
-int insertAfterCurrentItemPointer(itemList * l, item * i);
-int insertSortItemPointer(itemList * l, item * i);
+int itemPointerList_insert_first(itemList * l, item * i);
+int itemPointerList_insert_last(itemList * l, item * i);
+int itemPointerList_insert_before_current(itemList * l, item * i);
+int itemPointerList_insert_after_current(itemList * l, item * i);
+int itemPointerList_insert_sort(itemList * l, item * i);
 
-item * deleteFirstItemPointer(itemList * l);
-item * deleteLastItemPointer(itemList * l);
-item * deleteCurrentItemPointer(itemList * l);
-item * deleteSingleItemPointer(itemList * l, item * i);
+item * itemPointerList_delete_first(itemList * l);
+item * itemPointerList_delete_last(itemList * l);
+item * itemPointerList_delete_current(itemList * l);
+item * itemPointerList_delete_single(itemList * l, item * i);
 
-item * getCurrentItemPointer(itemList * l);
-item * findItemPointer(itemList * l, item * i);
-item * findItemPointerId(itemList * l, int id);
+item * itemPointerList_get_current(itemList * l);
+item * itemPointerList_find(itemList * l, item * i);
+item * itemPointerList_find_id(itemList * l, int id);
 
 #endif // !ITEMLIST_H

@@ -11,7 +11,7 @@
          - son cout F : somme de G et H
 		 - son parent
 		*/
-typedef struct nodeAstar nodeAstar;
+
 struct nodeAstar
 {
 	coord pos;	 /*!< position in graph*/
@@ -21,6 +21,13 @@ struct nodeAstar
 	int f;		/*!<total cost g+h*/
 
 	nodeAstar * parent;
+};
+
+typedef struct nodeAstarList nodeAstarList;
+struct nodeAstarList
+{
+	nodeAstar * a;
+	nodeAstarList * next;
 };
 
 

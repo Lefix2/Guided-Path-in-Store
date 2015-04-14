@@ -9,7 +9,7 @@
 */
 struct nodeSectionList{
 	section * s;						/*!< pointer to a section */
-	struct nodeSectionList *nextSectionPointer;/*!< pointer to the next nodeSectionList*/
+	struct nodeSectionList *sectionPointerList_next;/*!< pointer to the next nodeSectionList*/
 };
 
 /**
@@ -17,43 +17,43 @@ struct nodeSectionList{
 * \brief list of pointer to items
 */
 struct sectionList{
-	nodeSectionList *firstSectionPointer;	/*!< first section of the list*/
-	nodeSectionList *currentSection;/*!< current section of the list*/
-	nodeSectionList *lastSectionPointer;	/*!< last section of the list*/
+	nodeSectionList *first;	/*!< first section of the list*/
+	nodeSectionList *current;/*!< current section of the list*/
+	nodeSectionList *last;	/*!< last section of the list*/
 };
 
-nodeSectionList * newNodeSectionPointer(section *i, nodeSectionList *n);
+nodeSectionList * nodeSectionPointerList_new(section *i, nodeSectionList *n);
 
-sectionList * newSectionPointerList(void);
-int deleteSectionList(sectionList * l);
+sectionList * sectionPointerList_new(void);
+int sectionPointerList_delete(sectionList * l);
 
-void initSectionPointerList(sectionList * l);
-int emptySectionPointerList(sectionList * l);
+void sectionPointerList_init(sectionList * l);
+int sectionPointerList_is_empty(sectionList * l);
 
-int firstSectionPointer(sectionList * l);
-int lastSectionPointer(sectionList * l);
-int outOfSectionPointerList(sectionList * l);
+int sectionPointerList_is_on_first(sectionList * l);
+int sectionPointerList_is_on_last(sectionList * l);
+int sectionPointerList_is_out_of(sectionList * l);
 
-void setOnFirstSectionPointer(sectionList * l);
-void setOnLastSectionPointer(sectionList * l);
-void nextSectionPointer(sectionList * l);
+void sectionPointerList_set_on_first(sectionList * l);
+void sectionPointerList_set_on_last(sectionList * l);
+void sectionPointerList_next(sectionList * l);
 
-void printSectionPointerList(sectionList * l);
+void sectionPointerList_print(sectionList * l);
 
-int insertFirstSectionPointer(sectionList * l, section * s);
-int insertLastSectionPointer(sectionList * l, section * s);
-int insertBeforeCurrentSectionPointer(sectionList * l, section * s);
-int insertAfterCurrentSectionPointer(sectionList * l, section * s);
-int insertSortSectionPointer(sectionList * l, section * s);
+int sectionPointerList_insert_first(sectionList * l, section * s);
+int sectionPointerList_insert_last(sectionList * l, section * s);
+int sectionPointerList_insert_before_current(sectionList * l, section * s);
+int sectionPointerList_insert_after_current(sectionList * l, section * s);
+int sectionPointerList_insert_sort(sectionList * l, section * s);
 
-section * deletFirstSectionPointer(sectionList * l);
-section * deleteLastSectionPointer(sectionList * l);
-section * deleteCurrentSectionPointer(sectionList * l);
-section * deleteSingleSectionPointer(sectionList * l, section * s);
+section * sectionPointerList_delete_first(sectionList * l);
+section * sectionPointerList_delete_last(sectionList * l);
+section * sectionPointerList_delete_current(sectionList * l);
+section * sectionPointerList_delete_single(sectionList * l, section * s);
 
-section * findSectionPointer(sectionList * l, section * s);
-section * findSectionPointerId(sectionList * l, int id);
+section * sectionPointerList_find(sectionList * l, section * s);
+section * sectionPointerList_find_id(sectionList * l, int id);
 
-section * getCurrentSectionPointer(sectionList * l);
+section * getcurrent(sectionList * l);
 
 #endif // !SECTIONLIST_H
