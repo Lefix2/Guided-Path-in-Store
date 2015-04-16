@@ -258,6 +258,7 @@ section * sectionPointerList_delete_last(sectionList * l)
 			sectionPointerList_next(l);
 		}
 		l->last = l->current;
+		l->last->sectionPointerList_next = NULL;
 		free((void*)n);
 		return ret;
 	}

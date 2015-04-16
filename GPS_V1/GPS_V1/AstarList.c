@@ -3,16 +3,13 @@
 #include "AstarList.h"
 #include "Astar.h"
 
-nodeAstar * nodeAstar_new(coord pos, nodeAstar *parent)
+nodeAstar * nodeAstarList_new(nodeAstar * a, nodeAstarList *n)
 {
-	nodeAstar * newn;
-	newn = (nodeAstar*)malloc(sizeof(nodeAstar));
+	nodeAstarList * newn;
+	newn = (nodeAstarList*)malloc(sizeof(nodeAstarList));
 
-	newn->pos = pos;
-	newn->h = 0;
-	newn->g = 0;
-	newn->f = 0;
-	newn->parent = parent;
+	newn->a = a;
+	newn->next = n;
 
 	return newn;
 }
@@ -32,7 +29,7 @@ int astarList_delete(astarList * l)
 		return EXIT_FAILURE;
 	while (!astarList_is_empty(l))
 	{
-		astarList_delete_first(l);
+		nodeAstar_delete(astarList_delete_first(l));
 	}
 	free(l);
 	return EXIT_SUCCESS;
@@ -73,19 +70,24 @@ void astarList_set_on_last(astarList * l)
 	l->current = l->last;
 }
 
-void next(astarList * l)
+void astarList_next(astarList * l)
 {
 	l->current = l->current->next;
 }
 
 void astarList_print(astarList * l, gboolean minimal)
 {
-	
+	astarList_set_on_first(l);
+	while (astarList_is_out_of(l))
+	{
+		printf("astarNode : x=%d, y=%d, h=%d, g=%d, f=%d\n", l->current->a->pos.x, l->current->a->pos.y, l->current->a->h, l->current->a->g, l->current->a->f);
+		astarList_next(l);
+	}
 }
 
-int astarList_insert_first(astarList * l, coord pos)
+int astarList_insert_first(astarList * l, nodeAstar *a)
 {
-	nodeAstar* n = nodeAstar_new(pos, l->first);
+	nodeAstarList* n = nodeAstarList_new(a, l->first);
 	if (n == NULL)
 		return EXIT_FAILURE;
 
@@ -97,9 +99,9 @@ int astarList_insert_first(astarList * l, coord pos)
 	return EXIT_SUCCESS;
 }
 
-int astarList_insert_last(astarList * l, coord pos)
+int astarList_insert_last(astarList * l, nodeAstar *a)
 {
-	nodeAstar* n = nodeAstar_new(pos, NULL);
+	nodeAstarList* n = nodeAstarList_new(a, NULL);
 	if (n == NULL)
 		return EXIT_FAILURE;
 
@@ -113,11 +115,11 @@ int astarList_insert_last(astarList * l, coord pos)
 	return EXIT_SUCCESS;
 }
 
-int astarList_insert_before_current(astarList * l, coord pos)
+int astarList_insert_before_current(astarList * l, nodeAstar *a)
 {
 	if (astarList_is_empty(l) || astarList_is_on_first(l))
 	{
-		return astarList_insert_first(l, pos);
+		return astarList_insert_first(l, a);
 	}
 	else if (astarList_is_out_of(l))
 	{
@@ -126,12 +128,12 @@ int astarList_insert_before_current(astarList * l, coord pos)
 	}
 	else
 	{
-		nodeAstar* n = nodeAstar_new(pos, l->current);
-		nodeAstar* tmp = l->current;
+		nodeAstarList* n = nodeAstarList_new(a, l->current);
+		nodeAstarList* tmp = l->current;
 		astarList_set_on_first(l);
 		while (l->current->next != tmp)
 		{
-			next(l);
+			astarList_next(l);
 		}
 		l->current->next = n;
 		return EXIT_SUCCESS;
@@ -139,12 +141,12 @@ int astarList_insert_before_current(astarList * l, coord pos)
 	return EXIT_FAILURE;
 }
 
-int astarList_insert_after_current(astarList * l, coord pos)
+int astarList_insert_after_current(astarList * l, nodeAstar *a)
 {
 
 	if (astarList_is_empty(l))
 	{
-		return astarList_insert_first(l, pos);
+		return astarList_insert_first(l, a);
 	}
 	else if (astarList_is_out_of(l))
 	{
@@ -153,26 +155,36 @@ int astarList_insert_after_current(astarList * l, coord pos)
 	}
 	else
 	{
-		nodeAstar* n = nodeAstar_new(pos, l->current->next);
+		nodeAstarList* n = nodeAstarList_new(a, l->current->next);
 		l->current->next = n;
 		return EXIT_SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
 
-int astarList_insert_sort(astarList * l, coord pos)
+int astarList_insert_sort(astarList * l, nodeAstar *a)
 {
-	nodeAstar * tmp = l->current;
+	int ret;
+	nodeAstarList * tmp = l->current;
 	if (astarList_is_empty(l))
 	{
-		return astarList_insert_first(l, pos);
+		return astarList_insert_first(l, a);
 	}
 
 	astarList_set_on_first(l);
+	do
+	{
+		//sort with f value to get easily the best node
+		if (a->f <= l->current->a->f)
+		{
+			ret = astarList_insert_before_current(l, a);
+			l->current = tmp;
+			return ret;
+		}else astarList_next(l);
+	} while (!astarList_is_out_of(l));
 
-//à faire en fonction des coordonnées
 	l->current = tmp;
-	return EXIT_SUCCESS;
+	return astarList_insert_last(l,a);
 }
 
 nodeAstar * astarList_delete_first(astarList * l)
@@ -189,7 +201,7 @@ nodeAstar * astarList_delete_first(astarList * l)
 		if (l->first == NULL)
 			astarList_init(l);
 		astarList_set_on_first(l);
-		free((nodeAstarList*)n);
+		free(n);
 		return ret;
 	}
 	return NULL;
@@ -211,9 +223,10 @@ nodeAstar * astarList_delete_last(astarList * l)
 		astarList_set_on_first(l);
 		while (l->current->next != n)
 		{
-			next(l);
+			astarList_next(l);
 		}
 		l->last = l->current;
+		l->last->next = NULL;
 		free((nodeAstarList*)n);
 		return ret;
 	}
@@ -236,16 +249,16 @@ nodeAstar * astarList_delete_current(astarList * l)
 	}
 	else
 	{
-		nodeAstarList* n = l->last;
+		nodeAstarList* n = l->current;
 		nodeAstar * ret = n->a;
 		astarList_set_on_first(l);
 		while (l->current->next != n)
 		{
-			next(l);
+			astarList_next(l);
 		}
-		free((nodeAstarList*)n);
+		l->current->next = n->next;
 
-		free((void*)n);
+		free((nodeAstarList*)n);
 		return ret;
 	}
 	return NULL;
@@ -259,9 +272,19 @@ nodeAstar * astarList_delete_single(astarList * l, nodeAstar * a)
 	return tmp;
 }
 
+nodeAstar * astarList_get_first(astarList * l)
+{
+	return l->first->a;
+}
+
 nodeAstar * astarList_get_current(astarList * l)
 {
 	return l->current->a;
+}
+
+nodeAstar * astarList_get_last(astarList * l)
+{
+	return l->last->a;
 }
 
 nodeAstar * astarList_find(astarList * l, nodeAstar * a)
@@ -271,7 +294,7 @@ nodeAstar * astarList_find(astarList * l, nodeAstar * a)
 	{
 		if (l->current->a == a)
 			return l->current->a;
-		next(l);
+		astarList_next(l);
 	}
 	return NULL;
 }

@@ -65,8 +65,13 @@ struct coord{
 	int x;
 	int y;
 };
+static coord zero = { 0, 0 };
+
 gboolean betwn(int a, int x, int b, gboolean equal);
-gboolean on_border(int x, int y, int x_min, int x_max, int y_min, int y_max);
+gboolean same_coord(coord p1, coord p2);
+gboolean is_in_square(coord p, coord sqrBase, coord sqrSize);
+gboolean on_border(coord pos, coord sqrBase, coord sqrSize, int borderSize);
+coord add_coord(coord c1, coord c2);
 int manhattan_distance(coord p1, coord p2);
 
 #endif // !COMMON_H

@@ -164,14 +164,9 @@ gboolean item_is_in_promotion(item * item)
 	return item->promotion;
 }
 
-int item_get_X_pos(item * item)
+coord item_get_pos(item * item)
 {
-	return item->posInSec.x;
-}
-
-int item_get_Y_pos(item * item)
-{
-	return item->posInSec.y;
+	return item->posInSec;
 }
 
 section * item_get_section(item * item)
@@ -211,8 +206,8 @@ void item_print(item * item, gboolean minimal)
 		if (item_has_section(item))
 		{
 			printf("Section ID       : %d\n", item_get_section(item)->id);
-			printf("pos X in Section : %d\n", item_get_X_pos(item));
-			printf("    Y in Section : %d\n", item_get_Y_pos(item));
+			printf("pos X in Section : %d\n", item_get_pos(item).x);
+			printf("    Y in Section : %d\n", item_get_pos(item).y);
 		}
 		else
 			printf("No Section defined for this Item.");

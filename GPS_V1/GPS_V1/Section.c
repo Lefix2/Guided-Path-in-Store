@@ -104,10 +104,8 @@ int Section_addItem(section * s_source, item * item, int x_pos, int y_pos)
 		printf("\n");
 		return EXIT_FAILURE;
 	}
-
-	int x_max = s_source->size.x;
-	int y_max = s_source->size.y;
-	if (!on_border(x_pos, y_pos, 0, x_max, 0, y_max))
+	coord itemPos = { x_pos, y_pos };
+	if (!on_border(itemPos, zero, s_source->size, 1))
 	{
 		printf("error : Trying to put an item out of section borders\n");
 		item_print(item, TRUE);

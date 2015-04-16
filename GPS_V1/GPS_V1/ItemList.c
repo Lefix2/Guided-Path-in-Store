@@ -252,6 +252,7 @@ int itemPointerList_insert_after_current(itemList * l, item * i)
 
 int itemPointerList_insert_sort(itemList * l, item * i)
 {
+	int ret;
 	nodeItemList * tmp = l->current;
 	if (itemPointerList_is_empty(l))
 	{
@@ -266,16 +267,14 @@ int itemPointerList_insert_sort(itemList * l, item * i)
 			itemPointerList_next(l);
 		else
 		{
-			itemPointerList_insert_before_current(l, i);
-			itemPointerList_set_on_first(l);
-			break;
+			ret = itemPointerList_insert_before_current(l, i);
+			l->current = tmp;
+			return ret;
 		}
 	} while (!itemPointerList_is_out_of(l));
-	if (itemPointerList_is_out_of(l))
-		itemPointerList_insert_last(l, i);
 
 	l->current = tmp;
-	return EXIT_SUCCESS;
+	return itemPointerList_insert_last(l, i);
 }
 
 item * itemPointerList_delete_first(itemList * l)
@@ -317,6 +316,7 @@ item * itemPointerList_delete_last(itemList * l)
 			itemPointerList_next(l);
 		}
 		l->last = l->current;
+		l->last->itemPointerList_next = NULL;
 		free((void*)n);
 		return ret;
 	}
