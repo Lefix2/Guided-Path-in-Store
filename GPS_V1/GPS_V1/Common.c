@@ -1,4 +1,5 @@
 #include "Common.h"
+#include <math.h>
 
 gboolean same_coord(coord p1, coord p2)
 {

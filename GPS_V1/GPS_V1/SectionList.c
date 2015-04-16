@@ -81,9 +81,8 @@ void sectionPointerList_print(sectionList * l)
 	int i;
 	section * tmp;
 
-	printf("Section : ");
 	if (sectionPointerList_is_empty(l)){
-		printf("empty\n");
+		printf("empty section\n");
 	}
 	else{
 		printf("\n");

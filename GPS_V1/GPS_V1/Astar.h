@@ -47,4 +47,6 @@ int close_node(nodeAstar *n, astarList *opened, astarList *closed);
 int findpath(coord *coordonates, astarList *closed);
 int astar(store *st_source, coord start, coord end, coord *path);
 
+void testAstar(void);
+
 #endif // !ASTAR_H

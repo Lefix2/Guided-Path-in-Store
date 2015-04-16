@@ -214,3 +214,37 @@ int astar(store *st_source, coord start, coord end, coord **path)
 
 	return nbNodes;
 }
+
+void testAstar(void)
+{
+	int magsizex = 50;
+	int magsizey = 50;
+
+	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
+
+	store_add_section(sttest, 01, t_section, 1, 3, 40, 3);
+	store_add_section(sttest, 02, t_section, 10, 18, 39, 3);
+	store_add_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
+	store_add_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
+	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
+	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
+	store_add_section(sttest, 07, t_wall, 18, 18, 5, 5);
+
+	Store_computeCartography(sttest);
+	store_print_carto(sttest);
+
+	coord start = { 1, 1 };
+	coord end = { 40, 40 };
+	coord *path = NULL;
+	int nbNodePath, i;
+
+	nbNodePath = astar(sttest, start, end, &path);
+	for (i = 0; i < nbNodePath; i++)
+		sttest->cartography[path[i].x][path[i].y] = 2;
+	free(path);
+
+	store_print_carto(sttest);
+	store_delete(sttest);
+
+	printf("bloc alloue : %d\n", myCheck());
+}

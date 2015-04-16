@@ -98,22 +98,23 @@ void store_print(store * st_source)
 	printf("name  : %s\n", st_source->name);
 	printf("size X : %d\n", st_source->size.x);
 	printf("     Y : %d\n", st_source->size.y);
+	printf("\n");
+	printf("->Section : ");
 	sectionPointerList_print(st_source->allocatedSections);
+	printf("->Cartography :\n");
 	store_print_carto(st_source);
-	printf("\n\n");
+	printf("\n");
 }
 
 void store_print_carto(store * st_source){
-	int x,y;
-	printf("Cartography :\n");
-
-	printf("\n");
+	int x, y;
 	for (y = st_source->size.y-1; y >=0; y--){
 		for (x = 0; x < st_source->size.x; x++){
 			printf("%d", st_source->cartography[x][y]);
 		}
 		printf("\n");
 	}
+	printf("\n");
 }
 
 
@@ -310,19 +311,6 @@ void testStore(void)
 	Section_removeItem(itemPointerList_find_id(sectionPointerList_find_id(sttest->allocatedSections, 01)->stock, 31));
 
 	Store_computeCartography(sttest);
-	store_print(sttest);
-
-	coord start = { 1, 1 };
-	coord end = { 10, 19 };
-	coord **path = NULL;
-	path = (coord**)malloc(sizeof(coord*));
-	int nbNodePath,i;
-
-	nbNodePath = astar(sttest, start, end, path);
-	for (i = 0; i < nbNodePath; i++)
-		sttest->cartography[(*(*path+i)).x][(*(*path+i)).y] = 2;
-	free(*path);
-	free(path);
 	store_print(sttest);
 	store_delete(sttest);
 
