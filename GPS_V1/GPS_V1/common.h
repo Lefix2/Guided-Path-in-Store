@@ -14,14 +14,12 @@
 #include <stdlib.h>
 #include <glib.h>
 
-//uncomment nextItemPointer line to check memory allocation
+//uncomment itemPointerList_next line to check memory allocation
 #define MEMCHECK
 #include "myAlloc.h"
 
 /****usefull define ****/
 #define MAX_ARRAY_OF_CHAR 256
-#define X 0
-#define Y 1
 
 
 /**
@@ -48,6 +46,7 @@ char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
 typedef struct store store;
 typedef struct section section;
 typedef struct item item;
+typedef struct nodeAstar nodeAstar;
 
 typedef struct nodeItemList nodeItemList;
 typedef struct itemList itemList;
@@ -58,7 +57,21 @@ typedef struct sectionList sectionList;
 typedef struct listNode listNode;
 typedef struct list list;
 
+typedef struct nodeAstarList nodeAstarList;
+typedef struct astarList astarList;
+
+typedef struct coord coord;
+struct coord{
+	int x;
+	int y;
+};
+static coord zero = { 0, 0 };
+
 gboolean betwn(int a, int x, int b, gboolean equal);
-gboolean onBorder(int x, int y, int x_min, int x_max, int y_min, int y_max);
+gboolean same_coord(coord p1, coord p2);
+gboolean is_in_square(coord p, coord sqrBase, coord sqrSize);
+gboolean on_border(coord pos, coord sqrBase, coord sqrSize, int borderSize);
+coord add_coord(coord c1, coord c2);
+int manhattan_distance(coord p1, coord p2);
 
 #endif // !COMMON_H

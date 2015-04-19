@@ -4,6 +4,7 @@
 #include "ItemList.h"
 #include "Section.h"
 #include "Store.h"
+#include "Astar.h"
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
@@ -49,7 +50,7 @@ gboolean button3_callback(GtkWidget *window, gpointer data)
 
 gboolean button4_callback(GtkWidget *window, gpointer data)
 {
-	testStore();
+	testAstar();
 	return FALSE;
 }
 
@@ -81,6 +82,7 @@ int main(int argc, char *argv[])
 	button1 = gtk_button_new_with_label("Test Item");
 	button2 = gtk_button_new_with_label("Test Section");
 	button3 = gtk_button_new_with_label("Test Store");
+	button4 = gtk_button_new_with_label("Test Astar");
 
 	/* positionner les widgets */
 	gtk_container_add(GTK_CONTAINER(window), h_box);
@@ -89,6 +91,7 @@ int main(int argc, char *argv[])
 	gtk_box_pack_start(GTK_BOX(v_box), button1, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(v_box), button2, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(v_box), button3, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(v_box), button4, FALSE, FALSE, 5);
 
 	gtk_box_pack_start(GTK_BOX(h_box), label, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(h_box),v_box, FALSE, FALSE, 0);
@@ -99,6 +102,7 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(button1_callback), NULL);
 	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button2_callback), NULL);
 	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button3_callback), NULL);
+	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
 
 
 	/* afficher la fenêtre */

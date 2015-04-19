@@ -36,6 +36,7 @@ void* myMalloc(unsigned int size, char* file,  char * func, int line)
 
         nb_block ++;
         //printf("In file %s,\n\t function %s,\n\t\t line %d :\n\t\t\t allocated block at memory address: %p\n",file,func,line,allocated_block);
+		//printf("+function %s  line %d : allocated block address: %p\n", func, line, allocated_block);
 	}
 
     /*
@@ -68,6 +69,7 @@ void* myCalloc(unsigned int count, unsigned int size, char* file, char * func, i
 
 		nb_block++;
 		//printf("In file %s,\n\t function %s,\n\t\t line %d :\n\t\t\t %d allocated block at memory address: %p\n", file, func, line, count, allocated_block);
+		//printf("+function %s  line %d : allocated block address: %p\n", func, line, allocated_block);
 	}
 
 	/*
@@ -95,6 +97,7 @@ void myFree(void* block, char* file,  char * func, int line)
         nb_block --;
         free(block);
         //printf("In file %s,\n\t function %s,\n\t\t line %d :\n\t\t\t freed block at memory address: %p\n",file, func, line, block);
+		//printf("-function %s  line %d : freed block address: %p\n", func, line, block);
     }
 }
 /*!

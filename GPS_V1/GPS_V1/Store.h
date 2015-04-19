@@ -10,7 +10,7 @@
 struct store{
 	int id;							/*!< Store's identifiant */
 	char name[MAX_ARRAY_OF_CHAR];	/*!< Store's name */
-	int size[2];					/*!< size in X and Y of the store */
+	coord size;					/*!< size in X and Y of the store */
 	itemList * allocatedStock;		/*!< itemList of item allocated in memory */
 	sectionList * allocatedSections;	/*!< list of sections of the store */
 	int ** cartography;				/*!< array image of the store's cartography */

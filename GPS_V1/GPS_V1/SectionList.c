@@ -2,92 +2,91 @@
 #include "Section.h"
 #include "ItemList.h"
 
-nodeSectionList * newNodeSectionPointer(section * s, nodeSectionList *n)
+nodeSectionList * nodeSectionPointerList_new(section * s, nodeSectionList *n)
 {
 	nodeSectionList * newn;
 	newn = (nodeSectionList*)malloc(sizeof(nodeSectionList));
 
-	newn->nextSectionPointer = n;
+	newn->sectionPointerList_next = n;
 	newn->s = s;
 
 	return newn;
 }
 
-sectionList * newSectionPointerList(void)
+sectionList * sectionPointerList_new(void)
 {
 	sectionList * newl;
 	newl = (sectionList *)malloc(sizeof(sectionList));
-	initSectionPointerList(newl);
+	sectionPointerList_init(newl);
 
 	return newl;
 }
 
-int deleteSectionList(sectionList * l)
+int sectionPointerList_delete(sectionList * l)
 {
 	if (l == NULL)
 		return EXIT_FAILURE;
-	while (!emptySectionPointerList(l))
+	while (!sectionPointerList_is_empty(l))
 	{
-		deletFirstSectionPointer(l);
+		sectionPointerList_delete_first(l);
 	}
 	free(l);
 	return EXIT_SUCCESS;
 }
 
-void initSectionPointerList(sectionList * l)
+void sectionPointerList_init(sectionList * l)
 {
-	l->firstSectionPointer = l->lastSectionPointer = l->currentSection = NULL;
+	l->first = l->last = l->current = NULL;
 }
 
-int emptySectionPointerList(sectionList * l)
+int sectionPointerList_is_empty(sectionList * l)
 {
-	return l->firstSectionPointer == NULL;
+	return l->first == NULL;
 }
 
-int firstSectionPointer(sectionList * l)
+int sectionPointerList_is_on_first(sectionList * l)
 {
-	return l->currentSection == l->firstSectionPointer;
+	return l->current == l->first;
 }
 
-int lastSectionPointer(sectionList * l)
+int sectionPointerList_is_on_last(sectionList * l)
 {
-	return l->currentSection == l->lastSectionPointer;
+	return l->current == l->last;
 }
 
-int outOfSectionPointerList(sectionList * l)
+int sectionPointerList_is_out_of(sectionList * l)
 {
-	return l->currentSection == NULL;
+	return l->current == NULL;
 }
 
-void setOnFirstSectionPointer(sectionList * l)
+void sectionPointerList_set_on_first(sectionList * l)
 {
-	l->currentSection = l->firstSectionPointer;
+	l->current = l->first;
 }
 
-void setOnLastSectionPointer(sectionList * l)
+void sectionPointerList_set_on_last(sectionList * l)
 {
-	l->currentSection = l->lastSectionPointer;
+	l->current = l->last;
 }
 
-void nextSectionPointer(sectionList * l)
+void sectionPointerList_next(sectionList * l)
 {
-	l->currentSection = l->currentSection->nextSectionPointer;
+	l->current = l->current->sectionPointerList_next;
 }
 
-void printSectionPointerList(sectionList * l)
+void sectionPointerList_print(sectionList * l)
 {
 	char* header[] = { ".--------------------------------------------------------------------------.",
 					   "|  id  |      type      | items in stock |     size x     |     size y     |" };
 	int i;
 	section * tmp;
 
-	printf("Section : ");
-	if (emptySectionPointerList(l)){
-		printf("empty\n");
+	if (sectionPointerList_is_empty(l)){
+		printf("empty section\n");
 	}
 	else{
 		printf("\n");
-		setOnFirstSectionPointer(l);
+		sectionPointerList_set_on_first(l);
 
 		for (i = 0; i < 2; i++)
 		{
@@ -95,9 +94,9 @@ void printSectionPointerList(sectionList * l)
 		}
 		printf("%s\n", header[0]);
 
-		while (!outOfSectionPointerList(l))
+		while (!sectionPointerList_is_out_of(l))
 		{
-			tmp = l->currentSection->s;
+			tmp = l->current->s;
 			printf("| %4d | %14s | %14d | %14d | %14d |\n",Section_getId(tmp),
 														   Section_getTypeString(tmp),
 														   Section_getNbItems(tmp),
@@ -105,195 +104,190 @@ void printSectionPointerList(sectionList * l)
 														   Section_getYSize(tmp)
 			);
 			if (tmp->s_type == t_section)
-				printItemList(tmp->stock, TRUE);
+				itemPointerList_print(tmp->stock, TRUE);
 			printf("%s\n", header[0]);
-			nextSectionPointer(l);
+			sectionPointerList_next(l);
 		}
 		printf("\n");
 	}
 
 }
 
-int insertFirstSectionPointer(sectionList * l, section * s)
+int sectionPointerList_insert_first(sectionList * l, section * s)
 {
-	nodeSectionList* n = newNodeSectionPointer(s, l->firstSectionPointer);
+	nodeSectionList* n = nodeSectionPointerList_new(s, l->first);
 	if (n == NULL)
 		return EXIT_FAILURE;
 
-	if (emptySectionPointerList(l))
+	if (sectionPointerList_is_empty(l))
 	{
-		l->lastSectionPointer = l->currentSection = n;
+		l->last = l->current = n;
 	}
-	l->firstSectionPointer = n;
+	l->first = n;
 	return EXIT_SUCCESS;
 }
 
-int insertLastSectionPointer(sectionList * l, section * s)
+int sectionPointerList_insert_last(sectionList * l, section * s)
 {
-	nodeSectionList* n = newNodeSectionPointer(s, NULL);
+	nodeSectionList* n = nodeSectionPointerList_new(s, NULL);
 	if (n == NULL)
 		return EXIT_FAILURE;
 
-	if (emptySectionPointerList(l))
+	if (sectionPointerList_is_empty(l))
 	{
-		l->firstSectionPointer = l->currentSection = n;
+		l->first = l->current = n;
 	}
 	else
-		l->lastSectionPointer->nextSectionPointer = n;
-	l->lastSectionPointer = n;
+		l->last->sectionPointerList_next = n;
+	l->last = n;
 	return EXIT_SUCCESS;
 }
 
-int insertBeforeCurrentSectionPointer(sectionList * l, section * s)
+int sectionPointerList_insert_before_current(sectionList * l, section * s)
 {
-	nodeSectionList* n;
-	n = newNodeSectionPointer(s, l->currentSection);
-	if (n == NULL)
-		return EXIT_FAILURE;
-
-	if (emptySectionPointerList(l))
+	if (sectionPointerList_is_empty(l) || sectionPointerList_is_on_first(l))
 	{
-		l->lastSectionPointer = l->currentSection = l->lastSectionPointer = n;
+		return sectionPointerList_insert_first(l, s);
 	}
-	else if (firstSectionPointer(l))
+	else if (sectionPointerList_is_out_of(l))
 	{
-		insertFirstSectionPointer(l, s);
-	}
-	else if (outOfSectionPointerList(l))
-	{
-		printf("error: trying to write out of the sectionList!");
+		printf("error: trying to write out of th sectionlist!");
 		return EXIT_FAILURE;
 	}
 	else
 	{
-		nodeSectionList* tmp = l->currentSection;
-		setOnFirstSectionPointer(l);
-		while (l->currentSection->nextSectionPointer != tmp)
+		nodeSectionList* n = nodeSectionPointerList_new(s, l->current);
+		nodeSectionList* tmp = l->current;
+		sectionPointerList_set_on_first(l);
+		while (l->current->sectionPointerList_next != tmp)
 		{
-			nextSectionPointer(l);
+			sectionPointerList_next(l);
 		}
-		l->currentSection->nextSectionPointer = n;
+		l->current->sectionPointerList_next = n;
+		return EXIT_SUCCESS;
 	}
-	return EXIT_SUCCESS;
+	return EXIT_FAILURE;
 }
 
-int insertAfterCurrentSectionPointer(sectionList * l, section * s)
+int sectionPointerList_insert_after_current(sectionList * l, section * s)
 {
-	nodeSectionList* n;
-	n = newNodeSectionPointer(s, l->currentSection->nextSectionPointer);
-	if (n == NULL)
-		return EXIT_FAILURE;
 
-	if (emptySectionPointerList(l))
+	if (sectionPointerList_is_empty(l))
 	{
-		l->lastSectionPointer = l->currentSection = l->lastSectionPointer = n;
+		return sectionPointerList_insert_first(l, s);
 	}
-	else if (outOfSectionPointerList(l))
+	else if (sectionPointerList_is_out_of(l))
 	{
 		printf("error: trying to write out of the sectionList!");
 		return EXIT_FAILURE;
 	}
-	l->currentSection->nextSectionPointer = n;
-	return EXIT_SUCCESS;
+	else
+	{
+		nodeSectionList* n = nodeSectionPointerList_new(s, l->current->sectionPointerList_next);
+		l->current->sectionPointerList_next = n;
+		return EXIT_SUCCESS;
+	}
+	return EXIT_FAILURE;
 }
 
-int insertSortSectionPointer(sectionList * l, section * s)
+int sectionPointerList_insert_sort(sectionList * l, section * s)
 {
-	nodeSectionList * tmp = l->currentSection;
-	if (emptySectionPointerList(l))
+	nodeSectionList * tmp = l->current;
+	if (sectionPointerList_is_empty(l))
 	{
-		return insertFirstSectionPointer(l, s);
+		return sectionPointerList_insert_first(l, s);
 	}
 
-	setOnFirstSectionPointer(l);
+	sectionPointerList_set_on_first(l);
 
 	do
 	{
-		if (l->currentSection->s->id <= s->id)
-			nextSectionPointer(l);
+		if (l->current->s->id <= s->id)
+			sectionPointerList_next(l);
 		else
 		{
-			insertBeforeCurrentSectionPointer(l, s);
-			setOnFirstSectionPointer(l);
+			sectionPointerList_insert_before_current(l, s);
+			sectionPointerList_set_on_first(l);
 			break;
 		}
-	} while (!outOfSectionPointerList(l));
-	if (outOfSectionPointerList(l))
-		insertLastSectionPointer(l, s);
+	} while (!sectionPointerList_is_out_of(l));
+	if (sectionPointerList_is_out_of(l))
+		sectionPointerList_insert_last(l, s);
 
-	l->currentSection = tmp;
+	l->current = tmp;
 	return EXIT_SUCCESS;
 }
 
-section * deletFirstSectionPointer(sectionList * l)
+section * sectionPointerList_delete_first(sectionList * l)
 {
-	if (emptySectionPointerList(l)){
-		printf("error: trying to delete node in an emptySectionPointerList sectionList in %s\n", __FUNCTION__);
+	if (sectionPointerList_is_empty(l)){
+		printf("error: trying to delete node in an sectionPointerList_is_empty sectionList in %s\n", __FUNCTION__);
 		return NULL;
 	}
 
 	else{
-		nodeSectionList * n = l->firstSectionPointer;
+		nodeSectionList * n = l->first;
 		section * ret = n->s;
-		l->firstSectionPointer = n->nextSectionPointer;
-		if (l->firstSectionPointer == NULL)
-			initSectionPointerList(l);
-		setOnFirstSectionPointer(l);
+		l->first = n->sectionPointerList_next;
+		if (l->first == NULL)
+			sectionPointerList_init(l);
+		sectionPointerList_set_on_first(l);
 		free((void*)n);
 		return ret;
 	}
 	return NULL;
 }
 
-section * deleteLastSectionPointer(sectionList * l)
+section * sectionPointerList_delete_last(sectionList * l)
 {
-	if (emptySectionPointerList(l)){						//no node
+	if (sectionPointerList_is_empty(l)){						//no node
 		printf("error: trying to delete node in an empty sectionList in %s\n", __FUNCTION__);
 		return NULL;
 	}
-	else if (l->firstSectionPointer == l->lastSectionPointer)		//only one node
+	else if (l->first == l->last)		//only one node
 	{
-		return deletFirstSectionPointer(l);
+		return sectionPointerList_delete_first(l);
 	}
 	else{											//at least 2 nodes
-		nodeSectionList* n = l->lastSectionPointer;
+		nodeSectionList* n = l->last;
 		section * ret = n->s;
-		setOnFirstSectionPointer(l);
-		while (l->currentSection->nextSectionPointer != n)
+		sectionPointerList_set_on_first(l);
+		while (l->current->sectionPointerList_next != n)
 		{
-			nextSectionPointer(l);
+			sectionPointerList_next(l);
 		}
-		l->lastSectionPointer = l->currentSection;
+		l->last = l->current;
+		l->last->sectionPointerList_next = NULL;
 		free((void*)n);
 		return ret;
 	}
 	return NULL;
 }
 
-section * deleteCurrentSectionPointer(sectionList * l)
+section * sectionPointerList_delete_current(sectionList * l)
 {
-	if (emptySectionPointerList(l)){
+	if (sectionPointerList_is_empty(l)){
 		printf("error: trying to delete node in an empty sectionList in %s\n", __FUNCTION__);
 		return NULL;
 	}
-	if (firstSectionPointer(l))
+	if (sectionPointerList_is_on_first(l))
 	{
-		return deletFirstSectionPointer(l);
+		return sectionPointerList_delete_first(l);
 	}
-	else if (lastSectionPointer(l))
+	else if (sectionPointerList_is_on_last(l))
 	{
-		return deleteLastSectionPointer(l);
+		return sectionPointerList_delete_last(l);
 	}
 	else
 	{
-		nodeSectionList* n = l->currentSection;
+		nodeSectionList* n = l->current;
 		section * ret = n->s;
-		setOnFirstSectionPointer(l);
-		while (l->currentSection->nextSectionPointer != n)
+		sectionPointerList_set_on_first(l);
+		while (l->current->sectionPointerList_next != n)
 		{
-			nextSectionPointer(l);
+			sectionPointerList_next(l);
 		}
-		l->currentSection->nextSectionPointer = n->nextSectionPointer;
+		l->current->sectionPointerList_next = n->sectionPointerList_next;
 
 		free((void*)n);
 		return ret;
@@ -301,39 +295,39 @@ section * deleteCurrentSectionPointer(sectionList * l)
 	return NULL;
 }
 
-section * deleteSingleSectionPointer(sectionList * l, section * s)
+section * sectionPointerList_delete_single(sectionList * l, section * s)
 {
-	section * tmp = findSectionPointer(l, s);
+	section * tmp = sectionPointerList_find(l, s);
 	if(tmp != NULL)
-		deleteCurrentSectionPointer(l);
+		sectionPointerList_delete_current(l);
 	return tmp;
 }
 
-section * getCurrentSectionPointer(sectionList * l)
+section * getcurrent(sectionList * l)
 {
-	return l->currentSection->s;
+	return l->current->s;
 }
 
-section * findSectionPointer(sectionList * l, section * s)
+section * sectionPointerList_find(sectionList * l, section * s)
 {
-	setOnFirstSectionPointer(l);
-	while (l->currentSection != NULL)
+	sectionPointerList_set_on_first(l);
+	while (l->current != NULL)
 	{
-		if (l->currentSection->s == s)
-			return l->currentSection->s;
-		nextSectionPointer(l);
+		if (l->current->s == s)
+			return l->current->s;
+		sectionPointerList_next(l);
 	}
 	return NULL;
 }
 
-section * findSectionPointerId(sectionList * l, int id)
+section * sectionPointerList_find_id(sectionList * l, int id)
 {
-	setOnFirstSectionPointer(l);
-	while (l->currentSection != NULL)
+	sectionPointerList_set_on_first(l);
+	while (l->current != NULL)
 	{
-		if (l->currentSection->s->id == id)
-			return l->currentSection->s;
-		nextSectionPointer(l);
+		if (l->current->s->id == id)
+			return l->current->s;
+		sectionPointerList_next(l);
 	}
 	return NULL;
 }

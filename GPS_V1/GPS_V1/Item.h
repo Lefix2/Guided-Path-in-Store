@@ -19,7 +19,7 @@ struct item{
 	int fragility;					/*!< image of the fragility of the item */
 	double cost;					/*!< item's cost */
 	gboolean promotion;				/*!< Values set to true if the product is in promotion */
-	int posInSec[2];					/*!< position of the item in the section in X and Y */
+	coord posInSec;				/*!< position of the item in the section in X and Y */
 	section * section;			/*!< pointer to the associated section i the store */
 };
 
@@ -47,8 +47,7 @@ gboolean item_is_fresh(item * item);
 int item_get_fragility(item * item);
 double item_get_cost(item * item);
 gboolean item_is_in_promotion(item * item);
-int item_get_X_pos(item * item);
-int item_get_Y_pos(item * item);
+coord item_get_pos(item * item);
 section * item_get_section(item * item);
 
 //fonction pour liste générique

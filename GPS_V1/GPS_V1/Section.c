@@ -15,7 +15,7 @@ section * newSection(int id, type s_type)
 
 	if (Section_hasStock(s_new))
 	{
-		s_new->stock = item_newPointerList();
+		s_new->stock = itemPointerList_new();
 	}
 
 	return s_new;
@@ -25,10 +25,10 @@ section * Section_init(section * s_source)
 {
 	s_source->id = 0;
 	s_source->s_type = t_none;
-	s_source->pos[X] = 0;
-	s_source->pos[Y] = 0;
-	s_source->size[X] = 0;
-	s_source->size[Y] = 0;
+	s_source->pos.x = 0;
+	s_source->pos.y = 0;
+	s_source->size.x = 0;
+	s_source->size.y = 0;
 	s_source->nb_items = 0;
 	s_source->stock = NULL;
 
@@ -39,12 +39,12 @@ int Section_delete(section * s_source)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
-	deleteItemPointerList(s_source->stock);
+	itemPointerList_delete(s_source->stock);
 	free(s_source);
 	return EXIT_SUCCESS;
 }
 
-int Section_isemptyItemPointerList(section * s_source)
+int Section_isitemPointerList_is_empty(section * s_source)
 {
 	return (s_source->nb_items == 0);
 }
@@ -78,8 +78,8 @@ int Section_setPos(section * s_source, int x_pos, int y_pos)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
-	s_source->pos[X] = x_pos;
-	s_source->pos[Y] = y_pos;
+	s_source->pos.x = x_pos;
+	s_source->pos.y = y_pos;
 	return EXIT_SUCCESS;
 }
 
@@ -87,8 +87,8 @@ int Section_setSize(section * s_source, int x_size, int y_size)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
-	s_source->size[X] = x_size;
-	s_source->size[Y] = y_size;
+	s_source->size.x = x_size;
+	s_source->size.y = y_size;
 	return EXIT_SUCCESS;
 }
 
@@ -104,10 +104,8 @@ int Section_addItem(section * s_source, item * item, int x_pos, int y_pos)
 		printf("\n");
 		return EXIT_FAILURE;
 	}
-
-	int x_max = s_source->size[X];
-	int y_max = s_source->size[Y];
-	if (!onBorder(x_pos, y_pos, 0, x_max, 0, y_max))
+	coord itemPos = { x_pos, y_pos };
+	if (!on_border(itemPos, zero, s_source->size, 1))
 	{
 		printf("error : Trying to put an item out of section borders\n");
 		item_print(item, TRUE);
@@ -117,7 +115,7 @@ int Section_addItem(section * s_source, item * item, int x_pos, int y_pos)
 
 	item_set_pos(item, x_pos, y_pos);
 	item_set_section(item, s_source);
-	insertlastItemPointer(s_source->stock, item);
+	itemPointerList_insert_last(s_source->stock, item);
 	s_source->nb_items++;
 	return EXIT_SUCCESS;
 }
@@ -129,9 +127,9 @@ int Section_removeItem(item * item)
 	if (item->section == NULL)
 		return EXIT_FAILURE;
 
-	if (!findItemPointer(item->section->stock, item))
+	if (!itemPointerList_find(item->section->stock, item))
 		return EXIT_FAILURE;
-	deleteCurrentItemPointer(item->section->stock);
+	itemPointerList_delete_current(item->section->stock);
 	item->section->nb_items--;
 
 	item_set_section(item, NULL);
@@ -157,22 +155,22 @@ char * Section_getTypeString(section * s_source)
 
 int Section_getXPos(section * s_source)
 {
-	return s_source->pos[X];
+	return s_source->pos.x;
 }
 
 int Section_getYPos(section * s_source)
 {
-	return s_source->pos[Y];
+	return s_source->pos.y;
 }
 
 int Section_getXSize(section * s_source)
 {
-	return s_source->size[X];
+	return s_source->size.x;
 }
 
 int Section_getYSize(section * s_source)
 {
-	return s_source->size[Y];
+	return s_source->size.y;
 }
 
 int Section_getNbItems(section * s_source)
@@ -191,12 +189,12 @@ void Section_print(section * s_source, gboolean minimal)
 		printf("***** Section*****\n");
 		printf("ID    : %d\n", s_source->id);
 		printf("type  : %s\n", sec_type[s_source->s_type]);
-		printf("pos X : %d -> %d (%d)\n", s_source->pos[X], s_source->size[X] + s_source->pos[X], s_source->size[X]);
-		printf("    Y : %d -> %d (%d)\n", s_source->pos[Y], s_source->size[Y] + s_source->pos[Y], s_source->size[Y]);
+		printf("pos X : %d -> %d (%d)\n", s_source->pos.x, s_source->size.x + s_source->pos.x, s_source->size.x);
+		printf("    Y : %d -> %d (%d)\n", s_source->pos.y, s_source->size.y + s_source->pos.y, s_source->size.y);
 		if (Section_hasStock(s_source))
 		{
 			printf("Stock : ");
-			printItemList(s_source->stock, FALSE);
+			itemPointerList_print(s_source->stock, FALSE);
 		}
 	}
 
