@@ -47,11 +47,17 @@ gboolean button3_callback(GtkWidget *window, gpointer data)
 	return FALSE;
 }
 
+gboolean button4_callback(GtkWidget *window, gpointer data)
+{
+	testStore();
+	return FALSE;
+}
+
 int main(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
-	GtkWidget *window, *label, *v_box, *h_box,*button, *button1, *button2, *button3;
+	GtkWidget *window, *label, *v_box, *h_box,*button, *button1, *button2, *button3, *button4;
 	gchar *txtSchema = NULL;
 
 	/* initialiser GTK+ */

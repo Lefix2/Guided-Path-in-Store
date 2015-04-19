@@ -80,6 +80,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="callback.c" />
+    <ClCompile Include="courses.c" />
+    <ClCompile Include="error.c" />
     <ClCompile Include="GUI.c" />
     <ClCompile Include="jules.c" />
   </ItemGroup>
@@ -100,6 +103,10 @@
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\pangocairo-1.0.lib" />
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\pangoft2-1.0.lib" />
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\pangowin32-1.0.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="callback.h" />
+    <ClInclude Include="error.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
