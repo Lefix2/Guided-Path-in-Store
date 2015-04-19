@@ -9,6 +9,7 @@
 
 void cb_open(GtkWidget *p_widget, gpointer user_data);
 void cb_quit(GtkWidget *p_widget, gpointer user_data);
+void cb_shopping_list(GtkWidget *p_widget, gpointer box);
 static void open_file(const gchar *file_name, GtkTextView *p_text_view);
 
 #endif /* not CALLBACK_H */

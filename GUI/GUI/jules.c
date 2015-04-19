@@ -58,8 +58,9 @@ int init_window(){
 int main(int argc, char **argv){
 	/* GTK Initialisation */
 	gtk_init(&argc, &argv);
-	init_window();
 
+	init_courses();
+	
 	/* Main loop start */
 	gtk_main();
 
