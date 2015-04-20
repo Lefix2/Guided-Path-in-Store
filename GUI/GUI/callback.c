@@ -22,6 +22,7 @@ void cb_shopping_list(GtkWidget *p_widget, gpointer box){
 	p_new_label = gtk_button_new_with_label(text);
 	gtk_box_pack_start(GTK_BOX(box), p_new_label, FALSE, FALSE, 0);
 	gtk_widget_show_all(box);
+	printf("ajout de %s a la liste\n", text);
 }
 
 
