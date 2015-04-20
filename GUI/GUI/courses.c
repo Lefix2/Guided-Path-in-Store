@@ -8,18 +8,25 @@
 int init_courses(){
 	/*Widgets creation */
 	GtkWidget *p_window = NULL;
+	GtkWidget *p_grid[12];
 	GtkWidget *p_table = NULL;
 	GtkWidget *p_button[12];
 	GtkWidget *p_label = NULL;
 	GtkWidget *p_scrollbar = NULL;
 	GtkWidget *p_shopping_list = NULL;
+	GtkWidget *p_notebook = NULL;
+	GtkWidget *p_onglet[12];
+
 
 	
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), NULL);
 
+	
 	p_table = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(p_window), p_table);
+	p_notebook = gtk_notebook_new();
+	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 3, 1, 4, 4);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
 	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 2,3);
@@ -28,9 +35,9 @@ int init_courses(){
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
 
 
-	p_button[0] = gtk_button_new_with_label("poireaux");
+	p_button[0] = gtk_button_new_with_label("pates");
 	g_signal_connect(G_OBJECT(p_button[0]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[1] = gtk_button_new_with_label("lait");
+	p_button[1] = gtk_button_new_with_label("Fruit de la passion");
 	g_signal_connect(G_OBJECT(p_button[1]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
 	p_button[2] = gtk_button_new_with_label("alcool");
 	g_signal_connect(G_OBJECT(p_button[2]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
@@ -51,17 +58,78 @@ int init_courses(){
 	p_button[10] = gtk_button_new_with_label("banane");
 	g_signal_connect(G_OBJECT(p_button[10]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
 	p_button[11] = gtk_button_new_with_label("kiwi");
-	g_signal_connect(G_OBJECT(p_button[11]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-
-
+	g_signal_connect(G_OBJECT(p_button[11]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list); 
+	
 	int j = 0, k = 0;
+	char text[20];
+
+	sprintf(text, "Feculents");
+	p_onglet[0] = gtk_label_new(text);
+	p_grid[0] = gtk_grid_new();
+	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook),p_grid[0], p_onglet[0]);
+	/*j = k = 0;
 	for (k; k < 3; k++){
+		j = 0;
+		for (j; j < 4; j++){
+			gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[(k * 4) + j], j + 4, k + 1, 1, 1);
+
+		}
+	}*/
+	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[0], 0,0,1,1);
+	sprintf(text, "Fruits");
+	p_onglet[1] = gtk_label_new(text);
+	p_grid[1] = gtk_grid_new();
+	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[1], p_onglet[1]);
+	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[0], 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[7], 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[8], 0, 2, 1, 1);
+
+	sprintf(text, "Numerique");
+	p_onglet[2] = gtk_label_new(text);
+	p_grid[2] = gtk_grid_new();
+	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[2], p_onglet[2]);
+	gtk_grid_attach(GTK_GRID(p_grid[1]), p_button[1], 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[1]), p_button[9], 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[1]), p_button[10], 0, 2, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[1]), p_button[11], 0, 3, 1, 1);
+
+	sprintf(text, "Jardinage");
+	p_onglet[3] = gtk_label_new(text);
+	p_grid[3] = gtk_grid_new();
+	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[3], p_onglet[3]);
+	gtk_grid_attach(GTK_GRID(p_grid[2]), p_button[2], 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[2]), p_button[6], 0, 1, 1, 1);
+
+	sprintf(text, "Entretien");
+	p_onglet[4] = gtk_label_new(text);
+	p_grid[4] = gtk_grid_new();
+	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[4], p_onglet[4]);
+	gtk_grid_attach(GTK_GRID(p_grid[3]), p_button[3], 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[3]), p_button[5], 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_grid[3]), p_button[4], 0, 2, 1, 1);
+
+	sprintf(text, "Boisson");
+	p_onglet[5] = gtk_label_new(text);
+	p_grid[5] = gtk_grid_new();
+	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[5], p_onglet[5]);
+	gtk_grid_attach(GTK_GRID(p_grid[4]), p_button[4], 0, 0, 1, 1);
+
+	
+
+	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(p_notebook), GTK_POS_RIGHT);
+
+
+
+	
+
+
+	/*for (k; k < 3; k++){
 		j = 0;
 		for (j; j < 4; j++){
 			gtk_grid_attach(GTK_GRID(p_table), p_button[(k*4) + j], j+4, k+1, 1, 1);
 
 		}
-	}
+	}*/
 	
 
 	GtkWidget *label1 = NULL, *label2 =NULL;
