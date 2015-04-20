@@ -22,7 +22,7 @@ int init_courses(){
 	gtk_container_add(GTK_CONTAINER(p_window), p_table);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
-	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 3, 2, 3);
+	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 2,3);
 
 	p_shopping_list = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
@@ -52,15 +52,9 @@ int init_courses(){
 	g_signal_connect(G_OBJECT(p_button[10]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
 	p_button[11] = gtk_button_new_with_label("kiwi");
 	g_signal_connect(G_OBJECT(p_button[11]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	
-	
-	int j = 0, k = 0, r = 0, c = 0;
-	for (r; r < 4; r++){
-		gtk_grid_insert_row(GTK_GRID(p_table), 0);
-	}
-	for (c; c < 8; c++){
-		gtk_grid_insert_column(GTK_GRID(p_table), 0);
-	}
+
+
+	int j = 0, k = 0;
 	for (k; k < 3; k++){
 		j = 0;
 		for (j; j < 4; j++){
@@ -68,13 +62,13 @@ int init_courses(){
 
 		}
 	}
-
+	
 
 	GtkWidget *label1 = NULL, *label2 =NULL;
 	char texte[20];
 	sprintf(texte, "Your shopping list");
 	label1 = gtk_label_new(texte);
-	gtk_grid_attach(GTK_GRID(p_table), label1, 8, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), label1, 0, 0, 1, 1);
 	sprintf(texte, "Select products");
 	label2 = gtk_label_new(texte);
 	gtk_grid_attach(GTK_GRID(p_table), label2, 4, 0, 1, 1);
