@@ -21,7 +21,9 @@ void cb_shopping_list(GtkWidget *p_widget, gpointer box){
 	text = gtk_button_get_label(GTK_BUTTON(p_widget));
 	p_new_label = gtk_button_new_with_label(text);
 	gtk_box_pack_end(GTK_BOX(box), p_new_label, FALSE, FALSE, 0);
+	gtk_widget_show_all(box);
 }
+
 
 static void open_file(const gchar *file_name, GtkTextView *p_text_view)
 {

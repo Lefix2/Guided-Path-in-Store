@@ -1,7 +1,9 @@
-#include <stdlib.h>
 #include <gtk/gtk.h>
+#include <stdlib.h>
+
 #include "callback.h"
 #include "error.h"
+
 
 int init_courses(){
 	/*Widgets creation */
@@ -20,12 +22,10 @@ int init_courses(){
 	gtk_container_add(GTK_CONTAINER(p_window), p_table);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
-	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 1, 1, 2, 3);
+	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 3, 2, 3);
 
 	p_shopping_list = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
-
-
 
 
 	p_button[0] = gtk_button_new_with_label("poireaux");
@@ -74,7 +74,7 @@ int init_courses(){
 	char texte[20];
 	sprintf(texte, "Your shopping list");
 	label1 = gtk_label_new(texte);
-	gtk_grid_attach(GTK_GRID(p_table), label1, 1, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), label1, 8, 0, 1, 1);
 	sprintf(texte, "Select products");
 	label2 = gtk_label_new(texte);
 	gtk_grid_attach(GTK_GRID(p_table), label2, 4, 0, 1, 1);
@@ -86,6 +86,6 @@ int init_courses(){
 	gtk_grid_set_row_spacing(GTK_GRID(p_table), 2);
 	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), TRUE);
 	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), TRUE);
-	gtk_window_set_title(GTK_WINDOW(p_window), "Liste de courses");
+	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
 	return EXIT_SUCCESS;
 }
