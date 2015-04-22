@@ -15,25 +15,16 @@ void cb_quit(GtkWidget *p_widget, gpointer user_data){
 	gtk_main_quit();
 }
 
-void cb_shopping_list(GtkWidget *p_widget, gpointer p_table){
+void cb_shopping_list(GtkWidget *p_widget, gpointer box){
 	GtkWidget *p_new_label;
 	const gchar * text;
 	text = gtk_button_get_label(GTK_BUTTON(p_widget));
 	p_new_label = gtk_button_new_with_label(text);
-	gtk_grid_insert_row(GTK_GRID(p_table), 0);
-	gtk_grid_attach(GTK_GRID(p_table), p_new_label, 0, 0, 1, 1);
+	gtk_box_pack_start(GTK_BOX(box), p_new_label, FALSE, FALSE, 0);
 	gtk_widget_show(p_new_label);
 	printf("ajout de %s a la liste\n", text);
 }
 
-void cb_finish_list(GtkWidget *p_widget, gpointer p_table){
-	gint i = 0;
-	printf("Shopping list :\n");
-	while(gtk_grid_get_child_at(GTK_GRID(p_table), 0, i) != NULL){
-		printf("%s\n",gtk_button_get_label(GTK_BUTTON(gtk_grid_get_child_at(GTK_GRID(p_table), 0, i))));
-		i++;
-	}
-}
 
 static void open_file(const gchar *file_name, GtkTextView *p_text_view)
 {
