@@ -42,3 +42,17 @@ static void open_file(const gchar *file_name, GtkTextView *p_text_view)
 		}
 	}
 }
+
+//Function that opens the tab with the same label as the menu_item cliqued
+void cb_open_tab(GtkWidget *p_menu_item, gpointer p_notebook){
+	gint i = 0;
+	const gchar *label;
+	label = gtk_menu_item_get_label(GTK_MENU_ITEM(p_menu_item));
+	for (i; i < gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); i++){
+		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_notebook_get_tab_label(GTK_NOTEBOOK(p_notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)))), label) == 0){
+			gtk_notebook_set_current_page(GTK_NOTEBOOK(p_notebook), i);
+			return;
+		}
+	}
+	printf("WARNING : YOUR NOTEBOOKS TAB_LABEL AND MENU_ITEMS HAVE DIFFERENT NAMES");
+}
