@@ -205,6 +205,8 @@ int astar(store *st_source, coord start, coord end, coord **path)
 	if (astarList_is_empty(opened))
 	{
 		printf("Astar : No path found\n");
+		astarList_delete(opened);
+		astarList_delete(closed);
 		return 0;
 	}
 	int nbNodes = findpath(path, closed);
@@ -228,15 +230,23 @@ void testAstar(void)
 	store_add_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
 	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
 	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
-	store_add_section(sttest, 07, t_wall, 18, 18, 5, 5);
 
 	Store_computeCartography(sttest);
 	store_print_carto(sttest);
 
-	coord start = { 1, 1 };
-	coord end = { 40, 40 };
+	coord start;
+	coord end;
 	coord *path = NULL;
 	int nbNodePath, i;
+
+	printf("start : \nX :");
+	scanf("%d", &(start.x));
+	printf("Y :");
+	scanf("%d", &(start.y));
+	printf("end : \nX :");
+	scanf("%d", &(end.x));
+	printf("Y :");
+	scanf("%d", &(end.y));
 
 	nbNodePath = astar(sttest, start, end, &path);
 	for (i = 0; i < nbNodePath; i++)

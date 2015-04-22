@@ -73,6 +73,16 @@ int item_set_category(item * item, category category)
 	return EXIT_SUCCESS;
 }
 
+int item_set_stock(item *item, int stock)
+{
+	if (item == NULL)
+		return EXIT_FAILURE;
+	if (stock < 0)
+		return EXIT_FAILURE;
+	item->stock = stock;
+	return EXIT_SUCCESS;
+}
+
 int item_set_fresh(item * item, gboolean fresh)
 {
 	if (item == NULL)
@@ -142,6 +152,11 @@ category item_get_category(item * item)
 char * item_get_category_string(item * item)
 {
 	return item_category[item->category];
+}
+
+int item_get_stock(item *item)
+{
+	return item->stock;
 }
 
 gboolean item_is_fresh(item * item)
