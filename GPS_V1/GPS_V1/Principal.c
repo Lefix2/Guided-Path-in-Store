@@ -54,11 +54,35 @@ gboolean button4_callback(GtkWidget *window, gpointer data)
 	return FALSE;
 }
 
+gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
+{
+	guint width, height;
+	GdkRGBA color;
+
+	width = gtk_widget_get_allocated_width(widget);
+	height = gtk_widget_get_allocated_height(widget);
+	cairo_rectangle(cr, 10, 10, width / 2.0, height / 2.0);
+
+	/*cairo_arc(cr,
+		width / 2.0, height / 2.0,
+		MIN(width, height) / 2.0,
+		0, 2 * G_PI);*/
+
+	gtk_style_context_get_color(gtk_widget_get_style_context(widget),
+		0,
+		&color);
+	gdk_cairo_set_source_rgba(cr, &color);
+
+	cairo_fill(cr);
+
+	return FALSE;
+}
+
 int main(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
-	GtkWidget *window, *label, *v_box, *h_box,*button, *button1, *button2, *button3, *button4;
+	GtkWidget *window, *label, *v_box, *h_box,*button, *button1, *button2, *button3, *button4, *drawArea;
 	gchar *txtSchema = NULL;
 
 	/* initialiser GTK+ */
@@ -84,6 +108,9 @@ int main(int argc, char *argv[])
 	button3 = gtk_button_new_with_label("Test Store");
 	button4 = gtk_button_new_with_label("Test Astar");
 
+	drawArea = gtk_drawing_area_new();
+	gtk_widget_set_size_request(drawArea, 50, 50);
+
 	/* positionner les widgets */
 	gtk_container_add(GTK_CONTAINER(window), h_box);
 
@@ -93,6 +120,7 @@ int main(int argc, char *argv[])
 	gtk_box_pack_start(GTK_BOX(v_box), button3, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(v_box), button4, FALSE, FALSE, 5);
 
+	gtk_box_pack_start(GTK_BOX(h_box), drawArea, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(h_box), label, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(h_box),v_box, FALSE, FALSE, 0);
 
@@ -103,6 +131,7 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button2_callback), NULL);
 	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button3_callback), NULL);
 	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
+	g_signal_connect(G_OBJECT(drawArea), "draw",G_CALLBACK(draw_callback), NULL);
 
 
 	/* afficher la fenêtre */
