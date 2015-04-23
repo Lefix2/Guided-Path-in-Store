@@ -1,4 +1,4 @@
-#include <gtk/gtk.h>
+#include <gtk\gtk.h>
 #include <gdk\gdk.h>
 
 #include "Common.h"
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(drawArea), "draw",G_CALLBACK(draw_callback), NULL);
 
 
-	GdkPixbuf *pix_section,*sprite;
+	GdkPixbuf *sprites,*Store_pixbuf;
 	GtkImage *imtest;
 	GError **error = NULL;
 	GtkWidget *event_box;
@@ -147,21 +147,25 @@ int main(int argc, char *argv[])
 	imtest = gtk_image_new();
 	gtk_container_add(GTK_CONTAINER(event_box), imtest);
 
-	sprite = gdk_pixbuf_new_from_file("sprites.png", error);
-	//pix_section = gdk_pixbuf_new_from_file("floor.png", error);
-	pix_section = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, gdk_pixbuf_get_bits_per_sample(sprite),200,200);
-	for (x = 0; x < gdk_pixbuf_get_width(pix_section); x += 20)
-	{
-		for (y = 0; y < gdk_pixbuf_get_height(pix_section); y += 20)
-			gdk_pixbuf_composite(sprite, pix_section, x, y, 20, 20, x, y, 1, 1, GDK_INTERP_NEAREST, 255);
-	}
-	GdkPixbuf *test = store_image_new_pixbuf_from_sprites(sprite,FALSE, 20, 20, 1);
-	gdk_pixbuf_composite(test, pix_section, 40, 40, 20, 20, 40, 40, 1, 1, GDK_INTERP_NEAREST, 255);
-	//gdk_pixbuf_composite(sprite, pix_section, 20, 20, 20, 20, 20, 0, 1, 1, GDK_INTERP_NEAREST, 255);
-	//gdk_pixbuf_composite(sprite, pix_section, 40, 20, 20, 20, -40, 0, 1, 1, GDK_INTERP_NEAREST, 255);
-	//gdk_pixbuf_composite(sprite, pix_section, 60, 20, 20, 20, 40, 0, 1, 1, GDK_INTERP_NEAREST, 255);
+	sprites = gdk_pixbuf_new_from_file("sprites.png", error);
+	
+	int magsizex = 50;
+	int magsizey = 50;
 
-	gtk_image_set_from_pixbuf(imtest,pix_section);
+	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
+
+	store_add_section(sttest, 01, t_section, 3, 3, 7, 3);
+	store_add_section(sttest, 02, t_section, 18, 18, 10, 3);
+	store_add_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
+	store_add_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
+	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
+	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
+	store_add_section(sttest, 07, t_wall, 18, 18, 5, 5);
+
+	Store_pixbuf = store_image_new_pixbuf_from_store(sttest, sprites);
+	gtk_image_set_from_pixbuf(imtest, Store_pixbuf);
+
+	g_object_unref(Store_pixbuf);
 
 	gtk_box_pack_start(GTK_BOX(h_box), event_box, FALSE, FALSE, 0);
 

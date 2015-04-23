@@ -27,6 +27,8 @@ int store_set_size(store * st_source, int x_size, int y_size);
 int store_get_id(store * st_source);
 char * store_get_name(store * st_source);
 int store_get_x_size(store * st_source);
+itemList *store_get_allocatedStock(store * st_source);
+sectionList *store_get_allocatedSections(store * st_source);
 int store_get_y_size(store * st_source);
 
 void store_print(store * st_source);

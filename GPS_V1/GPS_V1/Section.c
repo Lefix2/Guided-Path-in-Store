@@ -24,7 +24,7 @@ section * newSection(int id, type s_type)
 section * Section_init(section * s_source)
 {
 	s_source->id = 0;
-	s_source->s_type = t_none;
+	s_source->s_type = t_floor;
 	s_source->pos.x = 0;
 	s_source->pos.y = 0;
 	s_source->size.x = 0;
