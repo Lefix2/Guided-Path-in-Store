@@ -1,10 +1,12 @@
 #include <gtk/gtk.h>
+#include <gdk\gdk.h>
 
 #include "Common.h"
 #include "ItemList.h"
 #include "Section.h"
 #include "Store.h"
 #include "Astar.h"
+#include "StoreImage.h"
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
@@ -68,12 +70,13 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 		MIN(width, height) / 2.0,
 		0, 2 * G_PI);*/
 
+
 	gtk_style_context_get_color(gtk_widget_get_style_context(widget),
 		0,
 		&color);
 	gdk_cairo_set_source_rgba(cr, &color);
 
-	cairo_fill(cr);
+	//cairo_fill(cr);
 
 	return FALSE;
 }
@@ -133,6 +136,34 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
 	g_signal_connect(G_OBJECT(drawArea), "draw",G_CALLBACK(draw_callback), NULL);
 
+
+	GdkPixbuf *pix_section,*sprite;
+	GtkImage *imtest;
+	GError **error = NULL;
+	GtkWidget *event_box;
+	int x, y;
+
+	event_box = gtk_event_box_new();
+	imtest = gtk_image_new();
+	gtk_container_add(GTK_CONTAINER(event_box), imtest);
+
+	sprite = gdk_pixbuf_new_from_file("sprites.png", error);
+	//pix_section = gdk_pixbuf_new_from_file("floor.png", error);
+	pix_section = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, gdk_pixbuf_get_bits_per_sample(sprite),200,200);
+	for (x = 0; x < gdk_pixbuf_get_width(pix_section); x += 20)
+	{
+		for (y = 0; y < gdk_pixbuf_get_height(pix_section); y += 20)
+			gdk_pixbuf_composite(sprite, pix_section, x, y, 20, 20, x, y, 1, 1, GDK_INTERP_NEAREST, 255);
+	}
+	GdkPixbuf *test = store_image_new_pixbuf_from_sprites(sprite,FALSE, 20, 20, 1);
+	gdk_pixbuf_composite(test, pix_section, 40, 40, 20, 20, 40, 40, 1, 1, GDK_INTERP_NEAREST, 255);
+	//gdk_pixbuf_composite(sprite, pix_section, 20, 20, 20, 20, 20, 0, 1, 1, GDK_INTERP_NEAREST, 255);
+	//gdk_pixbuf_composite(sprite, pix_section, 40, 20, 20, 20, -40, 0, 1, 1, GDK_INTERP_NEAREST, 255);
+	//gdk_pixbuf_composite(sprite, pix_section, 60, 20, 20, 20, 40, 0, 1, 1, GDK_INTERP_NEAREST, 255);
+
+	gtk_image_set_from_pixbuf(imtest,pix_section);
+
+	gtk_box_pack_start(GTK_BOX(h_box), event_box, FALSE, FALSE, 0);
 
 	/* afficher la fenêtre */
 	gtk_widget_show_all(window);
