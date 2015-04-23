@@ -32,12 +32,10 @@ int init_courses(){
 	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 3, 1, 4, 4);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
-	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 2,3);
+	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 4,3);
 
-	p_shopping_list = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	p_shopping_list = gtk_grid_new();
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
-
-
 	
 
 	p_button[0] = gtk_button_new_with_label("pates");
@@ -116,8 +114,14 @@ int init_courses(){
 	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(p_notebook), GTK_POS_RIGHT);
 	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(p_notebook), FALSE);
 
-
-
+	/*Addition of a search tab*/
+	GtkWidget *p_search_tab = NULL;
+	GtkWidget *p_search_grid = NULL;
+	sprintf(text, "search_tab");
+	p_search_tab = gtk_label_new(text);
+	p_search_grid = gtk_grid_new();
+	gtk_notebook_prepend_page(GTK_NOTEBOOK(p_notebook), p_search_grid, p_search_tab);
+	/*Ici, on va ajouter la recherche*/
 
 	/*****Creation of the menu*/
 	GtkWidget *p_menu_bar = NULL;
@@ -171,6 +175,12 @@ int init_courses(){
 	}*/
 	
 
+	/*Addition of the ending button*/
+	GtkWidget *p_ending_button = NULL;
+	p_ending_button = gtk_button_new_with_label("Cliquez ici pour finir votre liste de course");
+	gtk_grid_attach(GTK_GRID(p_table), p_ending_button, 6, 6, 1, 1);
+	g_signal_connect(G_OBJECT(p_ending_button), "clicked", G_CALLBACK(cb_finish_list), p_shopping_list);
+
 	GtkWidget *label1 = NULL, *label2 =NULL;
 	char texte[20];
 	sprintf(texte, "Your shopping list");
@@ -185,8 +195,8 @@ int init_courses(){
 	gtk_widget_show_all(p_window);
 	gtk_grid_set_column_spacing(GTK_GRID(p_table), 10);
 	gtk_grid_set_row_spacing(GTK_GRID(p_table), 2);
-	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), TRUE);
-	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), TRUE);
+	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), FALSE);
+	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), FALSE);
 	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
 	return EXIT_SUCCESS;
 }
