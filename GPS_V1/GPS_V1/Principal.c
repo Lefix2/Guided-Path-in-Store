@@ -1,10 +1,12 @@
-#include <gtk/gtk.h>
+#include <gtk\gtk.h>
+#include <gdk\gdk.h>
 
 #include "Common.h"
 #include "ItemList.h"
 #include "Section.h"
 #include "Store.h"
 #include "Astar.h"
+#include "StoreImage.h"
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
@@ -68,12 +70,13 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 		MIN(width, height) / 2.0,
 		0, 2 * G_PI);*/
 
+
 	gtk_style_context_get_color(gtk_widget_get_style_context(widget),
 		0,
 		&color);
 	gdk_cairo_set_source_rgba(cr, &color);
 
-	cairo_fill(cr);
+	//cairo_fill(cr);
 
 	return FALSE;
 }
@@ -133,6 +136,38 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
 	g_signal_connect(G_OBJECT(drawArea), "draw",G_CALLBACK(draw_callback), NULL);
 
+
+	GdkPixbuf *sprites,*Store_pixbuf;
+	GtkImage *imtest;
+	GError **error = NULL;
+	GtkWidget *event_box;
+	int x, y;
+
+	event_box = gtk_event_box_new();
+	imtest = gtk_image_new();
+	gtk_container_add(GTK_CONTAINER(event_box), imtest);
+
+	sprites = gdk_pixbuf_new_from_file("sprites.png", error);
+	
+	int magsizex = 50;
+	int magsizey = 50;
+
+	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
+
+	store_add_section(sttest, 01, t_section, 3, 3, 7, 3);
+	store_add_section(sttest, 02, t_section, 18, 18, 10, 3);
+	store_add_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
+	store_add_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
+	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
+	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
+	store_add_section(sttest, 07, t_wall, 18, 18, 5, 5);
+
+	Store_pixbuf = store_image_new_pixbuf_from_store(sttest, sprites);
+	gtk_image_set_from_pixbuf(imtest, Store_pixbuf);
+
+	g_object_unref(Store_pixbuf);
+
+	gtk_box_pack_start(GTK_BOX(h_box), event_box, FALSE, FALSE, 0);
 
 	/* afficher la fenêtre */
 	gtk_widget_show_all(window);

@@ -18,7 +18,7 @@ int init_courses(){
 	GtkWidget *p_onglet[12];
 
 	char *categories[] = {"Fruits", "Numerique", "entretient", "boissons"};
-	char *produits[] = { "pommes", "orange", "raisin", "poire" }
+	char *produits[] = { "pommes", "orange", "raisin", "poire" };
 
 	
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);

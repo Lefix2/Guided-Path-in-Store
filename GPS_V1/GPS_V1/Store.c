@@ -81,6 +81,16 @@ char * store_get_name(store * st_source)
 	return st_source->name;
 }
 
+itemList *store_get_allocatedStock(store * st_source)
+{
+	return st_source->allocatedStock;
+}
+
+sectionList *store_get_allocatedSections(store * st_source)
+{
+	return st_source->allocatedSections;
+}
+
 int store_get_x_size(store * st_source)
 {
 	return st_source->size.x;
@@ -108,7 +118,7 @@ void store_print(store * st_source)
 
 void store_print_carto(store * st_source){
 	int x, y;
-	for (y = st_source->size.y-1; y >=0; y--){
+	for (y = 0; y < st_source->size.y; y++){
 		for (x = 0; x < st_source->size.x; x++){
 			printf("%d", st_source->cartography[x][y]);
 		}

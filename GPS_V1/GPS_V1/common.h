@@ -26,7 +26,7 @@
 * \enum type
 * \brief enum of all section's type
 */
-typedef enum type{ t_none, t_wall, t_section, t_promo, t_checkout, t_entrance, t_reception }type;
+typedef enum type{ t_floor, t_wall, t_section, t_promo, t_checkout, t_entrance, t_reception }type;
 
 #ifdef SECTYPDEF
 char* sec_type[] = {"none", "wall", "section", "promo", "checkout", "entrance", "reception" };
