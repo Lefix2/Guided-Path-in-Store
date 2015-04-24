@@ -129,5 +129,11 @@
     <Image Include="ressources\caddie.jpg">
       <Filter>Fichiers de ressources</Filter>
     </Image>
+    <Image Include="sprites.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="spritesDebug.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

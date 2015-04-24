@@ -149,18 +149,25 @@ int main(int argc, char *argv[])
 
 	sprites = gdk_pixbuf_new_from_file("sprites.png", error);
 	
-	int magsizex = 50;
-	int magsizey = 50;
+	int magsizex = 40;
+	int magsizey = 40;
 
 	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
 
-	store_add_section(sttest, 01, t_section, 3, 3, 7, 3);
-	store_add_section(sttest, 02, t_section, 18, 18, 10, 3);
-	store_add_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
-	store_add_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
-	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
-	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
-	store_add_section(sttest, 07, t_wall, 18, 18, 5, 5);
+	store_add_section(sttest, 1, t_wall, 0, 1, 1, magsizey - 1);
+	store_add_section(sttest, 2, t_wall, 1, magsizey - 1, magsizex - 1, 1);
+	store_add_section(sttest, 3, t_wall, magsizex - 1, 0, 1, magsizey - 1);
+	store_add_section(sttest, 4, t_wall, 0, 0, magsizex - 1, 1);
+
+	store_add_section(sttest, 5, t_section, 3, 3, 15, 2);
+	store_add_section(sttest, 6, t_section, 3, 6, 15, 2);
+	store_add_section(sttest, 7, t_section, 3, 9, 15, 2);
+	store_add_section(sttest, 8, t_section, 3, 12, 15, 2);
+	store_add_section(sttest, 9, t_section, 3, 15, 15, 2);
+	store_add_section(sttest, 10, t_section, 3, 18, 15, 2);
+	store_add_section(sttest, 11, t_section, 3, 21, 11, 11);
+	store_add_section(sttest, 12, t_section, 15, 21, 1, 11);
+
 
 	Store_pixbuf = store_image_new_pixbuf_from_store(sttest, sprites);
 	gtk_image_set_from_pixbuf(imtest, Store_pixbuf);
