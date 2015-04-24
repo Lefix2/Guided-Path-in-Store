@@ -123,6 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ressources\caddie.jpg" />
+    <Image Include="sprites.png" />
+    <Image Include="spritesDebug.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

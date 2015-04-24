@@ -4,7 +4,7 @@
 #include "Store.h"
 
 typedef enum spriteOrientation{
-	middle,topLeftCorner, topRightCorner, botRightCorner, botLeftCorner, top, right, bot, left
+	middle, topLeftCorner, topRightCorner, botRightCorner, botLeftCorner, top, right, bot, left, singleVert, singleHor, singleUp, singleRight, singleDown, singleLeft
 }spriteOrientation;
 
 GdkPixbuf *store_image_new_pixbuf_from_store(store *src, GdkPixbuf *sprites)
@@ -60,42 +60,81 @@ GdkPixbuf *store_image_new_pixbuf_from_section(section *src, GdkPixbuf *sprites)
 	spriteOrientation actualSpriteOrientation;
 	type actualSpriteType = Section_getType(src);
 	
-	for (y = 0; y < height; y++)
+	if (width == 1)
 	{
-		for (x = 0; x < width; x++)
+		x = 0;
+		for (y = 0; y < height; y++)
 		{
 			if (y == 0)
-			{
-				if (x == 0)
-					actualSpriteOrientation = topLeftCorner;
-				else if (x == width - 1)
-					actualSpriteOrientation = topRightCorner;
-				else
-					actualSpriteOrientation = top;
-			}
+				actualSpriteOrientation = singleUp;
 			else if (y == height - 1)
-			{
-				if (x == 0)
-					actualSpriteOrientation = botLeftCorner;
-				else if (x == width - 1)
-					actualSpriteOrientation = botRightCorner;
-				else
-					actualSpriteOrientation = bot;
-			}
+				actualSpriteOrientation = singleDown;
 			else
-			{
-				if (x == 0)
-					actualSpriteOrientation = left;
-				else if (x == width - 1)
-					actualSpriteOrientation = right;
-				else
-					actualSpriteOrientation = middle;
-			}
+				actualSpriteOrientation = singleVert;
 
-			actualSprite = store_image_new_pixbuf_from_sprites(sprites, TRUE, SPRITE_RES, SPRITE_RES, actualSpriteOrientation+actualSpriteType*SPRITE_PER_LINE);
+			actualSprite = store_image_new_pixbuf_from_sprites(sprites, TRUE, SPRITE_RES, SPRITE_RES, actualSpriteOrientation + actualSpriteType*SPRITE_PER_LINE);
 			store_image_merge_pixbuf(actualSprite, newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
 
 			g_object_unref(actualSprite);
+		}
+	}
+	else if (height == 1)
+	{
+		y = 0;
+		for (x = 0; x < width; x++)
+		{
+			if (x == 0)
+				actualSpriteOrientation = singleLeft;
+			else if (x == width - 1)
+				actualSpriteOrientation = singleRight;
+			else
+				actualSpriteOrientation = singleHor;
+
+			actualSprite = store_image_new_pixbuf_from_sprites(sprites, TRUE, SPRITE_RES, SPRITE_RES, actualSpriteOrientation + actualSpriteType*SPRITE_PER_LINE);
+			store_image_merge_pixbuf(actualSprite, newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
+
+			g_object_unref(actualSprite);
+		}
+	}
+	else
+	{
+		for (y = 0; y < height; y++)
+		{
+			for (x = 0; x < width; x++)
+			{
+				if (y == 0)
+				{
+					if (x == 0)
+						actualSpriteOrientation = topLeftCorner;
+					else if (x == width - 1)
+						actualSpriteOrientation = topRightCorner;
+					else
+						actualSpriteOrientation = top;
+				}
+				else if (y == height - 1)
+				{
+					if (x == 0)
+						actualSpriteOrientation = botLeftCorner;
+					else if (x == width - 1)
+						actualSpriteOrientation = botRightCorner;
+					else
+						actualSpriteOrientation = bot;
+				}
+				else
+				{
+					if (x == 0)
+						actualSpriteOrientation = left;
+					else if (x == width - 1)
+						actualSpriteOrientation = right;
+					else
+						actualSpriteOrientation = middle;
+				}
+
+				actualSprite = store_image_new_pixbuf_from_sprites(sprites, TRUE, SPRITE_RES, SPRITE_RES, actualSpriteOrientation + actualSpriteType*SPRITE_PER_LINE);
+				store_image_merge_pixbuf(actualSprite, newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
+
+				g_object_unref(actualSprite);
+			}
 		}
 	}
 	return newGdkPixbuf;
