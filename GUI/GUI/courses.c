@@ -34,7 +34,17 @@ int init_courses(){
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
 	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 2,3);
 
-	p_shopping_list = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	/*We create now a grid contains the shopping list created by the user*/
+	GtkWidget * label0 = NULL;
+	GtkWidget * label1 = NULL;
+	char text[20];
+	p_shopping_list = gtk_grid_new();
+	sprintf(text, "Product");
+	label0 = gtk_label_new(text);
+	sprintf(text, "Number");
+	label1 = gtk_label_new(text);
+	gtk_grid_attach(GTK_GRID(p_shopping_list), label0, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_shopping_list), label1, 1, 0, 1, 1);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
 
 
@@ -67,7 +77,7 @@ int init_courses(){
 	
 
 	/*Creation of every tab of the notebook*/
-	char text[20];
+	//char text[20];
 
 	sprintf(text, "Fruits");
 	p_onglet[0] = gtk_label_new(text);
@@ -171,14 +181,14 @@ int init_courses(){
 	}*/
 	
 
-	GtkWidget *label1 = NULL, *label2 =NULL;
+	GtkWidget *label2 = NULL, *label3 =NULL;
 	char texte[20];
 	sprintf(texte, "Your shopping list");
-	label1 = gtk_label_new(texte);
-	gtk_grid_attach(GTK_GRID(p_table), label1, 0, 0, 1, 1);
-	sprintf(texte, "Select products");
 	label2 = gtk_label_new(texte);
-	gtk_grid_attach(GTK_GRID(p_table), label2, 4, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), label2, 0, 0, 1, 1);
+	sprintf(texte, "Select products");
+	label3 = gtk_label_new(texte);
+	gtk_grid_attach(GTK_GRID(p_table), label3, 4, 0, 1, 1);
 	
 
 

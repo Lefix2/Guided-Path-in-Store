@@ -15,13 +15,18 @@ void cb_quit(GtkWidget *p_widget, gpointer user_data){
 	gtk_main_quit();
 }
 
-void cb_shopping_list(GtkWidget *p_widget, gpointer box){
+void cb_shopping_list(GtkWidget *p_widget, gpointer grid){
 	GtkWidget *p_new_label;
+	GtkWidget *p_spin_button;
 	const gchar * text;
 	text = gtk_button_get_label(GTK_BUTTON(p_widget));
-	p_new_label = gtk_button_new_with_label(text);
-	gtk_box_pack_start(GTK_BOX(box), p_new_label, FALSE, FALSE, 0);
+	p_new_label = gtk_label_new(text);
+	gtk_grid_insert_row(GTK_GRID(grid), 1);
+	gtk_grid_attach(GTK_GRID(grid), p_new_label, 0, 1, 1, 1);
+	p_spin_button = gtk_spin_button_new_with_range(1, 42, 1);
+	gtk_grid_attach(GTK_GRID(grid), p_spin_button, 1, 1, 1, 1);
 	gtk_widget_show(p_new_label);
+	gtk_widget_show(p_spin_button);
 	printf("ajout de %s a la liste\n", text);
 }
 
