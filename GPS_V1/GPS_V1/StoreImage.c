@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "StoreImage.h"
 #include "Section.h"
 #include "SectionList.h"
@@ -16,15 +18,16 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src, GdkPixbuf *sprites)
 
 	GdkPixbuf *newGdkPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, gdk_pixbuf_get_bits_per_sample(sprites), width * SPRITE_RES, height * SPRITE_RES);
 
-	GdkPixbuf *floor = store_image_new_pixbuf_from_sprites(sprites, FALSE, SPRITE_RES, SPRITE_RES, middle + t_floor*SPRITE_PER_LINE);
+	GdkPixbuf *floor;
 	for (y = 0; y < height; y ++)
 	{
 		for (x = 0; x < width; x ++)
 		{
+			floor = store_image_new_pixbuf_from_sprites(sprites, FALSE, SPRITE_RES, SPRITE_RES, middle + (rand() % SPRITE_PER_LINE) + t_floor*SPRITE_PER_LINE);
 			store_image_merge_pixbuf(floor, newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
+			g_object_unref(floor);
 		}
 	}
-	g_object_unref(floor);
 	
 	section *currentSection;
 	sectionList *sections = store_get_allocatedSections(src);

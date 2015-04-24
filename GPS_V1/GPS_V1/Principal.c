@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 	store_add_section(sttest, 3, t_wall, magsizex - 1, 0, 1, magsizey - 1);
 	store_add_section(sttest, 4, t_wall, 0, 0, magsizex - 1, 1);
 
-	store_add_section(sttest, 5, t_section, 3, 3, 15, 2);
+	store_add_section(sttest, 5, t_promo, 3, 3, 15, 2);
 	store_add_section(sttest, 6, t_section, 3, 6, 15, 2);
 	store_add_section(sttest, 7, t_section, 3, 9, 15, 2);
 	store_add_section(sttest, 8, t_section, 3, 12, 15, 2);
@@ -167,6 +167,8 @@ int main(int argc, char *argv[])
 	store_add_section(sttest, 10, t_section, 3, 18, 15, 2);
 	store_add_section(sttest, 11, t_section, 3, 21, 11, 11);
 	store_add_section(sttest, 12, t_section, 15, 21, 1, 11);
+	store_add_section(sttest, 13, t_checkout, 3, 35, 10, 3);
+	store_add_section(sttest, 14, t_entrance, 15, 35, 10, 3);
 
 
 	Store_pixbuf = store_image_new_pixbuf_from_store(sttest, sprites);
