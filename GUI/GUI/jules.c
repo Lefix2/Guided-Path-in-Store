@@ -1,8 +1,15 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <gdk\gdk.h>
+
 #include "callback.h"
 #include "error.h"
-
+#include "Common.h"
+#include "ItemList.h"
+#include "Section.h"
+#include "Store.h"
+#include "Astar.h"
+#include "StoreImage.h"
 
 int init_window(){
 	GtkWidget *p_window = NULL;
@@ -58,8 +65,10 @@ int init_window(){
 int main(int argc, char **argv){
 	/* GTK Initialisation */
 	gtk_init(&argc, &argv);
+	store * store_test = NULL;
+	store_test = testStore();
 
-	init_courses();
+	init_courses(store_test);
 	
 	/* Main loop start */
 	gtk_main();

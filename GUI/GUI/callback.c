@@ -86,3 +86,9 @@ void cb_open_tab(GtkWidget *p_menu_item, gpointer p_notebook){
 	}
 	printf("WARNING : YOUR NOTEBOOKS TAB_LABEL AND MENU_ITEMS HAVE DIFFERENT NAMES");
 }
+
+
+void cb_ending(GtkWidget *p_widget, gpointer user_data){
+	// A ecrire, we face a dilemma
+	printf("we face a dilemma : \nCette fonction aura pour but de fermer la fenetre, ouvrir celle du magasin, et, je pense que c'est le plus simple, entrer dans une liste d'items la liste cree par l'utilisateur\nMerci de votre attention");
+}
