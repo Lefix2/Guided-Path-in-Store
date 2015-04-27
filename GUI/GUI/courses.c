@@ -124,7 +124,7 @@ int init_courses(){
 	
 
 	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(p_notebook), GTK_POS_RIGHT);
-	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(p_notebook), FALSE);
+	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(p_notebook), TRUE);
 
 
 
