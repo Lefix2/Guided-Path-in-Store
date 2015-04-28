@@ -65,6 +65,9 @@ struct coord{
 	int x;
 	int y;
 };
+
+typedef struct shopping_list shopping_list;
+
 static coord zero = { 0, 0 };
 
 gboolean betwn(int a, int x, int b, gboolean equal);

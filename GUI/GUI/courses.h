@@ -4,8 +4,14 @@
 #include <gtk/gtk.h>
 #include "common.h"
 
+typedef struct shopping_list shopping_list;
+struct shopping_list{
+	GtkWidget * shopping_list_grid;
+	itemList * shopping_itemlist;
+};
 
-int init_courses(store * store_test);
+shopping_list * shopping_list_new();
+int init_courses(store * store_test, itemList * user_list);
 GtkWidget * notebook_new_from_store(store * store_test);
 int grid_find_category(char * category_name, GtkWidget * p_notebook);
 void notebook_connect_button(GtkWidget * p_notebook, GtkWidget * p_shopping_list);

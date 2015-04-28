@@ -65,14 +65,18 @@ int init_window(){
 int main(int argc, char **argv){
 	/* GTK Initialisation */
 	gtk_init(&argc, &argv);
+	itemList * user_list = NULL;
+	user_list = itemPointerList_new();
 	store * store_test = NULL;
 	store_test = testStore();
 
-	init_courses(store_test);
+	init_courses(store_test, user_list);
 	
 	/* Main loop start */
 	gtk_main();
 
+	itemPointerList_print(user_list, FALSE);
+	system("pause");
 	return EXIT_SUCCESS;
 }
 

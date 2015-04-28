@@ -7,8 +7,19 @@
 #include "ItemList.h"
 #include "Item.h"
 #include "courses.h"
+#include "common.h"
 
-int init_courses(store * store_test){
+shopping_list * shopping_list_new()
+{
+	shopping_list * new_shopping_list;
+	new_shopping_list = (shopping_list *)malloc(sizeof(shopping_list));
+
+	new_shopping_list->shopping_itemlist = NULL;
+	new_shopping_list->shopping_list_grid = NULL;
+
+	return new_shopping_list;
+}
+int init_courses(store * store_test, itemList * user_list){
 	/*Widgets creation */
 	GtkWidget *p_window = NULL;
 	GtkWidget *p_table = NULL;
@@ -20,6 +31,8 @@ int init_courses(store * store_test){
 	char *categories[] = {"Fruits", "Numerique", "entretient", "boissons"};
 	char *produits[] = { "pommes", "orange", "raisin", "poire" };
 
+	shopping_list * s_list = NULL;
+	s_list = shopping_list_new();
 	
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), NULL);
@@ -47,7 +60,9 @@ int init_courses(store * store_test){
 	/*We create now a notebook */
 	p_notebook = notebook_new_from_store(store_test);
 	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 3, 1, 4, 4);
-	notebook_connect_button(p_notebook, p_shopping_list);
+	s_list->shopping_itemlist = user_list;
+	s_list->shopping_list_grid = p_shopping_list;
+	notebook_connect_button(p_notebook, s_list);
 
 	/*p_button[0] = gtk_button_new_with_label("pates");
 	g_signal_connect(G_OBJECT(p_button[0]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
@@ -180,7 +195,7 @@ int init_courses(store * store_test){
 	GtkWidget * ending_button = NULL;
 	ending_button = gtk_button_new_with_label("Click here to end your list");
 	gtk_grid_attach(GTK_GRID(p_table), ending_button, 6, 5, 1, 1);
-	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_ending), NULL);
+	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_quit), s_list->shopping_list_grid);
 
 
 
@@ -211,6 +226,8 @@ int init_courses(store * store_test){
 	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), TRUE);
 	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), TRUE);
 	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
+
+
 	return EXIT_SUCCESS;
 }
 
@@ -259,16 +276,20 @@ int grid_find_category(char * category_name, GtkWidget * p_notebook){
 	return i;
 }
 
-
-void notebook_connect_button(GtkWidget * p_notebook, GtkWidget * p_shopping_list){
+/*
+*
+*
+*Connecte tous les boutons du notebook au callback cb_shopping_list
+*/
+void notebook_connect_button(GtkWidget * p_notebook, shopping_list * s_list){
 	int i = 0,j;
 	GtkWidget * p_button = NULL;
 	for (i; i < gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); i++){ // i numéro de la page du notebook
 		j = 0;
 		p_button = gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)), j, 0);
 		while (p_button != NULL){
-			g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-			printf("selection du bouton avec le label : %s\ni=%d\nj=%d", gtk_button_get_label(GTK_BUTTON(p_button)),i,j);
+			g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), s_list);
+			printf("Selection du bouton avec le label : %s\nPage :%d\nNuméro=%d", gtk_button_get_label(GTK_BUTTON(p_button)),i,j);
 			j++;
 			p_button = gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)), j, 0);
 		}

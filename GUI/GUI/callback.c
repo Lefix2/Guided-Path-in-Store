@@ -15,44 +15,49 @@ void cb_quit(GtkWidget *p_widget, gpointer user_data){
 	gtk_main_quit();
 }
 
-void cb_shopping_list(GtkWidget *p_widget, gpointer grid){
+void cb_shopping_list(GtkWidget *p_widget, shopping_list * s_list){
 	const gchar * text;
 	text = gtk_button_get_label(GTK_BUTTON(p_widget));
 
 	/*Test de la présence dans la liste*/
 	int i = 0;
-	while (gtk_grid_get_child_at(GTK_GRID(grid), 0, i + 1) != NULL){
-		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_grid_get_child_at(GTK_GRID(grid), 0, i + 1))),text) == 0)
+	while (gtk_grid_get_child_at(GTK_GRID(s_list->shopping_list_grid), 0, i + 1) != NULL){
+		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_grid_get_child_at(GTK_GRID(s_list->shopping_list_grid), 0, i + 1))), text) == 0)
 		{
 			int j;
 			GtkWidget *spin_button = NULL;
-			spin_button = gtk_grid_get_child_at(GTK_GRID(grid), 1, i + 1);
+			spin_button = gtk_grid_get_child_at(GTK_GRID(s_list->shopping_list_grid), 1, i + 1);
 			j = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_button));
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_button),j+1);
-			printf("Incrementation du nombre de %s dans la liste\n", text);
+			printf("Incrementation du nombre de %s dans la liste (cb_shopping_list)\n", text);
 			return;
 		}
 		i++;
 	}
-	cb_add_item(p_widget, grid);
+	printf("cb_shopping_list appelle cb_add_item\n");
+	cb_add_item(p_widget, s_list);
 	i++;
 }
 
-void cb_add_item(GtkWidget *p_widget, gpointer grid){
+void cb_add_item(GtkWidget *p_widget, shopping_list * s_list){
 	GtkWidget *p_new_label;
 	GtkWidget *p_spin_button;
 	const gchar * text;
 	text = gtk_button_get_label(GTK_BUTTON(p_widget));
+	
+	item * n_item = item_new(0, fromage, text);
+	itemPointerList_insert_first(s_list->shopping_itemlist, n_item);
 
 	p_new_label = gtk_label_new(text);
-	gtk_grid_insert_row(GTK_GRID(grid), 1);
-	gtk_grid_attach(GTK_GRID(grid), p_new_label, 0, 1, 1, 1);
+	gtk_grid_insert_row(GTK_GRID(s_list->shopping_list_grid), 1);
+	gtk_grid_attach(GTK_GRID(s_list->shopping_list_grid), p_new_label, 0, 1, 1, 1);
+
 
 	p_spin_button = gtk_spin_button_new_with_range(1, 42, 1);
-	gtk_grid_attach(GTK_GRID(grid), p_spin_button, 1, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(s_list->shopping_list_grid), p_spin_button, 1, 1, 1, 1);
 	gtk_widget_show(p_new_label);
 	gtk_widget_show(p_spin_button);
-	printf("ajout de %s a la liste\n", text);
+	printf("ajout de %s a la liste (cb_add_item)\n", text);
 }
 
 
@@ -87,8 +92,3 @@ void cb_open_tab(GtkWidget *p_menu_item, gpointer p_notebook){
 	printf("WARNING : YOUR NOTEBOOKS TAB_LABEL AND MENU_ITEMS HAVE DIFFERENT NAMES");
 }
 
-
-void cb_ending(GtkWidget *p_widget, gpointer user_data){
-	// A ecrire, we face a dilemma
-	printf("we face a dilemma : \nCette fonction aura pour but de fermer la fenetre, ouvrir celle du magasin, et, je pense que c'est le plus simple, entrer dans une liste d'items la liste cree par l'utilisateur\nMerci de votre attention");
-}
