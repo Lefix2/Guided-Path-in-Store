@@ -12,7 +12,6 @@ int init_courses(store * store_test){
 	/*Widgets creation */
 	GtkWidget *p_window = NULL;
 	GtkWidget *p_table = NULL;
-	GtkWidget *p_button[12];
 	GtkWidget *p_label = NULL;
 	GtkWidget *p_scrollbar = NULL;
 	GtkWidget *p_shopping_list = NULL;
@@ -28,9 +27,6 @@ int init_courses(store * store_test){
 	/*The window contain a grid that contains all of our widgets*/
 	p_table = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(p_window), p_table);
-
-	p_notebook = notebook_new_from_store(store_test);
-	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 3, 1, 4, 4);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
 	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 2,3);
@@ -48,10 +44,12 @@ int init_courses(store * store_test){
 	gtk_grid_attach(GTK_GRID(p_shopping_list), label1, 1, 0, 1, 1);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
 
+	/*We create now a notebook */
+	p_notebook = notebook_new_from_store(store_test);
+	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 3, 1, 4, 4);
+	notebook_connect_button(p_notebook, p_shopping_list);
 
-	
-
-	p_button[0] = gtk_button_new_with_label("pates");
+	/*p_button[0] = gtk_button_new_with_label("pates");
 	g_signal_connect(G_OBJECT(p_button[0]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
 	p_button[1] = gtk_button_new_with_label("Fruit de la passion");
 	g_signal_connect(G_OBJECT(p_button[1]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
@@ -76,7 +74,7 @@ int init_courses(store * store_test){
 	p_button[11] = gtk_button_new_with_label("kiwi");
 	g_signal_connect(G_OBJECT(p_button[11]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list); 
 	
-
+	
 	/*
 	* Creation of every tab of the notebook
 	*
@@ -181,7 +179,7 @@ int init_courses(store * store_test){
 	*  Creation of the ending menu*/
 	GtkWidget * ending_button = NULL;
 	ending_button = gtk_button_new_with_label("Click here to end your list");
-	gtk_grid_attach(GTK_GRID(p_table), ending_button, 6, 2, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), ending_button, 6, 5, 1, 1);
 	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_ending), NULL);
 
 
@@ -230,8 +228,8 @@ GtkWidget * notebook_new_from_store(store * store_test){
 	while (!itemPointerList_is_out_of(store_test->allocatedStock)){
 		int grid_category_number = grid_find_category(item_get_category_string(store_test->allocatedStock->current->i), p_notebook);
 		char * item_category_name = item_get_category_string(store_test->allocatedStock->current->i);
-		p_button[j] = gtk_button_new_with_label(item_category_name);
-		if (grid_category_number != -1)
+		p_button[j] = gtk_button_new_with_label(store_test->allocatedStock->current->i->name);
+		if (grid_category_number == -1)
 		{// if there is no notebook tab with the item label
 			sprintf(text, item_get_category_string(store_test->allocatedStock->current->i));
 			p_onglet[i] = gtk_label_new(text);
@@ -242,9 +240,10 @@ GtkWidget * notebook_new_from_store(store * store_test){
 		}
 		else
 		{
-			gtk_grid_attach(GTK_GRID(p_grid[grid_category_number]), p_button[j], 0, 0, 1, 1);
+			gtk_grid_attach_next_to(GTK_GRID(p_grid[grid_category_number]), p_button[j], NULL,GTK_POS_RIGHT, 1, 1);
 		}
 		j++; // j is the item number (in the itemList)
+		itemPointerList_next(store_test->allocatedStock);
 	}
 	return p_notebook;
 }
@@ -252,10 +251,26 @@ GtkWidget * notebook_new_from_store(store * store_test){
 * returns -1 if there is no tab with the same name as category_name*/ 
 int grid_find_category(char * category_name, GtkWidget * p_notebook){
 	int i = -1,j=0;
-	for (j; j <= gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); j++){
+	for (j; j < gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); j++){
 		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_notebook_get_tab_label(GTK_NOTEBOOK(p_notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), j)))), category_name) == 0){
 			i = j;
 		}
 	}
 	return i;
+}
+
+
+void notebook_connect_button(GtkWidget * p_notebook, GtkWidget * p_shopping_list){
+	int i = 0,j;
+	GtkWidget * p_button = NULL;
+	for (i; i < gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); i++){ // i numéro de la page du notebook
+		j = 0;
+		p_button = gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)), j, 0);
+		while (p_button != NULL){
+			g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
+			printf("selection du bouton avec le label : %s\ni=%d\nj=%d", gtk_button_get_label(GTK_BUTTON(p_button)),i,j);
+			j++;
+			p_button = gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)), j, 0);
+		}
+	}
 }

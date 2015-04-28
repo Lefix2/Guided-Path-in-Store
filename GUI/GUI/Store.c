@@ -299,7 +299,7 @@ store * testStore(void)
 	store_add_item(sttest, 27, legumes_vert, "petits poids");
 	store_add_item(sttest, 28, legumes_vert, "choux");
 	store_add_item(sttest, 29, legumes_vert, "avocat");
-	store_add_item(sttest, 30, fromage, "comté");
+	store_add_item(sttest, 30, fromage, "comte");
 	store_add_item(sttest, 31, fromage, "gouda");
 	store_add_item(sttest, 32, fromage, "bleu");
 	store_add_item(sttest, 22, legumes_vert, "asperge");
