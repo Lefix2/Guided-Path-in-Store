@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+#include <gtk\gtk.h>
 
 //uncomment itemPointerList_next line to check memory allocation
 #define MEMCHECK

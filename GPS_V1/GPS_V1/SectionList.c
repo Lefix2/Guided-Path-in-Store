@@ -97,11 +97,11 @@ void sectionPointerList_print(sectionList * l)
 		while (!sectionPointerList_is_out_of(l))
 		{
 			tmp = l->current->s;
-			printf("| %4d | %14s | %14d | %14d | %14d |\n",Section_getId(tmp),
-														   Section_getTypeString(tmp),
-														   Section_getNbItems(tmp),
-														   Section_getXSize(tmp),
-														   Section_getYSize(tmp)
+			printf("| %4d | %14s | %14d | %14d | %14d |\n",section_get_id(tmp),
+														   section_get_type_string(tmp),
+														   section_get_nb_items(tmp),
+														   section_get_x_size(tmp),
+														   section_get_y_size(tmp)
 			);
 			if (tmp->s_type == t_section)
 				itemPointerList_print(tmp->stock, TRUE);

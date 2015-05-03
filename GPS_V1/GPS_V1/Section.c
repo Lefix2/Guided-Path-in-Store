@@ -4,16 +4,16 @@
 #include "Item.h"
 #include "ItemList.h"
 
-section * newSection(int id, type s_type)
+section * section_new(int id, type s_type)
 {
 	section * s_new;
 	s_new = (section *)malloc(sizeof(section));
 
-	Section_init(s_new);
-	Section_setId(s_new, id);
-	Section_setType(s_new, s_type);
+	section_init(s_new);
+	section_set_id(s_new, id);
+	section_set_type(s_new, s_type);
 
-	if (Section_hasStock(s_new))
+	if (section_has_stock(s_new))
 	{
 		s_new->stock = itemPointerList_new();
 	}
@@ -21,7 +21,7 @@ section * newSection(int id, type s_type)
 	return s_new;
 }
 
-section * Section_init(section * s_source)
+section * section_init(section * s_source)
 {
 	s_source->id = 0;
 	s_source->s_type = t_floor;
@@ -31,30 +31,33 @@ section * Section_init(section * s_source)
 	s_source->size.y = 0;
 	s_source->nb_items = 0;
 	s_source->stock = NULL;
+	s_source->pixbuf = NULL;
 
 	return s_source;
 }
 
-int Section_delete(section * s_source)
+int section_delete(section * s_source)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
 	itemPointerList_delete(s_source->stock);
+	if (s_source->pixbuf != NULL)
+		g_object_unref(s_source->pixbuf);
 	free(s_source);
 	return EXIT_SUCCESS;
 }
 
-int Section_isitemPointerList_is_empty(section * s_source)
+int section_is_empty(section * s_source)
 {
 	return (s_source->nb_items == 0);
 }
 
-int Section_hasStock(section * s_source)
+int section_has_stock(section * s_source)
 {
 	return(s_source->s_type == t_section || s_source->s_type == t_promo);
 }
 
-int Section_setId(section * s_source, int id)
+int section_set_id(section * s_source, int id)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
@@ -64,7 +67,7 @@ int Section_setId(section * s_source, int id)
 	return EXIT_SUCCESS;
 }
 
-int Section_setType(section * s_source, type s_type)
+int section_set_type(section * s_source, type s_type)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
@@ -74,7 +77,7 @@ int Section_setType(section * s_source, type s_type)
 	return EXIT_SUCCESS;
 }
 
-int Section_setPos(section * s_source, int x_pos, int y_pos)
+int section_set_pos(section * s_source, int x_pos, int y_pos)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
@@ -83,7 +86,7 @@ int Section_setPos(section * s_source, int x_pos, int y_pos)
 	return EXIT_SUCCESS;
 }
 
-int Section_setSize(section * s_source, int x_size, int y_size)
+int section_set_size(section * s_source, int x_size, int y_size)
 {
 	if (s_source == NULL)
 		return EXIT_FAILURE;
@@ -92,7 +95,17 @@ int Section_setSize(section * s_source, int x_size, int y_size)
 	return EXIT_SUCCESS;
 }
 
-int Section_addItem(section * s_source, item * item, int x_pos, int y_pos)
+int section_set_pixbuf(section * s_source, GdkPixbuf *pixbuf)
+{
+	if (s_source == NULL)
+		return EXIT_FAILURE;
+	if (s_source->pixbuf != NULL)
+		g_object_unref(s_source->pixbuf);
+	s_source->pixbuf = pixbuf;
+	return EXIT_SUCCESS;
+}
+
+int section_add_item(section * s_source, item * item, int x_pos, int y_pos)
 {
 	if (s_source == NULL || item == NULL)
 		return EXIT_FAILURE;
@@ -100,7 +113,7 @@ int Section_addItem(section * s_source, item * item, int x_pos, int y_pos)
 	{
 		printf("error : Trying to add an item already stored in a section\n");
 		item_print(item, TRUE);
-		Section_print(s_source, TRUE);
+		section_print(s_source, TRUE);
 		printf("\n");
 		return EXIT_FAILURE;
 	}
@@ -120,7 +133,7 @@ int Section_addItem(section * s_source, item * item, int x_pos, int y_pos)
 	return EXIT_SUCCESS;
 }
 
-int Section_removeItem(item * item)
+int section_remove_item(item * item)
 {
 	if (item == NULL)
 		return EXIT_FAILURE;
@@ -138,47 +151,52 @@ int Section_removeItem(item * item)
 	return EXIT_SUCCESS;
 }
 
-int Section_getId(section * s_source)
+int section_get_id(section * s_source)
 {
 	return s_source->id;
 }
 
-type Section_getType(section * s_source)
+type section_get_type(section * s_source)
 {
 	return s_source->s_type;
 }
 
-char * Section_getTypeString(section * s_source)
+char * section_get_type_string(section * s_source)
 {
 	return sec_type[s_source->s_type];
 }
 
-int Section_getXPos(section * s_source)
+int section_get_x_pos(section * s_source)
 {
 	return s_source->pos.x;
 }
 
-int Section_getYPos(section * s_source)
+int section_get_y_pos(section * s_source)
 {
 	return s_source->pos.y;
 }
 
-int Section_getXSize(section * s_source)
+int section_get_x_size(section * s_source)
 {
 	return s_source->size.x;
 }
 
-int Section_getYSize(section * s_source)
+int section_get_y_size(section * s_source)
 {
 	return s_source->size.y;
 }
 
-int Section_getNbItems(section * s_source)
+int section_get_nb_items(section * s_source)
 {
 	return s_source->nb_items;
 }
 
-void Section_print(section * s_source, gboolean minimal)
+GdkPixbuf* section_get_pixbuf(section * s_source)
+{
+	return s_source->pixbuf;
+}
+
+void section_print(section * s_source, gboolean minimal)
 {
 	if (minimal)
 	{
@@ -191,7 +209,7 @@ void Section_print(section * s_source, gboolean minimal)
 		printf("type  : %s\n", sec_type[s_source->s_type]);
 		printf("pos X : %d -> %d (%d)\n", s_source->pos.x, s_source->size.x + s_source->pos.x, s_source->size.x);
 		printf("    Y : %d -> %d (%d)\n", s_source->pos.y, s_source->size.y + s_source->pos.y, s_source->size.y);
-		if (Section_hasStock(s_source))
+		if (section_has_stock(s_source))
 		{
 			printf("Stock : ");
 			itemPointerList_print(s_source->stock, FALSE);
@@ -211,20 +229,20 @@ void testSect(void)
 	item * itest3 = item_new(3, alcool, "Grimbergen");
 	item_set_cost(itest3, 8.00);
 
-	section * stest = newSection(1, t_section);
-	Section_setPos(stest, 10, 15);
-	Section_setSize(stest, 8, 3);
+	section * stest = section_new(1, t_section);
+	section_set_pos(stest, 10, 15);
+	section_set_size(stest, 8, 3);
 
-	Section_addItem(stest, itest1, 0, 0);
-	Section_addItem(stest, itest2, 2, 1);//cet item ne peut être ajouté au millieu de la section
-	Section_addItem(stest, itest3, 1, 2);
+	section_add_item(stest, itest1, 0, 0);
+	section_add_item(stest, itest2, 2, 1);//cet item ne peut être ajouté au millieu de la section
+	section_add_item(stest, itest3, 1, 2);
 
-	Section_print(stest, FALSE);
+	section_print(stest, FALSE);
 
 	//delete function may only be used in Store functions
 	item_delete(itest1);
 	item_delete(itest2);
 	item_delete(itest3);
 
-	Section_delete(stest);
+	section_delete(stest);
 }

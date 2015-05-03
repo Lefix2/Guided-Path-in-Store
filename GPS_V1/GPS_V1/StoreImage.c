@@ -9,13 +9,13 @@ typedef enum spriteOrientation{
 	middle, topLeftCorner, topRightCorner, botRightCorner, botLeftCorner, top, right, bot, left, singleVert, singleHor, singleUp, singleRight, singleDown, singleLeft
 }spriteOrientation;
 
-GdkPixbuf *store_image_new_pixbuf_from_store(store *src, GdkPixbuf *sprites)
+GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 {
 	int x, y;
 
 	int width = store_get_x_size(src);
 	int height = store_get_y_size(src);
-
+	GdkPixbuf *sprites = store_get_sprites(src);
 	GdkPixbuf *newGdkPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, gdk_pixbuf_get_bits_per_sample(sprites), width * SPRITE_RES, height * SPRITE_RES);
 
 	GdkPixbuf *floor;
@@ -32,16 +32,27 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src, GdkPixbuf *sprites)
 	section *currentSection;
 	sectionList *sections = store_get_allocatedSections(src);
 	sectionPointerList_set_on_first(sections);
-	GdkPixbuf *currentSectionPixbuf;
+
+	//dessin de chaque rayon
 	while (!sectionPointerList_is_out_of(sections))
 	{
 		currentSection = getcurrent(sections);
 
-		x = Section_getXPos(currentSection);
-		y = Section_getYPos(currentSection);
+		section_set_pixbuf(currentSection, store_image_new_pixbuf_from_section(currentSection, sprites));
+		sectionPointerList_next(sections);
+	}
 
-		currentSectionPixbuf = store_image_new_pixbuf_from_section(currentSection, sprites);
-		store_image_merge_pixbuf(currentSectionPixbuf, newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
+	//création du pixbuf
+	sectionPointerList_set_on_first(sections);
+	while (!sectionPointerList_is_out_of(sections))
+	{
+		currentSection = getcurrent(sections);
+
+		x = section_get_x_pos(currentSection);
+		y = section_get_y_pos(currentSection);
+
+		store_image_merge_pixbuf(section_get_pixbuf(currentSection), newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
+
 		sectionPointerList_next(sections);
 	}
 
@@ -51,8 +62,8 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src, GdkPixbuf *sprites)
 GdkPixbuf *store_image_new_pixbuf_from_section(section *src, GdkPixbuf *sprites)
 {
 	int x, y;
-	int width = Section_getXSize(src);
-	int height = Section_getYSize(src);
+	int width = section_get_x_size(src);
+	int height = section_get_y_size(src);
 
 	guint32 color;
 
@@ -61,7 +72,7 @@ GdkPixbuf *store_image_new_pixbuf_from_section(section *src, GdkPixbuf *sprites)
 	GdkPixbuf *actualSprite;
 
 	spriteOrientation actualSpriteOrientation;
-	type actualSpriteType = Section_getType(src);
+	type actualSpriteType = section_get_type(src);
 	
 	if (width == 1)
 	{

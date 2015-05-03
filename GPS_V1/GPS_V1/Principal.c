@@ -1,6 +1,3 @@
-#include <gtk\gtk.h>
-#include <gdk\gdk.h>
-
 #include "Common.h"
 #include "ItemList.h"
 #include "Section.h"
@@ -10,6 +7,11 @@
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
+
+#define M_PI 3.1415
+
+GtkWidget *drawing_area;
+
 /* on quitte l'application en fermant la fenêtre */
 void on_window_closed(GtkWidget *window, gpointer data)
 {
@@ -56,11 +58,35 @@ gboolean button4_callback(GtkWidget *window, gpointer data)
 	return FALSE;
 }
 
+gboolean button5_callback(GtkWidget *window, gpointer data)
+{
+	store_add_section((store*)data, 15, t_section, 30, 3, 5, 3);
+	gtk_widget_queue_draw(drawing_area);
+	return FALSE;
+}
+
+gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
+{
+	
+	guint width, height;
+	GdkRGBA color;
+	GdkPixbuf *store_pixbuf = store_image_new_pixbuf_from_store(data);
+
+	gdk_cairo_set_source_pixbuf(cr, store_pixbuf, 0, 0);
+	width = gdk_pixbuf_get_width(store_pixbuf);
+	height = gdk_pixbuf_get_height(store_pixbuf);
+	cairo_rectangle(cr, 0, 0, width, height);
+	
+	cairo_fill(cr);
+
+	return FALSE;
+}
+
 int main(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
-	GtkWidget *window, *label, *h_box, *b_box, *v_box,*button, *button1, *button2, *button3, *button4;
+	GtkWidget *window, *label, *h_box, *b_box, *v_box,*button, *button1, *button2, *button3, *button4, *button5;
 	gchar *txtSchema = NULL;
 
 	/* initialiser GTK+ */
@@ -87,6 +113,7 @@ int main(int argc, char *argv[])
 	button2 = gtk_button_new_with_label("Test Section");
 	button3 = gtk_button_new_with_label("Test Store");
 	button4 = gtk_button_new_with_label("Test Astar");
+	button5 = gtk_button_new_with_label("Test Cairo");
 
 	/* positionner les widgets */
 	gtk_box_pack_start(GTK_BOX(h_box), b_box, FALSE, FALSE, 0);
@@ -98,9 +125,9 @@ int main(int argc, char *argv[])
 	gtk_box_pack_start(GTK_BOX(b_box), button2, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(b_box), button3, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(b_box), button4, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(b_box), button5, FALSE, FALSE, 5);
 
 	gtk_box_pack_start(GTK_BOX(v_box), label, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(v_box),b_box, FALSE, FALSE, 0);
 
 	/* connecter le bouton à une fonction de callback */
 	g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
@@ -111,25 +138,24 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
 
 
-	GdkPixbuf *sprites,*Store_pixbuf;
-	GtkImage *imtest;
+	GdkPixbuf *sprites;
+	GtkImage *imtest = gtk_image_new();
 	GError **error = NULL;
-	GtkWidget *event_box, *scrollmenuV;
-	int x, y;
+	GtkWidget *event_box = gtk_event_box_new();
+	GtkWidget *scrollmenuV = gtk_scrolled_window_new(NULL, NULL);;
+	drawing_area = gtk_drawing_area_new();
 
-	event_box = gtk_event_box_new();
-	//gtk_widget_set_size_request(event_box, 200, 50);
-	scrollmenuV = gtk_scrolled_window_new(NULL, NULL);
-	imtest = gtk_image_new();
-	//gtk_container_add(GTK_CONTAINER(event_box), imtest);
-	gtk_container_add(GTK_CONTAINER(event_box), scrollmenuV);
-	gtk_scrolled_window_add_with_viewport(scrollmenuV, imtest);
+	//gtk_container_add(GTK_CONTAINER(event_box), scrollmenuV);
+	//gtk_scrolled_window_add_with_viewport(scrollmenuV, imtest);
 	sprites = gdk_pixbuf_new_from_file("sprites.png", error);
+	gtk_box_pack_start(GTK_BOX(v_box), scrollmenuV, TRUE, TRUE, 0);
 	
 	int magsizex = 40;
 	int magsizey = 40;
 
 	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
+
+	store_set_sprites(sttest, sprites);
 
 	store_add_section(sttest, 1, t_wall, 0, 1, 1, magsizey - 1);
 	store_add_section(sttest, 2, t_wall, 1, magsizey - 1, magsizex - 1, 1);
@@ -148,12 +174,10 @@ int main(int argc, char *argv[])
 	store_add_section(sttest, 14, t_entrance, 15, 35, 10, 3);
 
 
-	Store_pixbuf = store_image_new_pixbuf_from_store(sttest, sprites);
-	gtk_image_set_from_pixbuf(imtest, Store_pixbuf);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollmenuV), drawing_area);
 
-	g_object_unref(Store_pixbuf);
-
-	gtk_box_pack_start(GTK_BOX(v_box), event_box, TRUE, TRUE, 0);
+	g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(draw_callback), sttest);
+	g_signal_connect(G_OBJECT(button5), "clicked", G_CALLBACK(button5_callback), sttest);
 
 	/* afficher la fenêtre */
 	gtk_widget_show_all(window);

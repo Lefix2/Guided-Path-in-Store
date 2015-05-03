@@ -14,6 +14,7 @@ struct store{
 	itemList * allocatedStock;		/*!< itemList of item allocated in memory */
 	sectionList * allocatedSections;	/*!< list of sections of the store */
 	int ** cartography;				/*!< array image of the store's cartography */
+	GdkPixbuf *sprites;				/*!< the sprites used to draw the store*/
 };
 
 store * store_new(int id, char * name, int x_size, int y_size);
@@ -23,13 +24,16 @@ int store_delete(store * st_source);
 int store_set_id(store * st_source, int id);
 int store_set_name(store * st_source, char * name);
 int store_set_size(store * st_source, int x_size, int y_size);
+int store_set_sprites(store * st_source, GdkPixbuf *sprites);
 
 int store_get_id(store * st_source);
 char * store_get_name(store * st_source);
 int store_get_x_size(store * st_source);
 itemList *store_get_allocatedStock(store * st_source);
 sectionList *store_get_allocatedSections(store * st_source);
+int store_get_x_size(store * st_source);
 int store_get_y_size(store * st_source);
+GdkPixbuf *store_get_sprites(store * st_source);
 
 void store_print(store * st_source);
 void store_print_carto(store * st_source);

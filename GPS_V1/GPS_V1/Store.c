@@ -30,6 +30,7 @@ store * store_init(store * st_source)
 	st_source->size.y = 0;
 	st_source->allocatedStock = NULL;
 	st_source->cartography = NULL;
+	st_source->sprites = NULL;
 	
 	return st_source;
 }
@@ -41,6 +42,8 @@ int store_delete(store * st_source)
 	store_free_carto(st_source);
 	store_delete_stock(st_source);
 	store_delete_sections(st_source);
+	if (st_source->sprites != NULL)
+		g_object_unref(st_source->sprites);
 	free(st_source);
 	return EXIT_SUCCESS;
 }
@@ -68,6 +71,16 @@ int store_set_size(store * st_source, int x_size, int y_size)
 	store_free_carto(st_source);
 	st_source->size.x = x_size;
 	st_source->size.y = y_size;
+	return EXIT_SUCCESS;
+}
+
+int store_set_sprites(store * st_source, GdkPixbuf *sprites)
+{
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	if (st_source->sprites != NULL)
+		g_object_unref(sprites);
+	st_source->sprites = sprites;
 	return EXIT_SUCCESS;
 }
 
@@ -99,6 +112,11 @@ int store_get_x_size(store * st_source)
 int store_get_y_size(store * st_source)
 {
 	return st_source->size.y;
+}
+
+GdkPixbuf *store_get_sprites(store * st_source)
+{
+	return st_source->sprites;
 }
 
 void store_print(store * st_source)
@@ -201,7 +219,7 @@ int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_p
 	if (tmp != NULL)
 	{
 		printf("error : Trying to add a section with existing id in Store\n");
-		Section_print(tmp, TRUE);
+		section_print(tmp, TRUE);
 		printf("\n");
 		return EXIT_FAILURE;
 	}
@@ -214,9 +232,9 @@ int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_p
 		printf("error : Trying to add a section on an existing section\n");
 		return EXIT_FAILURE;
 	}
-	section * new_s = newSection(id, s_type);
-	Section_setPos(new_s, x_pos, y_pos);
-	Section_setSize(new_s, x_size, y_size);
+	section * new_s = section_new(id, s_type);
+	section_set_pos(new_s, x_pos, y_pos);
+	section_set_size(new_s, x_size, y_size);
 	sectionPointerList_insert_sort(st_source->allocatedSections, new_s);
 
 	return EXIT_SUCCESS;
@@ -226,7 +244,7 @@ int store_delete_item(store * st_source, item * item)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
-	Section_removeItem(item->section, item);
+	section_remove_item(item->section, item);
 	return item_delete(itemPointerList_delete_single(st_source->allocatedStock, item));
 }
 
@@ -246,7 +264,7 @@ int store_delete_section(store * st_source, section * s_source)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
-	return Section_delete(sectionPointerList_delete_single(st_source->allocatedStock, s_source));
+	return section_delete(sectionPointerList_delete_single(st_source->allocatedStock, s_source));
 }
 
 int store_delete_sections(store * st_source)
@@ -255,7 +273,7 @@ int store_delete_sections(store * st_source)
 		return EXIT_FAILURE;
 	while (!sectionPointerList_is_empty(st_source->allocatedSections))
 	{
-		Section_delete(sectionPointerList_delete_first(st_source->allocatedSections));
+		section_delete(sectionPointerList_delete_first(st_source->allocatedSections));
 	}
 	free(st_source->allocatedSections);
 	return EXIT_SUCCESS;
@@ -304,21 +322,21 @@ void testStore(void)
 	store_add_item(sttest, 32, fromage, "bleu");
 	store_add_item(sttest, 22, legumes_vert, "asperge");
 
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 22), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 23), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 24), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 25), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 26), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 27), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 28), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 29), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 30), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 31), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 32), 6, 2);
-	Section_addItem(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 22), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 22), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 23), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 24), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 25), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 26), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 27), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 28), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 29), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 30), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 31), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 32), 6, 2);
+	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 22), 6, 2);
 
 
-	Section_removeItem(itemPointerList_find_id(sectionPointerList_find_id(sttest->allocatedSections, 01)->stock, 31));
+	section_remove_item(itemPointerList_find_id(sectionPointerList_find_id(sttest->allocatedSections, 01)->stock, 31));
 
 	Store_computeCartography(sttest);
 	store_print(sttest);
