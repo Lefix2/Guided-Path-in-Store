@@ -79,7 +79,7 @@ int store_set_sprites(store * st_source, GdkPixbuf *sprites)
 	if (st_source == NULL)
 		return EXIT_FAILURE;
 	if (st_source->sprites != NULL)
-		g_object_unref(sprites);
+		g_object_unref(st_source->sprites);
 	st_source->sprites = sprites;
 	return EXIT_SUCCESS;
 }
@@ -169,21 +169,21 @@ int Store_computeCartography(store * st_source)
 	}
 
 	//code calculant pour la position (x,y)  la valeur 0(vide) ou 1(obstacle) en fonction des sections
-	int x,y;
-	int x_pos, y_pos;
-	int x_size, y_size;
+	coord c;
+	coord pos, size;
 
 	sectionPointerList_set_on_first(st_source->allocatedSections);
 	while (!sectionPointerList_is_out_of(st_source->allocatedSections))
 	{
-		x_pos = st_source->allocatedSections->current->s->pos.x;
-		y_pos = st_source->allocatedSections->current->s->pos.y;
-		x_size = st_source->allocatedSections->current->s->size.x;
-		y_size = st_source->allocatedSections->current->s->size.y;
+		pos =  st_source->allocatedSections->current->s->pos;
+		size = st_source->allocatedSections->current->s->size;
 
-		for (x = 0; x < x_size; x++){
-			for (y = 0; y < y_size; y++){
-				(st_source->cartography[x_pos + x][y_pos + y]) = 1;
+		for (c.x = pos.x; c.x < size.x+pos.x; c.x++){
+			for (c.y = pos.y; c.y < size.y+pos.y; c.y++){
+				if (on_border(c,pos,size,1))
+					st_source->cartography[c.x][c.y] = STRONG_COST;//items are on border, so let them walkable
+				else
+					st_source->cartography[c.x][c.y] = INFINITY_COST;
 			}
 		}
 		sectionPointerList_next(st_source->allocatedSections);
@@ -208,6 +208,31 @@ int store_add_item(store * st_source, int id, category category, char * name)
 	}
 	itemPointerList_insert_sort(st_source->allocatedStock, new_i);
 	return EXIT_SUCCESS;
+}
+
+int store_delete_item(store * st_source, item * item)
+{
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	section_remove_item(item->section, item);
+	return item_delete(itemPointerList_delete_single(st_source->allocatedStock, item));
+}
+
+int store_delete_stock(store * st_source)
+{
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	while (!itemPointerList_is_empty(st_source->allocatedStock))
+	{
+		item_delete(itemPointerList_delete_first(st_source->allocatedStock));
+	}
+	free(st_source->allocatedStock);
+	return EXIT_SUCCESS;
+}
+
+item *store_find_item_id(store * st_source, int id)
+{
+	return itemPointerList_find_id(st_source->allocatedStock, id);
 }
 
 int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size)
@@ -240,26 +265,6 @@ int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_p
 	return EXIT_SUCCESS;
 }
 
-int store_delete_item(store * st_source, item * item)
-{
-	if (st_source == NULL)
-		return EXIT_FAILURE;
-	section_remove_item(item->section, item);
-	return item_delete(itemPointerList_delete_single(st_source->allocatedStock, item));
-}
-
-int store_delete_stock(store * st_source)
-{
-	if (st_source == NULL)
-		return EXIT_FAILURE;
-	while (!itemPointerList_is_empty(st_source->allocatedStock))
-	{
-		item_delete(itemPointerList_delete_first(st_source->allocatedStock));
-	}
-	free(st_source->allocatedStock);
-	return EXIT_SUCCESS;
-}
-
 int store_delete_section(store * st_source, section * s_source)
 {
 	if (st_source == NULL)
@@ -277,6 +282,11 @@ int store_delete_sections(store * st_source)
 	}
 	free(st_source->allocatedSections);
 	return EXIT_SUCCESS;
+}
+
+section *store_find_section_id(store * st_source, int id)
+{
+	return sectionPointerList_find_id(st_source->allocatedSections, id);
 }
 
 int store_detect_collision(store * st_source, int x_pos, int y_pos, int x_size, int y_size)

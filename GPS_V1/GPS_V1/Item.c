@@ -28,6 +28,7 @@ item * item_init(item * item)
 	item->posInSec.x = 0;
 	item->posInSec.y = 0;
 	item->section = NULL;
+	item->pathTo = NULL;
 
 	return item;
 }
@@ -36,6 +37,8 @@ int item_delete(item * item)
 {
 	if (item == NULL)
 		return EXIT_FAILURE;
+	if (item->pathTo != NULL)
+		free(item->pathTo);
 	free(item);
 	return EXIT_SUCCESS;
 }
@@ -189,6 +192,10 @@ section * item_get_section(item * item)
 	return item->section;
 }
 
+path * item_get_pathTo(item * item)
+{
+	return item->pathTo;
+}
 int item_compare_id(void *element1, void *element2)
 {
 	return (((item*)element2)->id - ((item*)element1)->id);

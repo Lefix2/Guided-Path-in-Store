@@ -22,6 +22,7 @@ struct item{
 	gboolean promotion;				/*!< Values set to true if the product is in promotion */
 	coord posInSec;					/*!< position of the item in the section in X and Y */
 	section * section;				/*!< pointer to the associated section i the store */
+	path *pathTo;					/*!< path from the precedent item, variable only used in the user checklist*/
 };
 
 item * item_new(int id, category category, char * name);
@@ -52,6 +53,7 @@ double item_get_cost(item * item);
 gboolean item_is_in_promotion(item * item);
 coord item_get_pos(item * item);
 section * item_get_section(item * item);
+path * item_get_pathTo(item * item);
 
 //fonction pour liste générique
 int item_compare_id(void *element1, void *element2);

@@ -100,8 +100,8 @@ void sectionPointerList_print(sectionList * l)
 			printf("| %4d | %14s | %14d | %14d | %14d |\n",section_get_id(tmp),
 														   section_get_type_string(tmp),
 														   section_get_nb_items(tmp),
-														   section_get_x_size(tmp),
-														   section_get_y_size(tmp)
+														   section_get_size(tmp).x,
+														   section_get_size(tmp).y
 			);
 			if (tmp->s_type == t_section)
 				itemPointerList_print(tmp->stock, TRUE);

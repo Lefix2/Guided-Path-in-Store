@@ -2,7 +2,6 @@
 #include "AstarList.h"
 #include "Store.h"
 
-
 nodeAstar * nodeAstar_new(coord pos, nodeAstar *parent)
 {
 	nodeAstar *newn = (nodeAstar*)malloc(sizeof(nodeAstar));
@@ -22,6 +21,44 @@ int nodeAstar_delete(nodeAstar * nodeAstar)
 		return EXIT_FAILURE;
 	free(nodeAstar);
 	return EXIT_SUCCESS;
+}
+
+path * path_new()
+{
+	path * newpath = (path*)malloc(sizeof(path));
+
+	newpath->coordinates = (coord*)malloc(0);
+	newpath->nb_coord = 0;
+
+	return newpath;
+}
+
+int path_delete(path *path)
+{
+	if (path == NULL)
+		return EXIT_FAILURE;
+	free(path->coordinates);
+	free(path);
+
+	return EXIT_SUCCESS;
+}
+
+int path_reset(path *path)
+{
+	if (path == NULL)
+		return EXIT_FAILURE;
+	path->coordinates = (coord*)realloc(path->coordinates, 0);
+	path->nb_coord = 0;
+
+	return EXIT_SUCCESS;
+}
+
+int path_add_node(path *path, coord newcoord)
+{
+	path->nb_coord++;
+	path->coordinates = (coord*)realloc(path->coordinates, path->nb_coord*sizeof(coord));
+	*(path->coordinates + path->nb_coord - 1) = newcoord;
+	return path->nb_coord;
 }
 
 int nodeAstar_set_pos(nodeAstar *nodeAstar, coord pos)
@@ -91,17 +128,20 @@ nodeAstar *nodeAstar_find_pos(astarList *l, coord pos)
 void update_neighbours(nodeAstar *n,coord end ,store *st_source, astarList *opened, astarList *closed)
 {
 	//x and y variation for each 8 neighbours
-	coord dxdy[] = { { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 } };
-	int neighbour;
+	coord dxdy[] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { -1, 1 }, { 1, 1 }, { 1, -1 }, { -1, -1 } };
+	int astar_cost[] = { 10, 20, 30, 40, 50, 60, 70, 80, 500, MY_INFINITY };
+	int neighbour, neighbour_cost;
 	nodeAstar *nodeNeighbour;
 	for (neighbour = 0; neighbour < 8; neighbour++)
 	{
 		coord neighbourPos = add_coord(dxdy[neighbour], n->pos);
-		//if there's no neighbour(ou of the map)
+		//if there's no neighbour(out of the map)
 		if (!is_in_square(neighbourPos, zero, st_source->size))
 			continue;
+		neighbour_cost = astar_cost[st_source->cartography[neighbourPos.x][neighbourPos.y]];
+		neighbour_cost = neighbour_cost + (neighbour_cost*(neighbour >= 4))/ 10;// path in diag a bit more expensive
 		//if the neighbour is an obstacle impassable
-		if (st_source->cartography[neighbourPos.x][neighbourPos.y] == 1)
+		if (neighbour_cost >= MY_INFINITY)
 			continue;
 		//if the neighbour is already in closed list
 		if (nodeAstar_find_pos(closed, neighbourPos) != NULL)
@@ -110,7 +150,7 @@ void update_neighbours(nodeAstar *n,coord end ,store *st_source, astarList *open
 		//We can create the node
 		nodeNeighbour = nodeAstar_new(neighbourPos, n);
 		//g = cost of the parent from the start + cost from parent to child
-		nodeAstar_set_g(nodeNeighbour, n->g + GENERAL_COST);
+		nodeAstar_set_g(nodeNeighbour, n->g + neighbour_cost);
 		//h = distant to the end
 		nodeAstar_set_h(nodeNeighbour, manhattan_distance(nodeNeighbour->pos, end));
 		//f = g + h
@@ -164,28 +204,26 @@ int close_node(nodeAstar *n, astarList *opened, astarList *closed)
 	return astarList_insert_last(closed, n);
 }
 
-int findpath(coord **coordonates, astarList *closed)
+void findpath(path * path, astarList *closed)
 {
 	nodeAstar * currentNode = astarList_get_last(closed);
-	*coordonates = (coord**)malloc(0);
-	int nb = 0;
+	path_reset(path);
+
 	while (currentNode != NULL)
 	{
-		nb++;
-		*coordonates = (coord*)realloc(*coordonates, nb*sizeof(coord));
-		*(*coordonates + nb-1) = currentNode->pos;
+		path_add_node(path, currentNode->pos);
 		currentNode = currentNode->parent;
 	}
-	return nb;
 }
 
-int astar(store *st_source, coord start, coord end, coord **path)
+int astar(store *st_source, coord start, coord end, path *path)
 {
 	astarList *opened = astarList_new();
 	astarList *closed = astarList_new();
 
 	nodeAstar *current;
 	current = nodeAstar_new(start, NULL);
+
 	open_node(current, opened);
 	close_node(current, opened, closed);
 	update_neighbours(current, end, st_source, opened, closed);
@@ -209,12 +247,12 @@ int astar(store *st_source, coord start, coord end, coord **path)
 		astarList_delete(closed);
 		return 0;
 	}
-	int nbNodes = findpath(path, closed);
+	findpath(path, closed);
 
 	astarList_delete(opened);
 	astarList_delete(closed);
 
-	return nbNodes;
+	return EXIT_SUCCESS;
 }
 
 void testAstar(void)
@@ -236,8 +274,8 @@ void testAstar(void)
 
 	coord start;
 	coord end;
-	coord *path = NULL;
-	int nbNodePath, i;
+	path *path = path_new();
+	int i;
 
 	printf("start : \nX :");
 	scanf("%d", &(start.x));
@@ -248,10 +286,10 @@ void testAstar(void)
 	printf("Y :");
 	scanf("%d", &(end.y));
 
-	nbNodePath = astar(sttest, start, end, &path);
-	for (i = 0; i < nbNodePath; i++)
-		sttest->cartography[path[i].x][path[i].y] = 2;
-	free(path);
+	astar(sttest, start, end, path);
+	for (i = 0; i < path->nb_coord; i++)
+		sttest->cartography[path->coordinates[i].x][path->coordinates[i].y] = 2;
+	path_delete(path);
 
 	store_print_carto(sttest);
 	store_delete(sttest);

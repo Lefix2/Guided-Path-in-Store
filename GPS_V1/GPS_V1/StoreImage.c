@@ -1,6 +1,8 @@
 #include <math.h>
 
 #include "StoreImage.h"
+#include "Item.h"
+#include "ItemList.h"
 #include "Section.h"
 #include "SectionList.h"
 #include "Store.h"
@@ -19,6 +21,7 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 	GdkPixbuf *newGdkPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, gdk_pixbuf_get_bits_per_sample(sprites), width * SPRITE_RES, height * SPRITE_RES);
 
 	GdkPixbuf *floor;
+	srand(1);
 	for (y = 0; y < height; y ++)
 	{
 		for (x = 0; x < width; x ++)
@@ -31,16 +34,6 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 	
 	section *currentSection;
 	sectionList *sections = store_get_allocatedSections(src);
-	sectionPointerList_set_on_first(sections);
-
-	//dessin de chaque rayon
-	while (!sectionPointerList_is_out_of(sections))
-	{
-		currentSection = getcurrent(sections);
-
-		section_set_pixbuf(currentSection, store_image_new_pixbuf_from_section(currentSection, sprites));
-		sectionPointerList_next(sections);
-	}
 
 	//création du pixbuf
 	sectionPointerList_set_on_first(sections);
@@ -48,10 +41,10 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 	{
 		currentSection = getcurrent(sections);
 
-		x = section_get_x_pos(currentSection);
-		y = section_get_y_pos(currentSection);
+		x = section_get_pos(currentSection).x;
+		y = section_get_pos(currentSection).y;
 
-		store_image_merge_pixbuf(section_get_pixbuf(currentSection), newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
+		store_image_merge_pixbuf(store_image_new_pixbuf_from_section(currentSection, sprites), newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
 
 		sectionPointerList_next(sections);
 	}
@@ -62,8 +55,8 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 GdkPixbuf *store_image_new_pixbuf_from_section(section *src, GdkPixbuf *sprites)
 {
 	int x, y;
-	int width = section_get_x_size(src);
-	int height = section_get_y_size(src);
+	int width = section_get_size(src).x;
+	int height = section_get_size(src).y;
 
 	guint32 color;
 
@@ -177,4 +170,34 @@ void store_image_merge_pixbuf(GdkPixbuf *src, GdkPixbuf *dest, int dest_x, int d
 	int height = gdk_pixbuf_get_height(src);
 
 	gdk_pixbuf_composite(src, dest, dest_x, dest_y, width, height, dest_x, dest_y, 1, 1, GDK_INTERP_NEAREST, 255);
+}
+
+int store_image_draw_path(cairo_t *cr, path *pathToDraw)
+{
+	if (pathToDraw == NULL)
+		return EXIT_FAILURE;
+	int i;
+	cairo_set_source_rgba(cr, 255, 0, 0, 0.6);
+	cairo_set_line_width(cr, 10);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+	cairo_move_to(cr, pathToDraw->coordinates->x*SPRITE_RES, pathToDraw->coordinates->y*SPRITE_RES);
+	for (i = 1; i < pathToDraw->nb_coord; i++)
+	{
+		cairo_line_to(cr, (pathToDraw->coordinates + i)->x*SPRITE_RES + SPRITE_RES / 2, (pathToDraw->coordinates + i)->y*SPRITE_RES + SPRITE_RES / 2);
+	}
+	cairo_stroke(cr);
+	return EXIT_SUCCESS;
+}
+
+int store_image_draw_shopping(cairo_t *cr, itemList *list)
+{
+	if (list == NULL)
+		return EXIT_FAILURE;
+	itemPointerList_set_on_first(list);
+	while (!itemPointerList_is_out_of(list))
+	{
+		store_image_draw_path(cr, item_get_pathTo(itemPointerList_get_current(list)));
+		itemPointerList_next(list);
+	}
 }

@@ -31,7 +31,6 @@ section * section_init(section * s_source)
 	s_source->size.y = 0;
 	s_source->nb_items = 0;
 	s_source->stock = NULL;
-	s_source->pixbuf = NULL;
 
 	return s_source;
 }
@@ -41,8 +40,6 @@ int section_delete(section * s_source)
 	if (s_source == NULL)
 		return EXIT_FAILURE;
 	itemPointerList_delete(s_source->stock);
-	if (s_source->pixbuf != NULL)
-		g_object_unref(s_source->pixbuf);
 	free(s_source);
 	return EXIT_SUCCESS;
 }
@@ -92,16 +89,6 @@ int section_set_size(section * s_source, int x_size, int y_size)
 		return EXIT_FAILURE;
 	s_source->size.x = x_size;
 	s_source->size.y = y_size;
-	return EXIT_SUCCESS;
-}
-
-int section_set_pixbuf(section * s_source, GdkPixbuf *pixbuf)
-{
-	if (s_source == NULL)
-		return EXIT_FAILURE;
-	if (s_source->pixbuf != NULL)
-		g_object_unref(s_source->pixbuf);
-	s_source->pixbuf = pixbuf;
 	return EXIT_SUCCESS;
 }
 
@@ -166,34 +153,19 @@ char * section_get_type_string(section * s_source)
 	return sec_type[s_source->s_type];
 }
 
-int section_get_x_pos(section * s_source)
+coord section_get_pos(section * s_source)
 {
-	return s_source->pos.x;
+	return s_source->pos;
 }
 
-int section_get_y_pos(section * s_source)
+coord section_get_size(section * s_source)
 {
-	return s_source->pos.y;
-}
-
-int section_get_x_size(section * s_source)
-{
-	return s_source->size.x;
-}
-
-int section_get_y_size(section * s_source)
-{
-	return s_source->size.y;
+	return s_source->size;
 }
 
 int section_get_nb_items(section * s_source)
 {
 	return s_source->nb_items;
-}
-
-GdkPixbuf* section_get_pixbuf(section * s_source)
-{
-	return s_source->pixbuf;
 }
 
 void section_print(section * s_source, gboolean minimal)

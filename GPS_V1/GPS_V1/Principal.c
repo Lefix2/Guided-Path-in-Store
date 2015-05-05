@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "Item.h"
 #include "ItemList.h"
 #include "Section.h"
 #include "Store.h"
@@ -11,6 +12,7 @@
 #define M_PI 3.1415
 
 GtkWidget *drawing_area;
+
 
 /* on quitte l'application en fermant la fenêtre */
 void on_window_closed(GtkWidget *window, gpointer data)
@@ -60,7 +62,7 @@ gboolean button4_callback(GtkWidget *window, gpointer data)
 
 gboolean button5_callback(GtkWidget *window, gpointer data)
 {
-	store_add_section((store*)data, 15, t_section, 30, 3, 5, 3);
+	store_add_section(((shopping*)data)->Store, 15, t_section, 30, 3, 5, 3);
 	gtk_widget_queue_draw(drawing_area);
 	return FALSE;
 }
@@ -68,9 +70,9 @@ gboolean button5_callback(GtkWidget *window, gpointer data)
 gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 {
 	
-	guint width, height;
+	guint width, height,i;
 	GdkRGBA color;
-	GdkPixbuf *store_pixbuf = store_image_new_pixbuf_from_store(data);
+	GdkPixbuf *store_pixbuf = store_image_new_pixbuf_from_store(((shopping*)data)->Store);
 
 	gdk_cairo_set_source_pixbuf(cr, store_pixbuf, 0, 0);
 	width = gdk_pixbuf_get_width(store_pixbuf);
@@ -78,6 +80,8 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 	cairo_rectangle(cr, 0, 0, width, height);
 	
 	cairo_fill(cr);
+
+	store_image_draw_shopping(cr, ((shopping*)data)->List);
 
 	return FALSE;
 }
@@ -142,8 +146,10 @@ int main(int argc, char *argv[])
 	GtkImage *imtest = gtk_image_new();
 	GError **error = NULL;
 	GtkWidget *event_box = gtk_event_box_new();
-	GtkWidget *scrollmenuV = gtk_scrolled_window_new(NULL, NULL);;
+	GtkWidget *scrollmenuV = gtk_scrolled_window_new(NULL, NULL);
 	drawing_area = gtk_drawing_area_new();
+
+	shopping shopping;
 
 	//gtk_container_add(GTK_CONTAINER(event_box), scrollmenuV);
 	//gtk_scrolled_window_add_with_viewport(scrollmenuV, imtest);
@@ -173,11 +179,28 @@ int main(int argc, char *argv[])
 	store_add_section(sttest, 13, t_checkout, 3, 32, 10, 3);
 	store_add_section(sttest, 14, t_entrance, 15, 35, 10, 3);
 
+	store_add_item(sttest, 1, legumes_vert, "haricot");
+	shopping.Store = sttest;
+	section_add_item(store_find_section_id(shopping.Store, 6),store_find_item_id(shopping.Store, 1),1,0);
+
+	coord start, end;
+	shopping.List = itemPointerList_new();
+	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 1));
+	item *currenti = itemPointerList_get_current(shopping.List);
+
+
+	start.x = magsizex-1; start.y = magsizey-1;
+	end = add_coord(item_get_pos(currenti), section_get_pos(item_get_section(currenti)));
+	//end.y -= 1;
+
+	currenti->pathTo = path_new();
+	astar(shopping.Store, start, end, currenti->pathTo);
+	
 
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollmenuV), drawing_area);
 
-	g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(draw_callback), sttest);
-	g_signal_connect(G_OBJECT(button5), "clicked", G_CALLBACK(button5_callback), sttest);
+	g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(draw_callback), &shopping);
+	g_signal_connect(G_OBJECT(button5), "clicked", G_CALLBACK(button5_callback), &shopping);
 
 	/* afficher la fenêtre */
 	gtk_widget_show_all(window);
