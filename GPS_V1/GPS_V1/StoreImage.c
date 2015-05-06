@@ -39,7 +39,7 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 	sectionPointerList_set_on_first(sections);
 	while (!sectionPointerList_is_out_of(sections))
 	{
-		currentSection = getcurrent(sections);
+		currentSection = sectionPointerList_get_current(sections);
 
 		x = section_get_pos(currentSection).x;
 		y = section_get_pos(currentSection).y;

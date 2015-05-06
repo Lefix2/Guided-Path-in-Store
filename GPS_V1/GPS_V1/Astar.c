@@ -139,7 +139,7 @@ void update_neighbours(nodeAstar *n,coord end ,store *st_source, astarList *open
 		if (!is_in_square(neighbourPos, zero, st_source->size))
 			continue;
 		neighbour_cost = astar_cost[st_source->cartography[neighbourPos.x][neighbourPos.y]];
-		neighbour_cost = neighbour_cost + (neighbour_cost*(neighbour >= 4))/ 10;// path in diag a bit more expensive
+		neighbour_cost = neighbour_cost + (neighbour_cost*(neighbour >= 4));// / 10;// path in diag a bit more expensive
 		//if the neighbour is an obstacle impassable
 		if (neighbour_cost >= MY_INFINITY)
 			continue;
@@ -181,7 +181,6 @@ void update_neighbours(nodeAstar *n,coord end ,store *st_source, astarList *open
 
 nodeAstar *best_node(astarList *l)
 {
-
 	return astarList_get_first(l);
 }
 

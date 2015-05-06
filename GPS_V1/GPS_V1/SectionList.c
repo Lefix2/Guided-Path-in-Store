@@ -303,7 +303,7 @@ section * sectionPointerList_delete_single(sectionList * l, section * s)
 	return tmp;
 }
 
-section * getcurrent(sectionList * l)
+section * sectionPointerList_get_current(sectionList * l)
 {
 	return l->current->s;
 }

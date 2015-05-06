@@ -4,7 +4,10 @@
 #include "Section.h"
 #include "Store.h"
 #include "Astar.h"
+#include "merchant.h"
 #include "StoreImage.h"
+
+#include "tests.h"
 
 #define MAIN_WINDOW_WIDTH 300
 #define MAIN_WINDOW_HEIGHT 150
@@ -141,10 +144,7 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button3_callback), NULL);
 	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
 
-
-	GdkPixbuf *sprites;
 	GtkImage *imtest = gtk_image_new();
-	GError **error = NULL;
 	GtkWidget *event_box = gtk_event_box_new();
 	GtkWidget *scrollmenuV = gtk_scrolled_window_new(NULL, NULL);
 	drawing_area = gtk_drawing_area_new();
@@ -153,49 +153,18 @@ int main(int argc, char *argv[])
 
 	//gtk_container_add(GTK_CONTAINER(event_box), scrollmenuV);
 	//gtk_scrolled_window_add_with_viewport(scrollmenuV, imtest);
-	sprites = gdk_pixbuf_new_from_file("sprites.png", error);
+	
 	gtk_box_pack_start(GTK_BOX(v_box), scrollmenuV, TRUE, TRUE, 0);
-	
-	int magsizex = 40;
-	int magsizey = 40;
 
-	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
-
-	store_set_sprites(sttest, sprites);
-
-	store_add_section(sttest, 1, t_wall, 0, 1, 1, magsizey - 1);
-	store_add_section(sttest, 2, t_wall, 1, magsizey - 1, magsizex - 1, 1);
-	store_add_section(sttest, 3, t_wall, magsizex - 1, 0, 1, magsizey - 1);
-	store_add_section(sttest, 4, t_wall, 0, 0, magsizex - 1, 1);
-
-	store_add_section(sttest, 5, t_promo, 3, 3, 15, 2);
-	store_add_section(sttest, 6, t_section, 3, 6, 15, 2);
-	store_add_section(sttest, 7, t_section, 3, 9, 15, 2);
-	store_add_section(sttest, 8, t_section, 3, 12, 15, 2);
-	store_add_section(sttest, 9, t_section, 3, 15, 15, 2);
-	store_add_section(sttest, 10, t_section, 3, 18, 15, 2);
-	store_add_section(sttest, 11, t_section, 3, 21, 11, 11);
-	store_add_section(sttest, 12, t_section, 15, 21, 1, 11);
-	store_add_section(sttest, 13, t_checkout, 3, 32, 10, 3);
-	store_add_section(sttest, 14, t_entrance, 15, 35, 10, 3);
-
-	store_add_item(sttest, 1, legumes_vert, "haricot");
-	shopping.Store = sttest;
-	section_add_item(store_find_section_id(shopping.Store, 6),store_find_item_id(shopping.Store, 1),1,0);
-
-	coord start, end;
+	shopping.Store = my_test_store_new();
 	shopping.List = itemPointerList_new();
+
+	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 0));
 	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 1));
-	item *currenti = itemPointerList_get_current(shopping.List);
-
-
-	start.x = magsizex-1; start.y = magsizey-1;
-	end = add_coord(item_get_pos(currenti), section_get_pos(item_get_section(currenti)));
-	//end.y -= 1;
-
-	currenti->pathTo = path_new();
-	astar(shopping.Store, start, end, currenti->pathTo);
+	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 2));
+	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 3));
 	
+	merchant_connect_paths(&shopping);
 
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollmenuV), drawing_area);
 
@@ -207,7 +176,6 @@ int main(int argc, char *argv[])
 
 	/* boucle principale */
 	gtk_main();
-
 
 	return EXIT_SUCCESS;
 }

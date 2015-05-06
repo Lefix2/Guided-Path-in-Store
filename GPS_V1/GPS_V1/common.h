@@ -48,7 +48,6 @@ typedef struct store store;
 typedef struct section section;
 typedef struct item item;
 typedef struct nodeAstar nodeAstar;
-typedef struct shopping shopping;
 
 typedef struct nodeItemList nodeItemList;
 typedef struct itemList itemList;
@@ -74,6 +73,12 @@ struct path
 {
 	coord *coordinates;
 	int nb_coord;
+};
+
+typedef struct shopping shopping;
+struct shopping{
+	store *Store;
+	itemList *List;
 };
 
 gboolean betwn(int a, int x, int b, gboolean equal);

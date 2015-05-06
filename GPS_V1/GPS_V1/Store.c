@@ -171,20 +171,49 @@ int Store_computeCartography(store * st_source)
 	//code calculant pour la position (x,y)  la valeur 0(vide) ou 1(obstacle) en fonction des sections
 	coord c;
 	coord pos, size;
+	section *current;
 
 	sectionPointerList_set_on_first(st_source->allocatedSections);
 	while (!sectionPointerList_is_out_of(st_source->allocatedSections))
 	{
-		pos =  st_source->allocatedSections->current->s->pos;
-		size = st_source->allocatedSections->current->s->size;
+		current = sectionPointerList_get_current(st_source->allocatedSections);
+		pos =  section_get_pos(current);
+		size = section_get_size(current);
 
-		for (c.x = pos.x; c.x < size.x+pos.x; c.x++){
-			for (c.y = pos.y; c.y < size.y+pos.y; c.y++){
-				if (on_border(c,pos,size,1))
-					st_source->cartography[c.x][c.y] = STRONG_COST;//items are on border, so let them walkable
-				else
+		switch (section_get_type(current))
+		{
+		case t_wall :
+			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
+				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
 					st_source->cartography[c.x][c.y] = INFINITY_COST;
+				}
 			}
+			break;
+		case t_entrance :
+			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
+				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
+					st_source->cartography[c.x][c.y] = MEDIUM_COST;
+				}
+			}
+			break;
+		case t_checkout:
+			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
+				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
+					st_source->cartography[c.x][c.y] = MEDIUM_COST;
+				}
+			}
+			break;
+		default :
+			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
+				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
+					if (on_border(c, pos, size, 1))
+						st_source->cartography[c.x][c.y] = STRONG_COST;//items are on border, so let them walkable
+					else
+						st_source->cartography[c.x][c.y] = INFINITY_COST;
+				}
+			}
+			break;
+
 		}
 		sectionPointerList_next(st_source->allocatedSections);
 	}

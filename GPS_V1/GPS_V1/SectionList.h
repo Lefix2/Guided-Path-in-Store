@@ -51,6 +51,7 @@ section * sectionPointerList_delete_last(sectionList * l);
 section * sectionPointerList_delete_current(sectionList * l);
 section * sectionPointerList_delete_single(sectionList * l, section * s);
 
+section * sectionPointerList_get_current(sectionList * l);
 section * sectionPointerList_find(sectionList * l, section * s);
 section * sectionPointerList_find_id(sectionList * l, int id);
 

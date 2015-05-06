@@ -2,6 +2,7 @@
 
 #include "Item.h"
 #include "Section.h"
+#include "astar.h"
 
 item * item_new(int id, category category, char * name)
 {
@@ -28,7 +29,7 @@ item * item_init(item * item)
 	item->posInSec.x = 0;
 	item->posInSec.y = 0;
 	item->section = NULL;
-	item->pathTo = NULL;
+	item->pathTo = path_new();
 
 	return item;
 }

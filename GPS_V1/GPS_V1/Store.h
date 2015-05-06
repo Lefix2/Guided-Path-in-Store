@@ -17,11 +17,6 @@ struct store{
 	GdkPixbuf *sprites;				/*!< the sprites used to draw the store*/
 };
 
-struct shopping{
-	store *Store;
-	itemList *List;
-};
-
 store * store_new(int id, char * name, int x_size, int y_size);
 store * store_init(store * st_source);
 int store_delete(store * st_source);
@@ -45,6 +40,7 @@ void store_print(store * st_source);
 void store_print_carto(store * st_source);
 
 int store_free_carto(store * st_source);
+int Store_computeCartography(store * st_source);
 int store_alloc_carto(store * st_source);
 
 int store_add_item(store * st_source, int id, category category, char * name);
