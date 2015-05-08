@@ -177,11 +177,15 @@ int store_image_draw_path(cairo_t *cr, path *pathToDraw)
 	if (pathToDraw == NULL)
 		return EXIT_FAILURE;
 	int i;
-	cairo_set_source_rgba(cr, 255, 0, 0, 0.6);
+	//cairo_set_source_rgba(cr, 255, 0, 0, 0.5);
+	double r = (rand() % 10)/10.0;
+	double v = (rand() % 10) / 10.0;
+	double b = (rand() % 10) / 10.0;
+	cairo_set_source_rgba(cr, r, v, b, 0.6);
 	cairo_set_line_width(cr, 10);
 	cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-	cairo_move_to(cr, pathToDraw->coordinates->x*SPRITE_RES, pathToDraw->coordinates->y*SPRITE_RES);
+	cairo_move_to(cr, pathToDraw->coordinates->x*SPRITE_RES + SPRITE_RES / 2, pathToDraw->coordinates->y*SPRITE_RES + SPRITE_RES / 2);
 	for (i = 1; i < pathToDraw->nb_coord; i++)
 	{
 		cairo_line_to(cr, (pathToDraw->coordinates + i)->x*SPRITE_RES + SPRITE_RES / 2, (pathToDraw->coordinates + i)->y*SPRITE_RES + SPRITE_RES / 2);
@@ -198,6 +202,13 @@ int store_image_draw_shopping(cairo_t *cr, itemList *list)
 	while (!itemPointerList_is_out_of(list))
 	{
 		store_image_draw_path(cr, item_get_pathTo(itemPointerList_get_current(list)));
+		int x = itemPointerList_get_current(list)->posInSec.x + itemPointerList_get_current(list)->section->pos.x;
+		int y = itemPointerList_get_current(list)->posInSec.y + itemPointerList_get_current(list)->section->pos.y;
+		cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
+		cairo_select_font_face(cr, "Georgia",CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+		cairo_set_font_size(cr, 15);
+		cairo_move_to(cr,( x )*SPRITE_RES, (y)*SPRITE_RES);
+		cairo_show_text(cr, itemPointerList_get_current(list)->name);
 		itemPointerList_next(list);
 	}
 }

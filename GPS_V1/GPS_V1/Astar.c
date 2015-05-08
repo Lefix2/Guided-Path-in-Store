@@ -130,6 +130,7 @@ void update_neighbours(nodeAstar *n,coord end ,store *st_source, astarList *open
 	//x and y variation for each 8 neighbours
 	coord dxdy[] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { -1, 1 }, { 1, 1 }, { 1, -1 }, { -1, -1 } };
 	int astar_cost[] = { 10, 20, 30, 40, 50, 60, 70, 80, 500, MY_INFINITY };
+	//int astar_cost[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, MY_INFINITY };
 	int neighbour, neighbour_cost;
 	nodeAstar *nodeNeighbour;
 	for (neighbour = 0; neighbour < 8; neighbour++)
@@ -217,6 +218,8 @@ void findpath(path * path, astarList *closed)
 
 int astar(store *st_source, coord start, coord end, path *path)
 {
+	int iterations = 0;
+
 	astarList *opened = astarList_new();
 	astarList *closed = astarList_new();
 
@@ -232,6 +235,7 @@ int astar(store *st_source, coord start, coord end, path *path)
 	//->need an update :)
 	while (!(same_coord(current->pos, end)) && !astarList_is_empty(opened))
 	{
+		iterations++;
 		//found the best node
 		current = best_node(opened);
 		//add it to the closed path
