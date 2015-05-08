@@ -6,6 +6,7 @@
 #include "Section.h"
 #include "SectionList.h"
 #include "Store.h"
+#include "Shopping.h"
 
 typedef enum spriteOrientation{
 	middle, topLeftCorner, topRightCorner, botRightCorner, botLeftCorner, top, right, bot, left, singleVert, singleHor, singleUp, singleRight, singleDown, singleLeft
@@ -177,8 +178,7 @@ int store_image_draw_path(cairo_t *cr, path *pathToDraw)
 	if (pathToDraw == NULL)
 		return EXIT_FAILURE;
 	int i;
-	//cairo_set_source_rgba(cr, 255, 0, 0, 0.5);
-	double r = (rand() % 10)/10.0;
+	double r = (rand() % 10) / 10.0;
 	double v = (rand() % 10) / 10.0;
 	double b = (rand() % 10) / 10.0;
 	cairo_set_source_rgba(cr, r, v, b, 0.6);
@@ -194,10 +194,11 @@ int store_image_draw_path(cairo_t *cr, path *pathToDraw)
 	return EXIT_SUCCESS;
 }
 
-int store_image_draw_shopping(cairo_t *cr, itemList *list)
+int store_image_draw_shopping(cairo_t *cr, shopping *shopping)
 {
-	if (list == NULL)
+	if (shopping == NULL)
 		return EXIT_FAILURE;
+	itemList *list = shopping->List;
 	itemPointerList_set_on_first(list);
 	while (!itemPointerList_is_out_of(list))
 	{
@@ -211,4 +212,5 @@ int store_image_draw_shopping(cairo_t *cr, itemList *list)
 		cairo_show_text(cr, itemPointerList_get_current(list)->name);
 		itemPointerList_next(list);
 	}
+	store_image_draw_path(cr, item_get_pathTo(shopping->end));
 }

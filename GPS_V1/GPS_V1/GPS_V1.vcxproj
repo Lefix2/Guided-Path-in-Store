@@ -92,6 +92,7 @@
     <ClCompile Include="Principal.c" />
     <ClCompile Include="Section.c" />
     <ClCompile Include="SectionList.c" />
+    <ClCompile Include="shopping.c" />
     <ClCompile Include="Store.c" />
     <ClCompile Include="StoreImage.c" />
   </ItemGroup>
@@ -114,6 +115,7 @@
     <ClInclude Include="AstarList.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="GenericList.h" />
+    <ClInclude Include="Shopping.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemList.h" />
     <ClInclude Include="merchant.h" />
