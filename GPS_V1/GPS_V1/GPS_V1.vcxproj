@@ -87,11 +87,14 @@
     <ClCompile Include="GenericList.c" />
     <ClCompile Include="Item.c" />
     <ClCompile Include="ItemList.c" />
+    <ClCompile Include="main.c" />
     <ClCompile Include="merchant.c" />
     <ClCompile Include="myAlloc.c" />
     <ClCompile Include="Principal.c" />
     <ClCompile Include="Section.c" />
     <ClCompile Include="SectionList.c" />
+    <ClCompile Include="sqlite3.c" />
+    <ClCompile Include="sqlite_functions.c" />
     <ClCompile Include="Store.c" />
     <ClCompile Include="StoreImage.c" />
   </ItemGroup>
@@ -120,6 +123,9 @@
     <ClInclude Include="myAlloc.h" />
     <ClInclude Include="Section.h" />
     <ClInclude Include="SectionList.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="sqlite3ext.h" />
+    <ClInclude Include="sqlite_functions.h" />
     <ClInclude Include="Store.h" />
     <ClInclude Include="StoreImage.h" />
     <ClInclude Include="tests.h" />
