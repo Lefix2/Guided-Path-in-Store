@@ -21,4 +21,5 @@ void dropValue(char *dataBaseName, char *tableName);
 void alterValue(char *dataBaseName, char *tableName, int Id);
 void printTable(char *dataBaseName, char *tableName);
 char returnInformations(char *dataBaseName, char *tableName);
+void edit();
 #endif
