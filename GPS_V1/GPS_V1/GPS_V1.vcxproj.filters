@@ -54,6 +54,15 @@
     <ClCompile Include="merchant.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite_functions.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
     <ClCompile Include="shopping.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -134,6 +143,15 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="merchant.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite_functions.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3ext.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Shopping.h">
