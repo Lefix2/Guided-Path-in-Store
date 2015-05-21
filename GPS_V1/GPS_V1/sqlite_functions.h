@@ -1,6 +1,8 @@
 #ifndef _SQLITE_FUNCTIONS_H_
 #define _SQLITE_FUNCTIONS_H_
 
+#include "Common.h"
+#include "sqlite3.h"
 
 static int callback(void *data, int argc, char **argv, char **azColName);
 static sqlite3 *openDb(char *dbName);
@@ -18,6 +20,5 @@ void addValue(char *dataBaseName, char *tableName);
 void dropValue(char *dataBaseName, char *tableName);
 void alterValue(char *dataBaseName, char *tableName, int Id);
 void printTable(char *dataBaseName, char *tableName);
-char returnValue(char *dataBaseName, char *tableName);
 char returnInformations(char *dataBaseName, char *tableName);
 #endif

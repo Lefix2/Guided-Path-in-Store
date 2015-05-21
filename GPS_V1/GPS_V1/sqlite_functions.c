@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "sqlite3.h"
 #include <string.h> //Fonctions strcpy, strcat
-#include "Item.h"
+
+#include "sqlite_functions.h"
+#include "sqlite3.h"
 
 #define MAX_ARRAY_OF_CHAR 255
 
@@ -188,7 +189,7 @@ char** element_list(char *DataBaseName)
 	char *sql = "SELECT * from item where itemId = 1;";
 	char **description;
 	int i = 0;
-	nodeItemPointerList_new()
+	//nodeItemPointerList_new();
 
 
 
@@ -228,7 +229,7 @@ char** element_list(char *DataBaseName)
 			strcpy(description[5], (char *)sqlite3_column_text(stmt, 5));
 			strcpy(description[6], (char *)sqlite3_column_text(stmt, 6));
 			strcpy(description[7], (char *)sqlite3_column_text(stmt, 7));
-			item->id = atof(description[0]);
+			//item_set_Id(item, atof(description[0]));
 		}
 	} while (rc == SQLITE_ROW);
 

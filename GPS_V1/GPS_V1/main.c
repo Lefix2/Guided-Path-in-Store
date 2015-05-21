@@ -5,7 +5,7 @@
 
 #define MAX_ARRAY_OF_CHAR 255
 
-int main(int argc, char* argv[])
+int my_main(int argc, char* argv[])
 {
 	//createTable();
 	//printf("%d\n",returnRow("C:/Users/rom/Documents/projet.db"));
