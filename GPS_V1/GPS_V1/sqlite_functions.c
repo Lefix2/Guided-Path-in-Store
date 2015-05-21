@@ -4,7 +4,7 @@
 
 #include "sqlite_functions.h"
 #include "sqlite3.h"
-
+#include "store.h"
 #define MAX_ARRAY_OF_CHAR 255
 
 
@@ -179,14 +179,91 @@ int returnRow(char *DataBaseName)
 	return ret;
 }
 
-char** element_list(char *DataBaseName)
+char** element_store(char *DataBaseName)
 {
 	//SQLITE3
 	sqlite3 *db = NULL;
 	sqlite3_stmt *stmt;
 	char *dbName = DataBaseName;
 	int rc;
-	char *sql = "SELECT * from item where itemId = 1;";
+	char *sql = "SELECT * from store where storeId = 1;";
+	char **description;
+	int i = 0;
+	//nodeItemPointerList_new();
+
+
+
+	//Open database
+	db = openDb(dbName);
+
+	/* prepare the sql, leave stmt ready for loop */
+	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	if (rc != SQLITE_OK) {
+		printf("Failed to prepare database\n\r");
+		sqlite3_close(db);
+		return 2;
+	}
+
+	printf("SQL prepared ok\n\r");
+
+	/* allocate memory for decsription and venue */
+	//description = (char *)malloc(100);
+	description = (char**)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
+	/* loop reading each row until step returns anything other than SQLITE_ROW */
+	do {
+		rc = sqlite3_step(stmt);
+		if (rc == SQLITE_ROW) { //can read data
+			description[0] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
+			description[1] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
+			description[2] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
+			description[3] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
+			strcpy(description[0], (char *)sqlite3_column_text(stmt, 0));
+			strcpy(description[1], (char *)sqlite3_column_text(stmt, 1));//récupération de la valeur grâce à la requête
+			strcpy(description[2], (char *)sqlite3_column_text(stmt, 2));
+			strcpy(description[3], (char *)sqlite3_column_text(stmt, 3));
+			//item_set_Id(item, atof(description[0]));
+		}
+	} while (rc == SQLITE_ROW);
+
+	/* finish off */
+	sqlite3_close(db);
+
+
+	//Close database
+	closeDb(db);
+	
+	return description;
+}
+
+store* create_store()
+{
+	char **tab;
+	tab = (char**)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
+	tab = element_list("C:/Users/rom/Documents/projet.db");
+	int a = 0;
+	int b = 0;
+	int c = 0;
+	char *name;
+	store *Aucampos;
+	name = (char*)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
+	name = tab[1];
+	a = atof(tab[0]);
+	b = atof(tab[2]);
+	c = atof(tab[3]);
+	Aucampos = store_new(a, name, b, c);
+	printf("%d %s %d %d", a, name, b, c);
+	system("PAUSE");
+	return Aucampos;
+}
+
+char** element_section(char *DataBaseName)
+{
+	//SQLITE3
+	sqlite3 *db = NULL;
+	sqlite3_stmt *stmt;
+	char *dbName = DataBaseName;
+	int rc;
+	char *sql = "SELECT * from section";
 	char **description;
 	int i = 0;
 	//nodeItemPointerList_new();
@@ -219,8 +296,6 @@ char** element_list(char *DataBaseName)
 			description[3] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
 			description[4] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
 			description[5] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-			description[6] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-			description[7] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
 			strcpy(description[0], (char *)sqlite3_column_text(stmt, 0));
 			strcpy(description[1], (char *)sqlite3_column_text(stmt, 1));//récupération de la valeur grâce à la requête
 			strcpy(description[2], (char *)sqlite3_column_text(stmt, 2));
@@ -228,8 +303,7 @@ char** element_list(char *DataBaseName)
 			strcpy(description[4], (char *)sqlite3_column_text(stmt, 4));
 			strcpy(description[5], (char *)sqlite3_column_text(stmt, 5));
 			strcpy(description[6], (char *)sqlite3_column_text(stmt, 6));
-			strcpy(description[7], (char *)sqlite3_column_text(stmt, 7));
-			//item_set_Id(item, atof(description[0]));
+			
 		}
 	} while (rc == SQLITE_ROW);
 
@@ -239,10 +313,33 @@ char** element_list(char *DataBaseName)
 
 	//Close database
 	closeDb(db);
-	
+
 	return description;
 }
 
+void create_section()
+{
+	char **tab;
+	tab = (char**)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
+	tab = element_list("C:/Users/rom/Documents/projet.db");
+	int a = 0;
+	int b = 0;
+	int c = 0;
+	int d = 0;
+	int e = 0;
+	int f = 0;
+	char *name;
+	a = atof(tab[0]);
+	b = atof(tab[2]);
+	c = atof(tab[3]);
+	d = atof(tab[4]);
+	e = atof(tab[5]);
+	f = atof(tab[6]);
+	store* Aucampos;
+	Aucampos = create_store();
+	store_add_section(Aucampos, a, b, c, d, e, f);
+	
+}
 /*
 int addValue(char *dataBaseName, char *tableName)
 {

@@ -94,7 +94,7 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 	return FALSE;
 }
 
-int main(int argc, char *argv[])
+int my_main(int argc, char *argv[])
 {
 
 	/* déclaration des variables */

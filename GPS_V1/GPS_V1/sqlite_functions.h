@@ -12,8 +12,9 @@ static void closeDb(sqlite3 *db);
 int createTable();
 char** returnValue(char *DataBaseName);
 int returnRow(char *DataBaseName);
-char** element_list(char *DataBaseName);
-
+char** element_store(char *DataBaseName);
+store* create_store();
+char** element_section(char *DataBaseName);
 
 void dropTable(char *dataBaseName, char *tableName);
 void addValue(char *dataBaseName, char *tableName);
