@@ -40,7 +40,7 @@ void store_print(store * st_source);
 void store_print_carto(store * st_source);
 
 int store_free_carto(store * st_source);
-int Store_computeCartography(store * st_source);
+int Store_computeCartography(store * st_source, gboolean optAstar);
 int store_alloc_carto(store * st_source);
 
 int store_add_item(store * st_source, int id, category category, char * name);

@@ -51,7 +51,9 @@ item * itemPointerList_delete_last(itemList * l);
 item * itemPointerList_delete_current(itemList * l);
 item * itemPointerList_delete_single(itemList * l, item * i);
 
+item * itemPointerList_get_first(itemList * l);
 item * itemPointerList_get_current(itemList * l);
+item * itemPointerList_get_last(itemList * l);
 item * itemPointerList_find(itemList * l, item * i);
 item * itemPointerList_find_id(itemList * l, int id);
 

@@ -10,6 +10,10 @@
 #define STRONG_COST 8
 #define INFINITY_COST 9
 
+#define UNTRET_NODE 0
+#define OPENED_NODE 1
+#define CLOSED_NODE 2
+
 
 struct nodeAstar
 {
@@ -48,12 +52,12 @@ int nodeAstar_get_f(nodeAstar *nodeAstar);
 
 nodeAstar *nodeAstar_find_pos(astarList *l, coord pos);
 
-void update_neighbours(nodeAstar *n, coord end, store *st_source, astarList *opened, astarList *closed);
+void update_neighbours(nodeAstar *n, coord end, store *st_source, int **nodeControl, astarList *opened, astarList *closed);
 nodeAstar *best_node(astarList *l);
 int update_node(astarList *l, nodeAstar *nNew, nodeAstar *nOld);
-int open_node(nodeAstar *n, astarList *opened);
-int close_node(nodeAstar *n, astarList *opened, astarList *closed);
-void findpath(path *path, astarList *closed);
+int open_node(int **nodeControl, nodeAstar *n, astarList *opened);
+int close_node(int **nodeControl, nodeAstar *n, astarList *opened, astarList *closed);
+int findpath(path *path, astarList *closed);
 int astar(store *st_source, coord start, coord end, path *path);
 
 void testAstar(void);

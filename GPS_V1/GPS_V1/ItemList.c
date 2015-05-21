@@ -362,9 +362,19 @@ item * itemPointerList_delete_single(itemList * l, item * i)
 	return tmp;
 }
 
+item * itemPointerList_get_first(itemList * l)
+{
+	return l->first->i;
+}
+
 item * itemPointerList_get_current(itemList * l)
 {
 	return l->current->i;
+}
+
+item * itemPointerList_get_last(itemList * l)
+{
+	return l->last->i;
 }
 
 item * itemPointerList_find(itemList * l, item * i)

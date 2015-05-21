@@ -4,6 +4,7 @@
 #include "Section.h"
 #include "Store.h"
 #include "Astar.h"
+#include "Shopping.h"
 #include "merchant.h"
 #include "StoreImage.h"
 
@@ -65,7 +66,11 @@ gboolean button4_callback(GtkWidget *window, gpointer data)
 
 gboolean button5_callback(GtkWidget *window, gpointer data)
 {
-	store_add_section(((shopping*)data)->Store, 15, t_section, 30, 3, 5, 3);
+	int x, y, sx, sy,id;
+	printf("Rentreze x, y, size x, size y , id:\n");
+	scanf("%d", &x); scanf("%d", &y); scanf("%d", &sx); scanf("%d", &sy); scanf("%d", &id);
+	store_add_section(((shopping*)data)->Store, id, t_section, x, y, sx, sy);
+	merchant_optimise_shopping((shopping*)data);
 	gtk_widget_queue_draw(drawing_area);
 	return FALSE;
 }
@@ -84,7 +89,7 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 	
 	cairo_fill(cr);
 
-	store_image_draw_shopping(cr, ((shopping*)data)->List);
+	store_image_draw_shopping(cr, (shopping*)data);
 
 	return FALSE;
 }
@@ -105,7 +110,7 @@ int main(int argc, char *argv[])
 	gtk_window_set_default_size(GTK_WINDOW(window), MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 500);
-	gtk_window_set_icon_from_file(GTK_WINDOW(window), "ressources\\caddie.jpg", NULL);
+	gtk_window_set_icon_from_file(GTK_WINDOW(window), "ressources\\Images\\caddie.jpg", NULL);
 
 	/* créer les widgets */
 	h_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -149,27 +154,29 @@ int main(int argc, char *argv[])
 	GtkWidget *scrollmenuV = gtk_scrolled_window_new(NULL, NULL);
 	drawing_area = gtk_drawing_area_new();
 
-	shopping shopping;
+	shopping *shopping;
 
 	//gtk_container_add(GTK_CONTAINER(event_box), scrollmenuV);
 	//gtk_scrolled_window_add_with_viewport(scrollmenuV, imtest);
 	
 	gtk_box_pack_start(GTK_BOX(v_box), scrollmenuV, TRUE, TRUE, 0);
 
-	shopping.Store = my_test_store_new();
-	shopping.List = itemPointerList_new();
+	shopping = shopping_new(my_test_store_new());
+	shopping->List = itemPointerList_new();
 
-	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 0));
-	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 1));
-	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 2));
-	itemPointerList_insert_sort(shopping.List, store_find_item_id(shopping.Store, 3));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 0));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 1));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 2));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 3));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 4));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 5));
 	
-	merchant_connect_paths(&shopping);
+	merchant_optimise_shopping(shopping);
 
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollmenuV), drawing_area);
 
-	g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(draw_callback), &shopping);
-	g_signal_connect(G_OBJECT(button5), "clicked", G_CALLBACK(button5_callback), &shopping);
+	g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(draw_callback), shopping);
+	g_signal_connect(G_OBJECT(button5), "clicked", G_CALLBACK(button5_callback), shopping);
 
 	/* afficher la fenêtre */
 	gtk_widget_show_all(window);
@@ -177,5 +184,7 @@ int main(int argc, char *argv[])
 	/* boucle principale */
 	gtk_main();
 
+	store_delete(shopping->Store);
+	shopping_delete(shopping);
 	return EXIT_SUCCESS;
 }

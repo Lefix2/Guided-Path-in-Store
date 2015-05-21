@@ -22,7 +22,6 @@
 /****usefull define ****/
 #define MAX_ARRAY_OF_CHAR 256
 
-
 /**
 * \enum type
 * \brief enum of all section's type
@@ -61,6 +60,8 @@ typedef struct list list;
 typedef struct nodeAstarList nodeAstarList;
 typedef struct astarList astarList;
 
+typedef struct shopping shopping;
+
 typedef struct coord coord;
 struct coord{
 	int x;
@@ -75,11 +76,8 @@ struct path
 	int nb_coord;
 };
 
-typedef struct shopping shopping;
-struct shopping{
-	store *Store;
-	itemList *List;
-};
+
+
 
 gboolean betwn(int a, int x, int b, gboolean equal);
 gboolean same_coord(coord p1, coord p2);
