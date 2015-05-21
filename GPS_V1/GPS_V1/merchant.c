@@ -51,6 +51,7 @@ int merchant_connect_paths(shopping *shopping)
 
 int merchant_optimise_shopping(shopping *shopping)
 {
+	printf("Merchant : starting...\n");
 	/*---------------------------------------------------------------*/
 	/***************initialize start and end position*****************/
 	/*---------------------------------------------------------------*/
@@ -130,6 +131,10 @@ int merchant_optimise_shopping(shopping *shopping)
 
 	coord start, end;
 	item *currentItem;
+
+	//compute the map for the astar
+	Store_computeCartography(shopping->Store, TRUE);
+
 	for (s = 0; s < nbItems-1; s++)
 	{
 		//set current item of the list on the s'th position
@@ -149,4 +154,6 @@ int merchant_optimise_shopping(shopping *shopping)
 		}
 	}
 	merchant_connect_paths(shopping);
+	printf("Merchant : finished\n");
 }
+

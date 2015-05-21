@@ -17,7 +17,7 @@ store * store_new(int id, char * name, int x_size, int y_size)
 	store_set_size(st_new, x_size, y_size);
 	st_new->allocatedStock = itemPointerList_new();
 	st_new->allocatedSections = sectionPointerList_new();
-	Store_computeCartography(st_new);
+	Store_computeCartography(st_new, FALSE);
 
 	return st_new;
 }
@@ -157,7 +157,7 @@ int store_free_carto(store * st_source)
 	return EXIT_SUCCESS;
 }
 
-int Store_computeCartography(store * st_source)
+int Store_computeCartography(store * st_source, gboolean optAstar)
 {
 	//allocation de la mémoire
 	if (st_source->cartography != NULL)
@@ -170,52 +170,90 @@ int Store_computeCartography(store * st_source)
 
 	//code calculant pour la position (x,y)  la valeur 0(vide) ou 1(obstacle) en fonction des sections
 	coord c;
-	coord pos, size;
+	coord pos1,pos2, size;
 	section *current;
 
-	sectionPointerList_set_on_first(st_source->allocatedSections);
-	while (!sectionPointerList_is_out_of(st_source->allocatedSections))
+	//if we only want to get the map hitbox, set 1 where sections are presents
+	if (!optAstar)
 	{
-		current = sectionPointerList_get_current(st_source->allocatedSections);
-		pos =  section_get_pos(current);
-		size = section_get_size(current);
-
-		switch (section_get_type(current))
+		sectionPointerList_set_on_first(st_source->allocatedSections);
+		while (!sectionPointerList_is_out_of(st_source->allocatedSections))
 		{
-		case t_wall :
-			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
-				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
+			current = sectionPointerList_get_current(st_source->allocatedSections);
+			pos1 = section_get_pos(current);
+			size = section_get_size(current);
+			pos2 = add_coord(pos1, size);
+			pos2.x -= 1; pos2.y -= 1;
+
+			for (c.x = pos1.x; c.x <= pos2.x; c.x++){
+				for (c.y = pos1.y; c.y <= pos2.y; c.y++){
 					st_source->cartography[c.x][c.y] = INFINITY_COST;
 				}
 			}
-			break;
-		case t_entrance :
-			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
-				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
-					st_source->cartography[c.x][c.y] = MEDIUM_COST;
-				}
-			}
-			break;
-		case t_checkout:
-			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
-				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
-					st_source->cartography[c.x][c.y] = MEDIUM_COST;
-				}
-			}
-			break;
-		default :
-			for (c.x = pos.x; c.x < size.x + pos.x; c.x++){
-				for (c.y = pos.y; c.y < size.y + pos.y; c.y++){
-					if (on_border(c, pos, size, 1))
-						st_source->cartography[c.x][c.y] = STRONG_COST;//items are on border, so let them walkable
-					else
-						st_source->cartography[c.x][c.y] = INFINITY_COST;
-				}
-			}
-			break;
 
+			sectionPointerList_next(st_source->allocatedSections);
 		}
-		sectionPointerList_next(st_source->allocatedSections);
+	}
+	//else compute astar costs depnding of sections type
+	else
+	{
+		sectionPointerList_set_on_first(st_source->allocatedSections);
+		while (!sectionPointerList_is_out_of(st_source->allocatedSections))
+		{
+			current = sectionPointerList_get_current(st_source->allocatedSections);
+			pos1 =  section_get_pos(current);
+			size = section_get_size(current);
+			size.x -= 1; size.y -= 1;
+			pos2 = add_coord(pos1, size);
+
+			switch (section_get_type(current))
+			{
+			case t_wall :
+				for (c.x = pos1.x; c.x <= pos2.x; c.x++){
+					for (c.y = pos1.y; c.y <= pos2.y; c.y++){
+						st_source->cartography[c.x][c.y] = INFINITY_COST;
+					}
+				}
+				break;
+			case t_entrance :
+				for (c.x = pos1.x; c.x <= pos2.x; c.x++){
+					for (c.y = pos1.y; c.y <= pos2.y; c.y++){
+						st_source->cartography[c.x][c.y] = MEDIUM_COST;
+					}
+				}
+				break;
+			case t_checkout:
+				for (c.x = pos1.x; c.x <= pos2.x; c.x++){
+					for (c.y = pos1.y; c.y <= pos2.y; c.y++){
+						st_source->cartography[c.x][c.y] = MEDIUM_COST;
+					}
+				}
+				break;
+			default :
+				for (c.x = pos1.x; c.x <= pos2.x; c.x++){
+					for (c.y = pos1.y; c.y <= pos2.y; c.y++){
+						st_source->cartography[c.x][c.y] = INFINITY_COST;
+					}
+				}
+				break;
+
+			}
+			
+			//make the border of each section a bit more expensive
+			//in this case, the path calculated by astar will be more natural
+			for (c.x = pos1.x-1; c.x <= pos2.x+1; c.x++){
+				for (c.y = pos1.y-1; c.y <= pos2.y+1; c.y++){
+					if (!is_in_square(c,zero,st_source->size))
+						continue;
+					if (is_in_square(c, pos1, size))
+						continue;
+					if (st_source->cartography[c.x][c.y] == GENERAL_COST)
+					st_source->cartography[c.x][c.y] = MEDIUM_COST;
+				}
+			}
+			sectionPointerList_next(st_source->allocatedSections);
+		}
+		//store_print_carto(st_source);
 	}
 	return EXIT_SUCCESS;
 }
@@ -322,7 +360,7 @@ int store_detect_collision(store * st_source, int x_pos, int y_pos, int x_size, 
 {
 	int x, y;
 
-	Store_computeCartography(st_source);
+	Store_computeCartography(st_source, FALSE);
 	for (x = 0; x < x_size; x++){
 		for (y = 0; y < y_size; y++){
 			if (st_source->cartography[x_pos + x][y_pos + y] != 0){
@@ -377,7 +415,7 @@ void testStore(void)
 
 	section_remove_item(itemPointerList_find_id(sectionPointerList_find_id(sttest->allocatedSections, 01)->stock, 31));
 
-	Store_computeCartography(sttest);
+	Store_computeCartography(sttest, FALSE);
 	store_print(sttest);
 	store_delete(sttest);
 

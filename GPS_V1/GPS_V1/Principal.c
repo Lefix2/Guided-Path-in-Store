@@ -66,7 +66,11 @@ gboolean button4_callback(GtkWidget *window, gpointer data)
 
 gboolean button5_callback(GtkWidget *window, gpointer data)
 {
-	store_add_section(((shopping*)data)->Store, 15, t_section, 30, 3, 5, 3);
+	int x, y, sx, sy,id;
+	printf("Rentreze x, y, size x, size y , id:\n");
+	scanf("%d", &x); scanf("%d", &y); scanf("%d", &sx); scanf("%d", &sy); scanf("%d", &id);
+	store_add_section(((shopping*)data)->Store, id, t_section, x, y, sx, sy);
+	merchant_optimise_shopping((shopping*)data);
 	gtk_widget_queue_draw(drawing_area);
 	return FALSE;
 }

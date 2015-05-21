@@ -125,7 +125,7 @@ nodeAstar *nodeAstar_find_pos(astarList *l, coord pos)
 	return NULL;
 }
 
-void update_neighbours(nodeAstar *n,coord end ,store *st_source,int **nodeControl, astarList *opened, astarList *closed)
+void update_neighbours(nodeAstar *n, coord end, store *st_source, int **nodeControl, astarList *opened, astarList *closed)
 {
 	//x and y variation for each 8 neighbours
 	coord dxdy[] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { -1, 1 }, { 1, 1 }, { 1, -1 }, { -1, -1 } };
@@ -276,6 +276,11 @@ int astar(store *st_source, coord start, coord end, path *path)
 	/****************algorithm initialisation******************/
 	/*--------------------------------------------------------*/
 
+	//specific to our application, set the end point to a walkable point
+	int endCost = st_source->cartography[end.x][end.y];
+	st_source->cartography[end.x][end.y] = STRONG_COST;
+
+	//close the first node(start)
 	current = nodeAstar_new(start, NULL);
 	open_node(nodeControl, current, opened);
 	close_node(nodeControl, current, opened, closed);
@@ -297,7 +302,12 @@ int astar(store *st_source, coord start, coord end, path *path)
 		//update his neighbours
 		update_neighbours(current, end, st_source,nodeControl, opened, closed);
 	}
-	if (astarList_is_empty(opened))
+
+	//restore the costvalue of the endpoint
+	st_source->cartography[end.x][end.y] = endCost;
+
+	//test if a path was found
+	if (astarList_is_empty(opened) && !(same_coord(current->pos, end)))
 	{
 		printf("Astar : No path found\n");
 		astarList_delete(opened);
@@ -339,7 +349,7 @@ void testAstar(void)
 	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
 	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
 
-	Store_computeCartography(sttest);
+	Store_computeCartography(sttest, TRUE);
 	store_print_carto(sttest);
 
 	coord start;
