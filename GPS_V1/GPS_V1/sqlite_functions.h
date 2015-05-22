@@ -11,8 +11,10 @@ static sqlite3 *openDb(char *dbName);
 static void closeDb(sqlite3 *db);
 int createTable();
 char** returnValue(char *DataBaseName);
-int returnRow(char *DataBaseName);
-char** element_store(char *DataBaseName);
+int sqlite_store_row(char *DataBaseName);
+int sqlite_section_row(char *DataBaseName);
+int sqlite_item_row(char *DataBaseName);
+char** sqlite_get_store(char *DataBaseName);
 store* create_store();
 char** element_section(char *DataBaseName);
 
