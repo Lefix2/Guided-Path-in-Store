@@ -14,9 +14,9 @@ char** returnValue(char *DataBaseName);
 int sqlite_store_row(char *DataBaseName);
 int sqlite_section_row(char *DataBaseName);
 int sqlite_item_row(char *DataBaseName);
-char** sqlite_get_store(char *DataBaseName);
-store* create_store();
-char** element_section(char *DataBaseName);
+store* sqlite_get_store(char *DataBaseName);
+void sqlite_get_section(char *DataBaseName);
+void sqlite_get_item(char *DataBaseName);
 
 void dropTable(char *dataBaseName, char *tableName);
 void addValue(char *dataBaseName, char *tableName);
