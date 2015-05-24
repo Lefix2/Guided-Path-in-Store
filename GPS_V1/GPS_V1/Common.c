@@ -55,3 +55,38 @@ int manhattan_distance(coord p1, coord p2)
 {
 	return (abs(p1.x - p2.x) + abs(p1.y - p2.y));
 }
+
+int **alloc_double_int_pointer(int size1, int size2)
+{
+	int i;
+	int **ret = (int**)calloc(size1, sizeof(int*));
+	if (ret == NULL)
+		return ret;
+
+	for (i = 0; i < size1; i++)
+	{
+		*(ret + i) = (int*)calloc(size2, sizeof(int));
+	}
+	return ret;
+}
+
+void free_double_int_pointer(int **pt, int size1, int size2)
+{
+	int i;
+
+	for (i = 0; i < size1; i++)
+	{
+		free(*(pt + i));
+	}
+	free(pt);
+}
+
+void rotab(int *tab, int size)
+{
+	int i, tmp = tab[size - 1];
+
+	for (i = size - 1; i > 0; i--)
+		tab[i] = tab[i - 1];
+
+	tab[0] = tmp;
+}

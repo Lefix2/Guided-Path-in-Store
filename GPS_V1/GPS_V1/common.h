@@ -21,6 +21,7 @@
 
 /****usefull define ****/
 #define MAX_ARRAY_OF_CHAR 256
+#define max(a,b) ((a) > (b) ? (a) : (b))
 
 /**
 * \enum type
@@ -85,5 +86,10 @@ gboolean is_in_square(coord p, coord sqrBase, coord sqrSize);
 gboolean on_border(coord pos, coord sqrBase, coord sqrSize, int borderSize);
 coord add_coord(coord c1, coord c2);
 int manhattan_distance(coord p1, coord p2);
+
+int **alloc_double_int_pointer(int size1, int size2);
+void free_double_int_pointer(int **pt, int size1, int size2);
+
+void rotab(int *tab, int size);
 
 #endif // !COMMON_H
