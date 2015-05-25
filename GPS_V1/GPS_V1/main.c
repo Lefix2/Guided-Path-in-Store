@@ -39,8 +39,8 @@ int main(int argc, char* argv[]){
 
 
 	/*Appel de la fonction de felix*/
-	//principal();
-
+	principal();
+	
 	/*Appel de la fonction master*/
 	master_window();
 
