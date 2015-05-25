@@ -5,7 +5,7 @@
 
 int merchant_optimise_shopping(shopping *shopping);
 
-int* merchant_find_path(int nbr, int **pathlen);
+int* merchant_find_path(int nbr, int **pathlen, int *bestfx);
 
 int merchant_connect_paths(shopping *shopping);
 void merchant_init_population(int nbr, int **pathlen, int **path);

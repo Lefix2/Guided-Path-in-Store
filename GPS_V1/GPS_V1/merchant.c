@@ -9,8 +9,9 @@
 
 #define random(x) rand()%x
 #define NBPOP 30			  /* number of population to mutate*/
-#define ITERATION_FACTOR 500  /* higher factor for best results, lower for higher perf*/
+#define ITERATION_FACTOR 100  /* higher factor for best results, lower for higher perf*/
 #define PUNISH_START_END TRUE /*force the algo to keep the first and last item given at first and last position*/
+#define MERCHANT_ITERATION 10 /*number of merchant algorithm to get better path possible*/
 
 int merchant_optimise_shopping(shopping *shopping)
 {
@@ -126,7 +127,19 @@ int merchant_optimise_shopping(shopping *shopping)
 	/*********************compute merchant algo***********************/
 	/*---------------------------------------------------------------*/
 	printf("Merchant : compute algo...");
-	int *path = merchant_find_path(nbItems, pathLenghts);
+	int fx = 0,
+		minfx = 0;
+	int *path;
+
+	for (i = 0; i < MERCHANT_ITERATION; i++)
+	{
+		path = merchant_find_path(nbItems, pathLenghts, &fx);
+		if (fx < minfx)
+		{
+			minfx = fx;
+			i = 0;
+		}
+	}
 
 	while (path[0] != 0)
 	{
@@ -209,7 +222,7 @@ int merchant_connect_paths(shopping *shopping)
 }
 
 //main function of tsp
-int* merchant_find_path(int nbr, int **pathlen)
+int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 {
 	int i;
 	int maxpath = merchant_find_longest(nbr, pathlen);
@@ -244,6 +257,7 @@ int* merchant_find_path(int nbr, int **pathlen)
 	{
 		ret[i] = path[posmin[0]][i];
 	}
+	*bestfx = fx[posmin[0]];
 	/*
 	for (int g = 0; g < NBPOP; g++)
 	{
@@ -252,8 +266,8 @@ int* merchant_find_path(int nbr, int **pathlen)
 	printf("%2d ", path[g][h]);
 	}
 	printf("%d\n",fx[g]);
-	}
-	*/
+	}*/
+	
 	free_double_int_pointer(path, NBPOP, nbr);
 	free_double_int_pointer(child, 2, nbr);
 
