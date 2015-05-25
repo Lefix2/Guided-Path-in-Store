@@ -39,6 +39,126 @@ void cb_shopping_list(GtkWidget *p_widget, shopping_list * s_list){
 	i++;
 }
 
+
+void cb_activate_search_bar(GtkWidget *p_entry, store_notebook *s_notebook)
+{
+	const gchar *sText;
+	const gchar * item_name;
+	char text[20];
+	sprintf(text, "recherche");
+	sText = gtk_entry_get_text(GTK_ENTRY(p_entry));
+	
+	GtkWidget * p_button = NULL;
+	GtkWidget * new_grid = NULL;
+	GtkWidget * p_onglet = NULL;
+	GtkWidget * p_grid = NULL;
+
+	gboolean searching_tab_exists = FALSE;
+	gboolean search_success = FALSE;
+	int i = 0;
+	gint nbpages;
+	nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(s_notebook->notebook));
+
+
+	/**Pour commencer, on teste si l'onglet de recherche a deja ete cree
+	*/
+	printf("last tab label :\n");
+	printf(gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(s_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1)));
+	printf("\n");
+	if (g_strcmp0(text, gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(s_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1))) == 0)
+	{ 
+		searching_tab_exists = TRUE;
+	}
+
+
+	/**
+	*On teste maintenant si l'utilisateur n'a pas clear sa recherche :
+	*Si c'est le cas, on détruit la dernière page du notebook
+	*/
+	if (g_strcmp0(sText,"")==0)
+	{
+		printf("the user cleared his research\n");
+		if (searching_tab_exists)
+		{
+			printf("trying to remove last page");
+			gtk_notebook_remove_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
+			nbpages--;
+		}
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(s_notebook->notebook), 0); 
+	}
+	else
+	{
+		if (searching_tab_exists)
+			/*We destroy the existing tab*/
+		{
+			gtk_notebook_remove_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
+			nbpages--;
+		}
+		/*We create the last tab only activated when the user is searching*/
+		printf("We create the last tab only activated when the user is searching\n");
+		p_onglet = gtk_label_new(text);
+		p_grid = gtk_grid_new();
+		gtk_notebook_append_page(GTK_NOTEBOOK(s_notebook->notebook), p_grid, p_onglet);
+		gtk_widget_show_all(s_notebook->notebook);
+		nbpages++;
+
+
+		/*On parcours la liste des items et on crée un button pour chacun de ceux qui correspondent*/
+		itemPointerList_set_on_first(s_notebook->store->allocatedStock);
+		while (!itemPointerList_is_out_of(s_notebook->store->allocatedStock))
+		{
+			item_name = (const gchar *)item_get_name(s_notebook->store->allocatedStock->current->i);
+
+			if (g_str_has_prefix(item_name, sText) != 0)
+			{//The item matched with the research, we create a new button
+				printf(item_name);
+				printf("\n");
+				p_button = gtk_button_new_with_label(item_name);
+				gtk_grid_attach(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
+				gtk_widget_show(p_button);
+				search_success = TRUE;
+			}
+			itemPointerList_next(s_notebook->store->allocatedStock);
+		}
+
+		/**On teste si on a trouvé un item dans notre recherche
+		*Si non, on crée un bouton comme quoi notre recherche a échouée*/
+		if (!search_success)
+		{
+			sprintf(item_name, "Aucun item correspondant");
+			p_button = gtk_button_new_with_label(item_name);
+			gtk_grid_attach(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
+			gtk_widget_show(p_button);
+
+		}
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
+	}
+
+	
+}
+
+void cb_search_clear_button(GtkWidget *p_button, store_notebook *s_notebook){
+	gboolean searching_tab_exists = FALSE;
+	char text[20];
+	sprintf(text, "recherche");
+	gint nbpages;
+	nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(s_notebook->notebook));
+
+	if (g_strcmp0(text, gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(s_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1))) == 0)
+	{
+		searching_tab_exists = TRUE;
+		printf("clear_button : searching tab exists\n");
+	}
+
+	if (searching_tab_exists)
+		/*We destroy the existing tab*/
+	{
+		gtk_notebook_remove_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
+	}
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(s_notebook->notebook), 0);
+}
+
+
 void cb_add_item(GtkWidget *p_widget, shopping_list * s_list){
 	GtkWidget *p_new_label;
 	GtkWidget *p_spin_button;

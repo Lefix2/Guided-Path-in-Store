@@ -4,18 +4,32 @@
 #include <gtk/gtk.h>
 #include "common.h"
 
+/**
+*\struct shopping_list
+*\brief contains a grid and an itemList
+*/
 typedef struct shopping_list shopping_list;
 struct shopping_list{
 	GtkWidget * shopping_list_grid;
 	itemList * shopping_itemlist;
 };
 
+/*
+*\struct store_notebook
+*\brief used for the search_bar
+		contains a store and a notebook
+*/
+typedef struct store_notebook store_notebook;
+struct store_notebook{
+	store * store;
+	GtkWidget * notebook;
+};
+
 shopping_list * shopping_list_new();
 int init_courses(store * store_test, itemList * user_list);
 GtkWidget * notebook_new_from_store(store * store_test);
 int grid_find_category(char * category_name, GtkWidget * p_notebook);
-void notebook_connect_button(GtkWidget * p_notebook, GtkWidget * p_shopping_list);
-
+void notebook_connect_button(GtkWidget * p_notebook, shopping_list * s_list);
 
 #endif //!COURSES_H
 
