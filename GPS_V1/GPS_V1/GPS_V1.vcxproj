@@ -88,6 +88,7 @@
     <ClCompile Include="Item.c" />
     <ClCompile Include="ItemList.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="map.c" />
     <ClCompile Include="merchant.c" />
     <ClCompile Include="myAlloc.c" />
     <ClCompile Include="Principal.c" />
@@ -118,6 +119,7 @@
     <ClInclude Include="AstarList.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="GenericList.h" />
+    <ClInclude Include="map.h" />
     <ClInclude Include="Shopping.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemList.h" />
