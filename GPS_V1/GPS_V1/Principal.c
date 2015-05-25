@@ -11,15 +11,13 @@
 
 #include "tests.h"
 
-int main(int argc, char *argv[])
+int principal(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
 	GtkWidget *window, *label, *h_box, *b_box, *v_box,*button, *button1, *button2, *button3, *button4, *button5;
 	gchar *txtSchema = NULL;
 
-	/* initialiser GTK+ */
-	gtk_init(&argc, &argv);
 
 	shopping *shopping;
 

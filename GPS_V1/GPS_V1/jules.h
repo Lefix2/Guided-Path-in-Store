@@ -15,7 +15,7 @@
 #include "StoreImage.h"
 
 int init_window();
-int main();
+int jules_main();
 
 
 

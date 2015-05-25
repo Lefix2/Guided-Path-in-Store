@@ -2,7 +2,9 @@
 #define MASTER_H
 
 #include "common.h"
+#include "callback.h"
+#include "map.h"
 
-int master_window();
+void master_window();
 
 #endif //!MASTER_H

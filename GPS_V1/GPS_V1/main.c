@@ -13,7 +13,6 @@
 #include "merchant.h"
 #include "StoreImage.h"
 
-#include "tests.h"
 
 #define MAX_ARRAY_OF_CHAR 255
 
@@ -40,7 +39,10 @@ int main(int argc, char* argv[]){
 
 
 	/*Appel de la fonction de felix*/
-	principal();
+	//principal();
+
+	/*Appel de la fonction master*/
+	master_window();
 
 	/* boucle principale */
 	gtk_main();
