@@ -254,7 +254,6 @@ int* merchant_find_path(int nbr, int **pathlen)
 	printf("%d\n",fx[g]);
 	}
 	*/
-
 	free_double_int_pointer(path, NBPOP, nbr);
 	free_double_int_pointer(child, 2, nbr);
 

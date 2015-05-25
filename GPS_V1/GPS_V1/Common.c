@@ -70,7 +70,32 @@ int **alloc_double_int_pointer(int size1, int size2)
 	return ret;
 }
 
+int **alloc_double_char_pointer(int size1, int size2)
+{
+	int i;
+	int **ret = (char**)calloc(size1, sizeof(char*));
+	if (ret == NULL)
+		return ret;
+
+	for (i = 0; i < size1; i++)
+	{
+		*(ret + i) = (char*)calloc(size2, sizeof(char));
+	}
+	return ret;
+}
+
 void free_double_int_pointer(int **pt, int size1, int size2)
+{
+	int i;
+
+	for (i = 0; i < size1; i++)
+	{
+		free(*(pt + i));
+	}
+	free(pt);
+}
+
+void free_double_char_pointer(char **pt, int size1, int size2)
 {
 	int i;
 

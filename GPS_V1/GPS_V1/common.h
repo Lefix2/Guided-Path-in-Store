@@ -88,7 +88,9 @@ coord add_coord(coord c1, coord c2);
 int manhattan_distance(coord p1, coord p2);
 
 int **alloc_double_int_pointer(int size1, int size2);
+int **alloc_double_char_pointer(int size1, int size2);
 void free_double_int_pointer(int **pt, int size1, int size2);
+void free_double_char_pointer(char **pt, int size1, int size2);
 
 void rotab(int *tab, int size);
 
