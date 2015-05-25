@@ -11,7 +11,7 @@
 
 #include "tests.h"
 
-int principal(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
