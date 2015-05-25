@@ -1,7 +1,11 @@
 #include "Common.h"
-#include "master.h"
+#include "generalMenu.h"
 
-void master_window(){
+shopping * my_shopping;
+
+void call_main_menu()
+{
+	
 	/* Window Creation */
 	GtkWidget *p_window = NULL;
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -34,4 +38,13 @@ void master_window(){
 	gtk_widget_show_all(p_window);
 	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
 
+}
+
+void cb_quit(GtkWidget *p_widget, gpointer user_data){
+	gtk_main_quit();
+}
+
+void cb_store_selection(GtkWidget *p_widget, gpointer p_window){
+	//store_selection_window();
+	gtk_widget_destroy(GTK_WIDGET(p_window));
 }

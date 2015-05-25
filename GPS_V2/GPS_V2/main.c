@@ -8,7 +8,7 @@ int main(int argc, char* argv[]){
 	/* initialiser GTK+ */
 	gtk_init(&argc, &argv);
 	
-	/*Appel de la fonction master*/
+	/*Appel du menu principal*/
 	master_window();
 
 	/* boucle principale */
