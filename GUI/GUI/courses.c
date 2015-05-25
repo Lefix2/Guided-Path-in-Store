@@ -301,12 +301,7 @@ GtkWidget * notebook_new_from_store(store * store_test){
 		j++; // j is the item number (in the itemList)
 		itemPointerList_next(store_test->allocatedStock);
 	}
-	/*We create the last tab only activated when the user is searching */
-	sprintf(text, "recherche");
-	p_onglet[i+1] = gtk_label_new(text);
-	p_grid[i+1] = gtk_grid_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[i + 1], p_onglet[i + 1]);
-	gtk_grid_attach(GTK_GRID(p_grid[i+1]), p_button[0], 0, 0, 1, 1);
+	
 
 	return p_notebook;
 }
