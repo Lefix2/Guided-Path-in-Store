@@ -1,11 +1,10 @@
 #include "master.h"
 
-
 void master_window(){
 	/* Window Creation */
 	GtkWidget *p_window = NULL;
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_end_list), p_window);
+	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), p_window);
 	
 	/*The window contain a grid that contains all of our widgets*/
 	GtkWidget * p_table = NULL;
@@ -25,7 +24,7 @@ void master_window(){
 	gtk_label_set_use_markup(GTK_LABEL(p_label), TRUE);
 	g_signal_connect(G_OBJECT(p_event_box),
 		"button_press_event",
-		G_CALLBACK(cb_end_list),
+		G_CALLBACK(cb_store_selection),
 		p_window);
 	gtk_container_add(GTK_CONTAINER(p_event_box), p_label);
 	gtk_grid_attach(GTK_GRID(p_table), p_event_box, 0, 0, 1, 1);
