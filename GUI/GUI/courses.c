@@ -47,7 +47,7 @@ int init_courses(store * store_test, itemList * user_list){
 	
 	/*Creation of the window*/
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), NULL);
+	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_end_list), NULL);
 
 	/*The window contain a grid that contains all of our widgets*/
 	p_table = gtk_grid_new();
@@ -235,7 +235,7 @@ int init_courses(store * store_test, itemList * user_list){
 	GtkWidget * ending_button = NULL;
 	ending_button = gtk_button_new_with_label("Click here to end your list");
 	gtk_grid_attach(GTK_GRID(p_table), ending_button, 6, 5, 1, 1);
-	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_quit), s_list->shopping_list_grid);
+	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_end_list), p_window);
 
 
 

@@ -1,15 +1,4 @@
-#include <stdlib.h>
-#include <gtk/gtk.h>
-#include <gdk\gdk.h>
-
-#include "callback.h"
-#include "error.h"
-#include "Common.h"
-#include "ItemList.h"
-#include "Section.h"
-#include "Store.h"
-#include "Astar.h"
-#include "StoreImage.h"
+#include "jules.h"
 
 int init_window(){
 	GtkWidget *p_window = NULL;
@@ -55,7 +44,7 @@ int init_window(){
 	//gtk_widget_show(p_main_box); // or gtk_widget_show_all
 	//gtk_widget_show(close_button);
 	gtk_widget_show_all(p_main_box);
-	gtk_window_maximize(GTK_WINDOW(p_window));
+	//gtk_window_maximize(GTK_WINDOW(p_window));
 	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
 	gtk_window_set_title(GTK_WINDOW(p_window2), "Liste de courses");
 

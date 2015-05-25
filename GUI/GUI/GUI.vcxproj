@@ -125,6 +125,7 @@
     <ClInclude Include="GenericList.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemList.h" />
+    <ClInclude Include="jules.h" />
     <ClInclude Include="myAlloc.h" />
     <ClInclude Include="Section.h" />
     <ClInclude Include="SectionList.h" />

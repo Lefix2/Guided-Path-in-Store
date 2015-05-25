@@ -180,6 +180,12 @@ void cb_add_item(GtkWidget *p_widget, shopping_list * s_list){
 	printf("ajout de %s a la liste (cb_add_item)\n", text);
 }
 
+void cb_end_list(GtkWidget *p_button, GtkWidget *p_window){
+	init_window();
+	gtk_widget_destroy(GTK_WIDGET(p_window));
+}
+
+
 
 static void open_file(const gchar *file_name, GtkTextView *p_text_view)
 {
