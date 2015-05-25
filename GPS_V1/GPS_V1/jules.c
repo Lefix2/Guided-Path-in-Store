@@ -57,7 +57,7 @@ int main(int argc, char **argv){
 	itemList * user_list = NULL;
 	user_list = itemPointerList_new();
 	store * store_test = NULL;
-	store_test = testStore();
+	store_test = my_test_store_new();
 
 	init_courses(store_test, user_list);
 	
@@ -65,7 +65,7 @@ int main(int argc, char **argv){
 	gtk_main();
 
 	itemPointerList_print(user_list, FALSE);
-	//system("pause");
+	system("pause");
 	return EXIT_SUCCESS;
 }
 

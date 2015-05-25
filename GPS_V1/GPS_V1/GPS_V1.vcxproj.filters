@@ -31,11 +31,17 @@
     <Filter Include="Fichiers sources\Database">
       <UniqueIdentifier>{55ced1e1-b89f-4a7d-b8e0-bca46c2ced37}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\Grapphic">
-      <UniqueIdentifier>{286cafa0-65e7-40fb-949b-37942419034c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers sources\Graphic">
       <UniqueIdentifier>{45fe1ef3-0fc8-4337-a3e7-d304744d86d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Graphic">
+      <UniqueIdentifier>{286cafa0-65e7-40fb-949b-37942419034c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\GTK">
+      <UniqueIdentifier>{c467086f-aefc-4929-86d3-70b10cfd8ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\GTK">
+      <UniqueIdentifier>{2f35a571-b750-4f39-8cf9-6f84bfacf925}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +98,21 @@
     </ClCompile>
     <ClCompile Include="map.c">
       <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="callback.c">
+      <Filter>Fichiers sources\GTK</Filter>
+    </ClCompile>
+    <ClCompile Include="courses.c">
+      <Filter>Fichiers sources\GTK</Filter>
+    </ClCompile>
+    <ClCompile Include="master.c">
+      <Filter>Fichiers sources\GTK</Filter>
+    </ClCompile>
+    <ClCompile Include="error.c">
+      <Filter>Fichiers sources\GTK</Filter>
+    </ClCompile>
+    <ClCompile Include="jules.c">
+      <Filter>Fichiers sources\GTK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,7 +206,22 @@
       <Filter>Fichiers d%27en-tête\Database</Filter>
     </ClInclude>
     <ClInclude Include="map.h">
-      <Filter>Fichiers d%27en-tête\Grapphic</Filter>
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="callback.h">
+      <Filter>Fichiers d%27en-tête\GTK</Filter>
+    </ClInclude>
+    <ClInclude Include="courses.h">
+      <Filter>Fichiers d%27en-tête\GTK</Filter>
+    </ClInclude>
+    <ClInclude Include="master.h">
+      <Filter>Fichiers d%27en-tête\GTK</Filter>
+    </ClInclude>
+    <ClInclude Include="error.h">
+      <Filter>Fichiers d%27en-tête\GTK</Filter>
+    </ClInclude>
+    <ClInclude Include="jules.h">
+      <Filter>Fichiers d%27en-tête\GTK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

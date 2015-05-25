@@ -94,15 +94,14 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 	return FALSE;
 }
 
-int main(int argc, char *argv[])
+int principal(int argc, char *argv[])
 {
 
 	/* déclaration des variables */
 	GtkWidget *window, *label, *h_box, *b_box, *v_box,*button, *button1, *button2, *button3, *button4, *button5;
 	gchar *txtSchema = NULL;
 
-	/* initialiser GTK+ */
-	gtk_init(&argc, &argv);
+	
 
 	/* créer la fenêtre avec son titre */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -184,8 +183,7 @@ int main(int argc, char *argv[])
 	/* afficher la fenêtre */
 	gtk_widget_show_all(window);
 
-	/* boucle principale */
-	gtk_main();
+	
 
 	store_delete(shopping->Store);
 	shopping_delete(shopping);

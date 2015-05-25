@@ -30,7 +30,6 @@ int init_courses(store * store_test, itemList * user_list);
 GtkWidget * notebook_new_from_store(store * store_test);
 int grid_find_category(char * category_name, GtkWidget * p_notebook);
 void notebook_connect_button(GtkWidget * p_notebook, shopping_list * s_list);
-GtkWidget * new_menu(GtkWidget * p_table, GtkWidget p_notebook);
 
 #endif //!COURSES_H
 

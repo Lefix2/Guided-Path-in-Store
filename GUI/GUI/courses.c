@@ -54,7 +54,7 @@ int init_courses(store * store_test, itemList * user_list){
 	gtk_container_add(GTK_CONTAINER(p_window), p_table);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
-	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 2,3);
+	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 1,3);
 
 	/*We create now a grid that contains the shopping list created by the user*/
 	GtkWidget * label0 = NULL;
@@ -71,22 +71,25 @@ int init_courses(store * store_test, itemList * user_list){
 	gtk_grid_attach(GTK_GRID(p_shopping_list), label1, 1, 0, 1, 1);
 
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
-
+	
 	/*We create now a notebook */
 	shopping_list * s_list = NULL;
 	s_list = shopping_list_new();
 
 	p_notebook = notebook_new_from_store(store_test);
-	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 3, 1, 4, 4);
+	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 1, 1, 4, 4);
 	s_list->shopping_itemlist = user_list;
 	s_list->shopping_list_grid = p_shopping_list;
 	notebook_connect_button(p_notebook, s_list);
+
+	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(p_notebook), GTK_POS_LEFT);
+	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(p_notebook), TRUE);
 	
 
 	/*We create now the entry for the product research*/
 	GtkWidget *p_search_bar;
 	p_search_bar = gtk_entry_new();
-	gtk_grid_attach(GTK_GRID(p_table), p_search_bar, 3, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), p_search_bar, 2, 0, 1, 1);
 	gtk_entry_set_placeholder_text(GTK_ENTRY(p_search_bar), "Product name");
 	gtk_entry_set_icon_from_stock(GTK_ENTRY(p_search_bar),GTK_ENTRY_ICON_PRIMARY,GTK_STOCK_FIND);
 	
@@ -100,7 +103,7 @@ int init_courses(store * store_test, itemList * user_list){
 	/*We create next to it a button to clear the search*/
 	GtkWidget *p_search_clear_button;
 	p_search_clear_button = gtk_button_new_from_stock(GTK_STOCK_STOP);
-	gtk_grid_attach(GTK_GRID(p_table), p_search_clear_button, 2, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), p_search_clear_button, 3, 0, 1, 1);
 	g_signal_connect(G_OBJECT(p_search_clear_button), "clicked", G_CALLBACK(cb_search_clear_button), p_store_notebook);
 
 
@@ -182,59 +185,21 @@ int init_courses(store * store_test, itemList * user_list){
 	*/
 	
 
-	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(p_notebook), GTK_POS_RIGHT);
-	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(p_notebook), TRUE);
+	
 
 
 
 
-	/*****Creation of the menu*/
-	GtkWidget *p_menu_bar = NULL;
-	p_menu_bar = gtk_menu_bar_new();
-
-	GtkWidget *p_menu = NULL;
-	p_menu = gtk_menu_new();
-
-	/*Creation of the categories*/
-	GtkWidget *p_menu_item[6];
-	p_menu_item[0] = gtk_image_menu_item_new_with_label("Fruits");
-	p_menu_item[1] = gtk_image_menu_item_new_with_label("Feculents");
-	p_menu_item[2] = gtk_image_menu_item_new_with_label("Numerique");
-	p_menu_item[3] = gtk_image_menu_item_new_with_label("Jardinage");
-	p_menu_item[4] = gtk_image_menu_item_new_with_label("Entretien");
-	p_menu_item[5] = gtk_image_menu_item_new_with_label("Boisson");
-	//gtk_image_menu_item_set_image(p_menu_item, GTK_IMAGE_);
-	int i = 0;
-	for (i; i < 6; i++){
-		g_signal_connect(G_OBJECT(p_menu_item[i]), "activate", G_CALLBACK(cb_open_tab), p_notebook);
-	}
-	/*Addition of these categories to the menu*/
-	i = 0;
-	for (i; i < 6; i++){
-		gtk_menu_shell_append(GTK_MENU_SHELL(p_menu), p_menu_item[i]);
-	}
-
-
-	/*Creation of a box that will contain the menu, and go into the menubar*/
-	GtkWidget *p_menu_link = NULL;
-	p_menu_link = gtk_menu_item_new_with_label("Categories");
-
-	/*Association with the menu*/
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(p_menu_link), p_menu);
-
-	/*And finally add the linker to the menu_bar*/
-	gtk_menu_shell_append(GTK_MENU_SHELL(p_menu_bar), p_menu_link);
-
-	gtk_grid_attach(GTK_GRID(p_table), p_menu_bar, 6, 0, 1, 1);
+	
 
 
 	/*
 	*
 	*
-	*  Creation of the ending menu*/
+	*  Creation of the ending button*/
 	GtkWidget * ending_button = NULL;
 	ending_button = gtk_button_new_with_label("Click here to end your list");
-	gtk_grid_attach(GTK_GRID(p_table), ending_button, 6, 5, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), ending_button, 1, 5, 4, 1);
 	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_end_list), p_window);
 
 
@@ -256,7 +221,7 @@ int init_courses(store * store_test, itemList * user_list){
 	gtk_grid_attach(GTK_GRID(p_table), label2, 0, 0, 1, 1);
 	sprintf(texte, "Select products");
 	label3 = gtk_label_new(texte);
-	gtk_grid_attach(GTK_GRID(p_table), label3, 4, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(p_table), label3, 1, 0, 1, 1);
 	
 
 
@@ -342,4 +307,46 @@ void notebook_connect_button(GtkWidget * p_notebook, shopping_list * s_list){
 			p_button = gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)), j, 0);
 		}
 	}
+}
+
+GtkWidget * new_menu(GtkWidget * p_table, GtkWidget * p_notebook){
+	/*****Creation of the menu*/
+	GtkWidget *p_menu_bar = NULL;
+	p_menu_bar = gtk_menu_bar_new();
+
+	GtkWidget *p_menu = NULL;
+	p_menu = gtk_menu_new();
+
+	/*Creation of the categories*/
+	GtkWidget *p_menu_item[6];
+	p_menu_item[0] = gtk_image_menu_item_new_with_label("Fruits");
+	p_menu_item[1] = gtk_image_menu_item_new_with_label("Feculents");
+	p_menu_item[2] = gtk_image_menu_item_new_with_label("Numerique");
+	p_menu_item[3] = gtk_image_menu_item_new_with_label("Jardinage");
+	p_menu_item[4] = gtk_image_menu_item_new_with_label("Entretien");
+	p_menu_item[5] = gtk_image_menu_item_new_with_label("Boisson");
+	//gtk_image_menu_item_set_image(p_menu_item, GTK_IMAGE_);
+	int i = 0;
+	for (i; i < 6; i++){
+		g_signal_connect(G_OBJECT(p_menu_item[i]), "activate", G_CALLBACK(cb_open_tab), p_notebook);
+	}
+	/*Addition of these categories to the menu*/
+	i = 0;
+	for (i; i < 6; i++){
+		gtk_menu_shell_append(GTK_MENU_SHELL(p_menu), p_menu_item[i]);
+	}
+
+
+	/*Creation of a box that will contain the menu, and go into the menubar*/
+	GtkWidget *p_menu_link = NULL;
+	p_menu_link = gtk_menu_item_new_with_label("Categories");
+
+	/*Association with the menu*/
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(p_menu_link), p_menu);
+
+	/*And finally add the linker to the menu_bar*/
+	gtk_menu_shell_append(GTK_MENU_SHELL(p_menu_bar), p_menu_link);
+
+	gtk_grid_attach(GTK_GRID(p_table), p_menu_bar, 6, 0, 1, 1);
+
 }
