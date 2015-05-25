@@ -10,5 +10,5 @@ int main(int argc, char* argv[])
 	//createTable();
 	//printf("%d\n",returnRow("C:/Users/rom/Documents/projet.db"));
 	//system("PAUSE");
-	addValue("test.db", "zeb");
+	
 }

@@ -251,7 +251,7 @@ void sqlite_get_section(char *DataBaseName)
 			for (i = 0; i <= 5; i++)
 			{
 				description[i] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-				strcpy(description[i], (char *)sqlite3_column_int(stmt, i));
+				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
 
 			}
 
@@ -265,12 +265,12 @@ void sqlite_get_section(char *DataBaseName)
 	Aucampos = sqlite_get_store(dbName);
 
 	/*recupération des valeurs */
-	sectionId = description[0];
-	type = description[1];
-	posX = description[2];
-	posY = description[3];
-	lengthX = description[4];
-	lengthY = description[5];
+	sectionId = (int)atof(description[0]);
+	type = (int)atof(description[1]);
+	posX = (int)atof(description[2]);
+	posY = (int)atof(description[3]);
+	lengthX = (int)atof(description[4]);
+	lengthY = (int)atof(description[5]);
 
 	/*recup row section*/
 	for (i = 0; i < size_row; i++)
@@ -416,13 +416,14 @@ void sqlite_get_item(char *DataBaseName)
 	for (i = 0; i < size_row; i++)
 	{
 		newItem = item_new(itemId, category, name);
-	}
-	/*if*/
-	store_add_item(Aucampos, newItem);
 
-	if (sectionId != -1)
-	section_add_item(store_find_section_id(Aucampos,sectionId), newItem,posX,posY);
-	
+		/*if*/
+		store_add_item(Aucampos, newItem);
+
+		if (sectionId != -1)
+			section_add_item(store_find_section_id(Aucampos, sectionId), newItem, posX, posY);
+	}
+
 	// libération de la mémoire
 	for (i = 0; i <= 9; i++)
 	{
@@ -432,7 +433,7 @@ void sqlite_get_item(char *DataBaseName)
 
 }
 
-int callback(void *NotUsed, int argc, char **argv,char **azColName) {
+int callback(void *NotUsed, int argc, char **argv, char **azColName) {
 
 	NotUsed = 0;
 
@@ -445,44 +446,44 @@ int callback(void *NotUsed, int argc, char **argv,char **azColName) {
 
 	return 0;
 }
-
-void addValue(char *dataBaseName, char *tableName)
+int sqlite_add_value()
 {
-sqlite3 *db;
-char *zErrMsg = 0;
-int  rc;
-char *sql;
-const char* data = "Callback function called";
+	sqlite3 *db;
+	char *zErrMsg = 0;
+	int  rc;
+	char command[MAX_ARRAY_OF_CHAR];
+	
+	/* Open database */
+	db = openDb("C:/Users/rom/Documents/projet.db");
 
-/* Open database */
-rc = sqlite3_open("dataBaseName", &db);
-if (rc){
-fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-exit(0);
-}
-else{
-fprintf(stdout, "Opened database successfully\n");
-}
-char *s[30];
-s = "create table";
-strcat(s, tableName);
-printf("%c", s);
+	/* Create SQL statement */
+	unsigned char tableName[10];
+	printf("Donnez le nom de la table où ajouter une valeur : ");
+	scanf("%s", tableName);
+	if (strcmp(tableName, "store") == 0)
+	{
+		printf("Donnez le nom de la table où ajouter une valeur : ");
+		scanf("%s", tableName);
+	}
+	unsigned char table[] = "CREATE TABLE ";
+	unsigned char Id[] = "(ID INT PRIMARY KEY NOT NULL);";
+	sprintf(command, "%s%s%s", table, tableName, Id);
+	printf("%s\n", command);
+	system("pause");
 
-/* Create SQL statement */
 
-sql = s;
 
-/* Execute SQL statement */
-rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-if (rc != SQLITE_OK){
-fprintf(stderr, "SQL error: %s\n", zErrMsg);
-sqlite3_free(zErrMsg);
-}
-else{
-fprintf(stdout, "Value added successfully\n");
-}
-sqlite3_close(db);
-
+	/* Execute SQL statement */
+	rc = sqlite3_exec(db, command, callback, 0, &zErrMsg);
+	if (rc != SQLITE_OK){
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		sqlite3_free(zErrMsg);
+	}
+	else{
+		fprintf(stdout, "Table created successfully\n");
+	}
+	closeDb(db);
+	return 0;
 }
 
 /*void dropTable(char *dataBaseName, char *tableName);
@@ -491,23 +492,4 @@ void dropValue(char *dataBaseName, char *tableName);
 void alterValue(char *dataBaseName, char *tableName, int Id);
 
 */
-
-//FUNCTIONS
-
-
-void createFile()
-{
-char tableName[10];
-printf("Donnez le nom de la table a ajouter: ");
-scanf("%s", tableName);
-char table[30] = "CREATE TABLE ";
-char Id[50] = "(ID INT PRIMARY KEY NOT NULL);";
-char *d = strcat(table, tableName);
-printf("%s\n", d);
-system("pause");
-char *s = strcat(d, Id);
-printf("%s\n", s);
-system("pause");
-
-}
 

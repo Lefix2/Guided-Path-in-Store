@@ -14,9 +14,8 @@ void sqlite_get_section(char *DataBaseName); // insert sections from database in
 void sqlite_get_item(char *DataBaseName); // insert items from database in the store
 void createFile();
 int callback(void *NotUsed, int argc, char **argv, char **azColName);
-
-void addValue(char *dataBaseName, char *tableName); 
-void dropValue(char *dataBaseName, char *tableName);
-void alterValue(char *dataBaseName, char *tableName, int Id);
+int sqlite_add_value();
+void sqlite_drop_value(char *dataBaseName, char *tableName);
+void sqlite_alter_value(char *dataBaseName, char *tableName, int Id);
 
 #endif
