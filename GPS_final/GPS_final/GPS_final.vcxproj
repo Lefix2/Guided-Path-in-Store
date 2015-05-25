@@ -80,15 +80,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Astar.h" />
+    <ClInclude Include="AstarList.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="generalMenu.h" />
+    <ClInclude Include="go_shopping.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemList.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="merchant.h" />
     <ClInclude Include="myAlloc.h" />
+    <ClInclude Include="Section.h" />
+    <ClInclude Include="SectionList.h" />
+    <ClInclude Include="Shopping.h" />
+    <ClInclude Include="Store.h" />
+    <ClInclude Include="StoreImage.h" />
+    <ClInclude Include="tests.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Astar.c" />
+    <ClCompile Include="AstarList.c" />
     <ClCompile Include="Common.c" />
     <ClCompile Include="generalMenu.c" />
+    <ClCompile Include="go_shopping.c" />
+    <ClCompile Include="Item.c" />
+    <ClCompile Include="ItemList.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="map.c" />
+    <ClCompile Include="merchant.c" />
     <ClCompile Include="myAlloc.c" />
+    <ClCompile Include="Section.c" />
+    <ClCompile Include="SectionList.c" />
+    <ClCompile Include="shopping.c" />
+    <ClCompile Include="Store.c" />
+    <ClCompile Include="StoreImage.c" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\atk-1.0.lib" />
@@ -103,6 +128,11 @@
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\gobject-2.0.lib" />
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\gthread-2.0.lib" />
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\gtk-win32-3.0.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ressources\Images\caddie.jpg" />
+    <Image Include="ressources\Images\sprites.png" />
+    <Image Include="ressources\Images\spritesDebug.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

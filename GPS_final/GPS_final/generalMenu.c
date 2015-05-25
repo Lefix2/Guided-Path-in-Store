@@ -1,38 +1,57 @@
 #include "Common.h"
+#include "Shopping.h"
 #include "generalMenu.h"
+#include "go_shopping.h"
+#include "tests.h"
 
-shopping * my_shopping;
+shopping * myShop;
 
 void call_main_menu()
 {
-	
+	gchar utf8_chain[MAX_ARRAY_OF_CHAR];
+
 	/* Window Creation */
 	GtkWidget *p_window = NULL;
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), p_window);
 	
+	/*the first box horizontal*/
+	GtkWidget * h_box = NULL;
+	h_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+	gtk_container_add(GTK_CONTAINER(p_window), h_box);
+
 	/*The window contain a grid that contains all of our widgets*/
-	GtkWidget * p_table = NULL;
-	p_table = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(p_window), p_table);
+	GtkWidget * v_box = NULL;
+	v_box = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
+	gtk_box_pack_start(GTK_BOX(h_box), v_box, TRUE, FALSE, 10);
+
+	/*add a title*/
+	GtkWidget *title;
+	sprintf(utf8_chain, "<span face = \"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Guided Path in Store</b></span>");
+	title = gtk_label_new(g_locale_from_utf8(utf8_chain,-1,NULL,NULL,NULL));
+	gtk_label_set_use_markup(GTK_LABEL(title), TRUE);
+	gtk_box_pack_start(GTK_BOX(v_box), title, TRUE, TRUE, 10);
 
 	/*The first button is used to open the database to choose a store*/
-	GtkWidget * p_label = NULL;
-	GtkWidget * p_event_box = NULL;
-	gchar *txtSchema;
-	gchar utf8_chain[256];
+	GtkWidget * p_button1 = NULL;
 
-	p_event_box = gtk_event_box_new();
-	sprintf(utf8_chain, "<span face=\"Verdana\" foreground=\"#%02X%02X%02X\" size=\"xx-large\"><b>Choisissez \nvotre magasin</b></span>", rand() % (0xFF), rand() % (0xFF), rand() % (0xFF));
-	txtSchema = g_locale_to_utf8(utf8_chain, -1, NULL, NULL, NULL);
-	p_label = gtk_label_new(txtSchema);
-	gtk_label_set_use_markup(GTK_LABEL(p_label), TRUE);
-	g_signal_connect(G_OBJECT(p_event_box),
-		"button_press_event",
-		G_CALLBACK(cb_store_selection),
-		p_window);
-	gtk_container_add(GTK_CONTAINER(p_event_box), p_label);
-	gtk_grid_attach(GTK_GRID(p_table), p_event_box, 0, 0, 1, 1);
+	p_button1 = gtk_button_new_with_label("Ouvrir un magasin");
+	g_signal_connect(GTK_BUTTON(p_button1),	"button_press_event", G_CALLBACK(cb_store_selection), p_window);
+	gtk_box_pack_start(GTK_BOX(v_box), p_button1, FALSE, FALSE, 10);
+
+	/*The second button is used to create his list*/
+	GtkWidget * p_button2 = NULL;
+
+	p_button2 = gtk_button_new_with_label("Faire sa liste de course");
+	g_signal_connect(GTK_BUTTON(p_button2), "button_press_event", G_CALLBACK(cb_make_list), p_window);
+	gtk_box_pack_start(GTK_BOX(v_box), p_button2, FALSE, FALSE, 10);
+
+	/*The third is to start the shopping*/
+	GtkWidget * p_button3 = NULL;
+
+	p_button3 = gtk_button_new_with_label("Demarrer ses courses");
+	g_signal_connect(GTK_BUTTON(p_button3), "button_press_event", G_CALLBACK(cb_go_shopping), p_window);
+	gtk_box_pack_start(GTK_BOX(v_box), p_button3, FALSE, FALSE, 10);
 
 	/*We do the last settings to the window*/
 	gtk_widget_show_all(p_window);
@@ -40,11 +59,40 @@ void call_main_menu()
 
 }
 
-void cb_quit(GtkWidget *p_widget, gpointer user_data){
+gboolean cb_quit(GtkWidget *p_widget, gpointer user_data){
 	gtk_main_quit();
+	return FALSE;
 }
 
-void cb_store_selection(GtkWidget *p_widget, gpointer p_window){
+gboolean cb_store_selection(GtkWidget *p_widget, gpointer p_window){
 	//store_selection_window();
-	gtk_widget_destroy(GTK_WIDGET(p_window));
+	myShop = shopping_new(my_test_store_new());
+	//gtk_widget_destroy(GTK_WIDGET(p_window));
+	return FALSE;
+}
+
+gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
+	//make_list();
+	
+	/*code test*/
+	myShop->List = itemPointerList_new();
+
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 0));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 1));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 2));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 3));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 4));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 5));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 6));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 7));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 8));
+	
+	//gtk_widget_destroy(GTK_WIDGET(p_window));
+	return FALSE;
+}
+
+gboolean cb_go_shopping(GtkWidget *p_widget, gpointer p_window){
+	go_shopping_window(myShop);
+	//gtk_widget_destroy(GTK_WIDGET(p_window));
+	return FALSE;
 }

@@ -11,10 +11,10 @@
 
 #include "tests.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	/*initialisation GTK*/
-	gtk_init(&argc, argv);
+	gtk_init(&argc, &argv);
 
 	shopping *shopping;
 
