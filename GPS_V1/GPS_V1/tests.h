@@ -76,15 +76,21 @@ store *my_test_store_new()
 	store_add_item(sttest, 3, pain, "brioche");
 	store_add_item(sttest, 4, alcool, "vin");
 	store_add_item(sttest, 5, legumes_vert, "petits poids");
+	store_add_item(sttest, 6, fromage, "gouda");
+	store_add_item(sttest, 7, pain, "biscottes");
+	store_add_item(sttest, 8, legumes_vert, "asperges");
 
 	
-	//srand(time(NULL));
+	srand(time(NULL));
 	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 0), 1, 0);
 	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 1), 1, 0);
 	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 2), 1, 0);
 	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 3), 1, 0);
 	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 4), 1, 0);
 	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 5), 1, 0);
+	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 6), 1, 0);
+	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 7), 1, 0);
+	section_add_item(store_find_section_id(sttest, 8 + rand() % (id - 8)), store_find_item_id(sttest, 8), 1, 0);
 
 	return sttest;
 }

@@ -170,6 +170,9 @@ int main(int argc, char *argv[])
 	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 3));
 	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 4));
 	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 5));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 6));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 7));
+	itemPointerList_insert_sort(shopping->List, store_find_item_id(shopping->Store, 8));
 	
 	merchant_optimise_shopping(shopping);
 

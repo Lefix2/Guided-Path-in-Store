@@ -159,7 +159,7 @@ int store_free_carto(store * st_source)
 
 int Store_computeCartography(store * st_source, gboolean optAstar)
 {
-	//allocation de la mémoire
+	//memory allocation
 	if (st_source->cartography != NULL)
 		store_free_carto(st_source);
 	st_source->cartography = (int**)calloc(st_source->size.x, sizeof(int*));
@@ -281,7 +281,7 @@ int store_delete_item(store * st_source, item * item)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
-	section_remove_item(item->section, item);
+	section_remove_item(item);
 	return item_delete(itemPointerList_delete_single(st_source->allocatedStock, item));
 }
 
@@ -304,7 +304,6 @@ item *store_find_item_id(store * st_source, int id)
 
 int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size)
 {
-	int i, j;
 	if (st_source == NULL)
 		return EXIT_FAILURE;
 	section * tmp = sectionPointerList_find_id(st_source->allocatedSections, id);

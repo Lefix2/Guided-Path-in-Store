@@ -1,20 +1,34 @@
+/**
+* \file Astar.h
+* \brief Header Astar.c
+* \author GPSTeam
+* \date 29/03/2015
+*
+* Contain prototypes of astar
+*
+*/
+
 #ifndef ASTAR_H
 #define ASTAR_H
 
 #include "Common.h"
 
-/*!<this is the cost to go  to another node (*/
+/*!<All costs to go  to another node*/
 #define MY_INFINITY 9999
 #define GENERAL_COST 0
 #define MEDIUM_COST 5
 #define STRONG_COST 8
 #define INFINITY_COST 9
 
-#define UNTRET_NODE 0
-#define OPENED_NODE 1
-#define CLOSED_NODE 2
+/*!<states for astar nodes*/
+#define UNTRET_NODE 0 //untreated
+#define OPENED_NODE 1 //treated but still opened
+#define CLOSED_NODE 2 //closed
 
-
+/**
+* \struct nodeAstar
+* \brief node representing a path point
+*/
 struct nodeAstar
 {
 	coord pos;				/*!< position in graph*/
