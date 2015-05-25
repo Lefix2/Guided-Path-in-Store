@@ -67,6 +67,7 @@ struct coord{
 };
 
 typedef struct shopping_list shopping_list;
+typedef struct store_notebook store_notebook;
 
 static coord zero = { 0, 0 };
 

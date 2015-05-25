@@ -39,6 +39,53 @@ void cb_shopping_list(GtkWidget *p_widget, shopping_list * s_list){
 	i++;
 }
 
+
+void cb_activate_search_bar(GtkWidget *p_entry, store_notebook *s_notebook)
+{
+	const gchar *sText;
+	sText = gtk_entry_get_text(GTK_ENTRY(p_entry));
+	
+	GtkWidget * p_button;
+
+	int i = 0;
+	gint nbpages;
+	nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(s_notebook->notebook));
+
+	/*Pour commencer, on clear la page du notebook de la dernière recherche*/
+	
+	if (gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1)), i, 0) != NULL){
+		for (i; i < nbpages - 1; i++){
+			gtk_widget_destroy(gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1)), i, 0));
+		}
+	}
+	/*On teste si l'utilisateur n'a pas clear sa recherche :*/
+	if (g_strcmp0(sText,"")==0){
+		printf("the user cleared his research\n");
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(s_notebook->notebook), 0); //doesn't work
+	}
+
+	/*On parcours la liste des items et on crée un button pour chacun de ceux qui correspondent*/
+	itemPointerList_set_on_first(s_notebook->store->allocatedStock);
+	while (!itemPointerList_is_out_of(s_notebook->store->allocatedStock))
+	{
+		gchar * item_name;
+		item_name = (gchar *)item_get_name(s_notebook->store->allocatedStock->current->i);
+
+		if (g_str_has_prefix(item_name ,sText) != 0)
+		{//The item matched with the research, we create a new button
+			printf(item_name);
+			printf("\n");
+			p_button = gtk_button_new_with_label(item_name);
+			gtk_grid_attach(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
+			gtk_widget_show(p_button);
+		}
+		itemPointerList_next(s_notebook->store->allocatedStock);
+	}
+
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
+}
+
+
 void cb_add_item(GtkWidget *p_widget, shopping_list * s_list){
 	GtkWidget *p_new_label;
 	GtkWidget *p_spin_button;
