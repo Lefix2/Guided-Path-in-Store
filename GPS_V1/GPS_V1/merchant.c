@@ -8,7 +8,7 @@
 #include "ItemList.h"
 
 #define random(x) rand()%x
-#define NBPOP 20			/* number of population to mutate*/
+#define NBPOP 30			  /* number of population to mutate*/
 #define ITERATION_FACTOR 500  /* higher factor for best results, lower for higher perf*/
 #define PUNISH_START_END TRUE /*force the algo to keep the first and last item given at first and last position*/
 
@@ -213,10 +213,10 @@ int* merchant_find_path(int nbr, int **pathlen)
 {
 	int i;
 	int maxpath = merchant_find_longest(nbr, pathlen);
-	int fx[20];
+	int fx[NBPOP];
 	int posmin[2],
 		posmax[2];
-	int **path = alloc_double_int_pointer(20, nbr);
+	int **path = alloc_double_int_pointer(NBPOP, nbr);
 	int **child = alloc_double_int_pointer(2, nbr);
 	int *ret = (int*)calloc(nbr, sizeof(int));
 
@@ -245,7 +245,7 @@ int* merchant_find_path(int nbr, int **pathlen)
 		ret[i] = path[posmin[0]][i];
 	}
 	/*
-	for (int g = 0; g < 20; g++)
+	for (int g = 0; g < NBPOP; g++)
 	{
 	for (int h = 0; h < nbr; h++)
 	{
@@ -255,7 +255,7 @@ int* merchant_find_path(int nbr, int **pathlen)
 	}
 	*/
 
-	free_double_int_pointer(path, 20, nbr);
+	free_double_int_pointer(path, NBPOP, nbr);
 	free_double_int_pointer(child, 2, nbr);
 
 	return ret;

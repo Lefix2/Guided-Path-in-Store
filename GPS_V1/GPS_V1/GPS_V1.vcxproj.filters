@@ -13,58 +13,85 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Structures">
+      <UniqueIdentifier>{118c584f-94f7-41b3-a10e-d7d94bba2212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Algo">
+      <UniqueIdentifier>{d718660a-4194-437c-9e40-f541c4ccda4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Structures">
+      <UniqueIdentifier>{df17b40c-d12b-4649-82fd-6665b753f87a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Algo">
+      <UniqueIdentifier>{c64615b1-3a54-4f9e-b907-bf27fa17c0aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Database">
+      <UniqueIdentifier>{23f40e61-cc90-476a-b3bf-5bbaed505a67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Database">
+      <UniqueIdentifier>{55ced1e1-b89f-4a7d-b8e0-bca46c2ced37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Grapphic">
+      <UniqueIdentifier>{286cafa0-65e7-40fb-949b-37942419034c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Graphic">
+      <UniqueIdentifier>{45fe1ef3-0fc8-4337-a3e7-d304744d86d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Principal.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Section.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemList.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Common.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="myAlloc.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Store.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SectionList.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GenericList.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Astar.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="AstarList.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="StoreImage.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="merchant.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="main.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite_functions.c">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="Item.c">
+      <Filter>Fichiers sources\Structures</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite3.c">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="ItemList.c">
+      <Filter>Fichiers sources\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Section.c">
+      <Filter>Fichiers sources\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="SectionList.c">
+      <Filter>Fichiers sources\Structures</Filter>
     </ClCompile>
     <ClCompile Include="shopping.c">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Store.c">
+      <Filter>Fichiers sources\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericList.c">
+      <Filter>Fichiers sources\Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Astar.c">
+      <Filter>Fichiers sources\Algo</Filter>
+    </ClCompile>
+    <ClCompile Include="AstarList.c">
+      <Filter>Fichiers sources\Algo</Filter>
+    </ClCompile>
+    <ClCompile Include="merchant.c">
+      <Filter>Fichiers sources\Algo</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite_functions.c">
+      <Filter>Fichiers sources\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Fichiers sources\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="map.c">
+      <Filter>Fichiers sources\Graphic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,34 +133,10 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Section.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemList.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="myAlloc.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Store.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Common.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SectionList.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="GenericList.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Astar.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="AstarList.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="StoreImage.h">
@@ -142,20 +145,47 @@
     <ClInclude Include="tests.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="merchant.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="Item.h">
+      <Filter>Fichiers d%27en-tête\Structures</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite_functions.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="sqlite3.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="sqlite3ext.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="Section.h">
+      <Filter>Fichiers d%27en-tête\Structures</Filter>
     </ClInclude>
     <ClInclude Include="Shopping.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Store.h">
+      <Filter>Fichiers d%27en-tête\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericList.h">
+      <Filter>Fichiers d%27en-tête\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemList.h">
+      <Filter>Fichiers d%27en-tête\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="SectionList.h">
+      <Filter>Fichiers d%27en-tête\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Astar.h">
+      <Filter>Fichiers d%27en-tête\Algo</Filter>
+    </ClInclude>
+    <ClInclude Include="AstarList.h">
+      <Filter>Fichiers d%27en-tête\Algo</Filter>
+    </ClInclude>
+    <ClInclude Include="merchant.h">
+      <Filter>Fichiers d%27en-tête\Algo</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite_functions.h">
+      <Filter>Fichiers d%27en-tête\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Fichiers d%27en-tête\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3ext.h">
+      <Filter>Fichiers d%27en-tête\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Fichiers d%27en-tête\Grapphic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
