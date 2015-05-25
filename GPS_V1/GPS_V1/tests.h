@@ -19,6 +19,7 @@ store *my_test_store_new()
 	GError **error = NULL;
 	GdkPixbuf *sprites = gdk_pixbuf_new_from_file("ressources\\Images\\sprites.png", error);
 
+
 	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
 
 	int id = 0;

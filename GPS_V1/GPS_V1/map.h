@@ -1,8 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
 
-GtkWidget *drawing_area;
-
 void on_window_closed(GtkWidget *window, gpointer data);
 gboolean changer_texte(GtkWidget *window, gpointer data);
 
