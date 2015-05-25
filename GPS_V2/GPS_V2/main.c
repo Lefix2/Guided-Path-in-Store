@@ -3,8 +3,6 @@
 #include <stdarg.h>
 #include <glib.h>
 #include <gtk\gtk.h>
-#include "callback.h"
-
 
 int main(int argc, char* argv[]){
 	/* initialiser GTK+ */
