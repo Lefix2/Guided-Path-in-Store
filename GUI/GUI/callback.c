@@ -53,7 +53,7 @@ void cb_activate_search_bar(GtkWidget *p_entry, store_notebook *s_notebook)
 	GtkWidget * p_onglet = NULL;
 	GtkWidget * p_grid = NULL;
 
-	gboolean searching_tab_exist = FALSE;
+	gboolean searching_tab_exists = FALSE;
 	gboolean search_success = FALSE;
 	int i = 0;
 	gint nbpages;
@@ -67,7 +67,7 @@ void cb_activate_search_bar(GtkWidget *p_entry, store_notebook *s_notebook)
 	printf("\n");
 	if (g_strcmp0(text, gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(s_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1))) == 0)
 	{ 
-		searching_tab_exist = TRUE;
+		searching_tab_exists = TRUE;
 	}
 
 
@@ -78,7 +78,7 @@ void cb_activate_search_bar(GtkWidget *p_entry, store_notebook *s_notebook)
 	if (g_strcmp0(sText,"")==0)
 	{
 		printf("the user cleared his research\n");
-		if (searching_tab_exist)
+		if (searching_tab_exists)
 		{
 			printf("trying to remove last page");
 			gtk_notebook_remove_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
@@ -88,7 +88,7 @@ void cb_activate_search_bar(GtkWidget *p_entry, store_notebook *s_notebook)
 	}
 	else
 	{
-		if (searching_tab_exist)
+		if (searching_tab_exists)
 			/*We destroy the existing tab*/
 		{
 			gtk_notebook_remove_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
@@ -135,6 +135,27 @@ void cb_activate_search_bar(GtkWidget *p_entry, store_notebook *s_notebook)
 	}
 
 	
+}
+
+void cb_search_clear_button(GtkWidget *p_button, store_notebook *s_notebook){
+	gboolean searching_tab_exists = FALSE;
+	char text[20];
+	sprintf(text, "recherche");
+	gint nbpages;
+	nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(s_notebook->notebook));
+
+	if (g_strcmp0(text, gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(s_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1))) == 0)
+	{
+		searching_tab_exists = TRUE;
+		printf("clear_button : searching tab exists\n");
+	}
+
+	if (searching_tab_exists)
+		/*We destroy the existing tab*/
+	{
+		gtk_notebook_remove_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
+	}
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(s_notebook->notebook), 0);
 }
 
 

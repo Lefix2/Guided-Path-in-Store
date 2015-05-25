@@ -17,6 +17,7 @@ void cb_quit(GtkWidget *p_widget, gpointer user_data);
 void cb_shopping_list(GtkWidget *p_widget, shopping_list * s_list);
 void cb_add_item(GtkWidget *p_widget, gpointer grid);
 void cb_activate_search_bar(GtkWidget *p_entry, store_notebook * s_notebook);
+void cb_search_clear_button(GtkWidget *p_button, store_notebook *s_notebook);
 void cb_open_tab(GtkWidget *p_widget, gpointer user_data);
 static void open_file(const gchar *file_name, GtkTextView *p_text_view);
 

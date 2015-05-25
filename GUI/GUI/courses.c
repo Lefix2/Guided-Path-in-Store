@@ -97,6 +97,11 @@ int init_courses(store * store_test, itemList * user_list){
 
 	g_signal_connect(G_OBJECT(p_search_bar), "activate", G_CALLBACK(cb_activate_search_bar), p_store_notebook);
 
+	/*We create next to it a button to clear the search*/
+	GtkWidget *p_search_clear_button;
+	p_search_clear_button = gtk_button_new_from_stock(GTK_STOCK_STOP);
+	gtk_grid_attach(GTK_GRID(p_table), p_search_clear_button, 2, 0, 1, 1);
+	g_signal_connect(G_OBJECT(p_search_clear_button), "clicked", G_CALLBACK(cb_search_clear_button), p_store_notebook);
 
 
 	/*p_button[0] = gtk_button_new_with_label("pates");
