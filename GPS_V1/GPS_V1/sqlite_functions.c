@@ -9,15 +9,6 @@
 #include "Item.h"
 
 
-static int callback(void *data, int argc, char **argv, char **azColName){
-	int i;
-	fprintf(stderr, "%s: ", (const char*)data);
-	for (i = 0; i<argc; i++){
-		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-	}
-	printf("\n");
-	return 0;
-}
 
 //Open database
 static sqlite3 *openDb(char *dbName)
@@ -45,93 +36,7 @@ static void closeDb(sqlite3 *db)
 	printf("Database closed\n");
 }
 
-
-int createTable()
-{
-	sqlite3 *db;
-	char *zErrMsg = 0;
-	int  rc;
-	char command[MAX_ARRAY_OF_CHAR];
-
-	/* Open database */
-	db = openDb("test.db");
-
-	/* Create SQL statement */
-	unsigned char tableName[10];
-	printf("Donnez le nom de la table a ajouter : ");
-	scanf("%s", tableName);
-	unsigned char table[] = "CREATE TABLE ";
-	unsigned char Id[] = "(ID INT PRIMARY KEY NOT NULL);";
-	sprintf(command, "%s%s%s", table, tableName, Id);
-	printf("%s\n", command);
-	system("pause");
-	
-
-	 
-	/* Execute SQL statement */
-	rc = sqlite3_exec(db, command, callback, 0, &zErrMsg);
-	if (rc != SQLITE_OK){
-		fprintf(stderr, "SQL error: %s\n", zErrMsg);
-		sqlite3_free(zErrMsg);
-	}
-	else{
-		fprintf(stdout, "Table created successfully\n");
-	}
-	closeDb(db);
-	return 0;
-}
-
-
-char** returnValue(char *DataBaseName)
-{
-	//SQLITE3
-	sqlite3 *db = NULL;
-	sqlite3_stmt *stmt;
-	char *dbName = DataBaseName;
-	int rc;
-	char *sql = "SELECT * from item where category = 'fruit';";
-	char **description;
-	int i = 0;
-	
-
-	
-	//Open database
-	db = openDb(dbName);
-
-	/* prepare the sql, leave stmt ready for loop */
-	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-	if (rc != SQLITE_OK) {
-		printf("Failed to prepare database\n\r");
-		sqlite3_close(db);
-	
-	}
-
-	printf("SQL prepared ok\n\r");
-
-	/* allocate memory for decsription and venue */
-	//description = (char *)malloc(100);
-	description = (char**)malloc(returnRow(DataBaseName)*sizeof(char*));
-	/* loop reading each row until step returns anything other than SQLITE_ROW */
-	do {
-		rc = sqlite3_step(stmt);
-		if (rc == SQLITE_ROW) { //can read data
-			description[i] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-			strcpy(description[i], (char *)sqlite3_column_text(stmt, 1));//récupération de la valeur grâce à la requête
-			printf("%s \n", description[i]);
-			i++;
-			}
-	} while (rc == SQLITE_ROW);
-
-	/* finish off */
-	sqlite3_close(db);
-	
-
-	//Close database
-	closeDb(db);
-
-	return description;
-}
-
+//return the number of row in a store's query
 int sqlite_store_row(char *DataBaseName)
 {
 	//SQLITE3
@@ -169,17 +74,19 @@ int sqlite_store_row(char *DataBaseName)
 		}
 	} while (rc == SQLITE_ROW);;
 
-	/* finish off */
-	sqlite3_close(db);
+	/* recuperation de la valeur et libération de la mémoire */
+	
 	ret = (int)atof(description);
 	free(description);
 
 	//Close database
 	closeDb(db);
 
+	// return value
 	return ret;
 }
 
+//return a pointer on a store from database
 store* sqlite_get_store(char *DataBaseName)
 {
 	//SQLITE3
@@ -192,7 +99,12 @@ store* sqlite_get_store(char *DataBaseName)
 	int i = 0;
 	int size_row;
 	size_row = sqlite_store_row(dbName);
-	//nodeItemPointerList_new();
+	int storeId = 0;
+	int lengthX = 0;
+	int lengthY = 0;
+	char *name;
+	store *Aucampos;
+	name = (char*)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
 
 
 
@@ -229,28 +141,25 @@ store* sqlite_get_store(char *DataBaseName)
 	//Close database
 	closeDb(db);
 
-	int storeId = 0;
-	int lengthX = 0;
-	int lengthY = 0;
-	char *name;
-	store *Aucampos;
-	name = (char*)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
+	// récupération des valeurs
 	name = description[1];
 	storeId = (int)atof(description[0]);
 	lengthX = (int)atof(description[2]);
 	lengthY = (int)atof(description[3]);
 	Aucampos = store_new(storeId, name, lengthX, lengthY);
 
+	// libération de la mémoire
 	for (i = 0; i <= 3; i++)
 	{
 		free(description[i]);
 	}
 	free(description);
 
+	// valeur retournée
 	return Aucampos;
 }
 
-
+// return the number of row in a section's query
 int sqlite_section_row(char *DataBaseName)
 {
 	//SQLITE3
@@ -288,20 +197,21 @@ int sqlite_section_row(char *DataBaseName)
 		}
 	} while (rc == SQLITE_ROW);;
 
-	/* finish off */
-	sqlite3_close(db);
+	/* récupération de la valeur et libération de la mémoire */
 	ret = (int)atof(description);
 	free(description);
 
 	//Close database
 	closeDb(db);
 
+	// valer retournée
 	return ret;
 }
 
+//insert sections from database in the store
 void sqlite_get_section(char *DataBaseName)
 {
-	//SQLITE3
+	//SQLITE3 et initialisation des paramètres
 	sqlite3 *db = NULL;
 	sqlite3_stmt *stmt;
 	char *dbName = "C:/Users/rom/Documents/projet.db";
@@ -327,7 +237,6 @@ void sqlite_get_section(char *DataBaseName)
 	if (rc != SQLITE_OK) {
 		printf("Failed to prepare database\n\r");
 		sqlite3_close(db);
-		return NULL;
 	}
 
 	printf("SQL prepared ok\n\r");
@@ -354,7 +263,8 @@ void sqlite_get_section(char *DataBaseName)
 
 	store* Aucampos;
 	Aucampos = sqlite_get_store(dbName);
-	/*recupérer values*/
+
+	/*recupération des valeurs */
 	sectionId = description[0];
 	type = description[1];
 	posX = description[2];
@@ -368,6 +278,7 @@ void sqlite_get_section(char *DataBaseName)
 		store_add_new_section(Aucampos, sectionId, type, posX, posY, lengthX, lengthY);
 	}
 
+	// libération de la mémoire
 	for (i = 0; i <= 5; i++)
 	{
 		free(description[i]);
@@ -376,7 +287,7 @@ void sqlite_get_section(char *DataBaseName)
 
 }
 
-
+// return the number of row in a item's query
 int sqlite_item_row(char *DataBaseName)
 {
 	//SQLITE3
@@ -414,20 +325,22 @@ int sqlite_item_row(char *DataBaseName)
 		}
 	} while (rc == SQLITE_ROW);;
 
-	/* finish off */
-	sqlite3_close(db);
+	/* récupération de la valeur et libération de la mémoire */
+	
 	ret = (int)atof(description);
 	free(description);
 
 	//Close database
 	closeDb(db);
 
+	// valeur retournée
 	return ret;
 }
 
+//insert items from database in the store
 void sqlite_get_item(char *DataBaseName)
 {
-	//SQLITE3
+	//SQLITE3 et initialisation des variables
 	sqlite3 *db = NULL;
 	sqlite3_stmt *stmt;
 	char *dbName = "C:/Users/rom/Documents/projet.db";
@@ -458,7 +371,6 @@ void sqlite_get_item(char *DataBaseName)
 	if (rc != SQLITE_OK) {
 		printf("Failed to prepare database\n\r");
 		sqlite3_close(db);
-		return NULL;
 	}
 
 	printf("SQL prepared ok\n\r");
@@ -483,11 +395,12 @@ void sqlite_get_item(char *DataBaseName)
 	//Close database
 	closeDb(db);
 
+	// récupération des valeurs
 	itemId = (int)atof(description[0]);
 	name = description[1];
 	category = (int)atof(description[2]); 
 	fresh = (int)atof(description[3]);
-	fragility = (int)aof(description[4]);
+	fragility = (int)atof(description[4]);
 	cost = (float)atof(description[5]);
 	promotion = (int)atof(description[6]);
 	posX = (int)atof(description[7]);
@@ -510,6 +423,7 @@ void sqlite_get_item(char *DataBaseName)
 	if (sectionId != -1)
 	section_add_item(store_find_section_id(Aucampos,sectionId), newItem,posX,posY);
 	
+	// libération de la mémoire
 	for (i = 0; i <= 9; i++)
 	{
 		free(description[i]);
@@ -517,8 +431,22 @@ void sqlite_get_item(char *DataBaseName)
 	free(description);
 
 }
-/*
-int addValue(char *dataBaseName, char *tableName)
+
+int callback(void *NotUsed, int argc, char **argv,char **azColName) {
+
+	NotUsed = 0;
+
+	for (int i = 0; i < argc; i++) {
+
+		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+	}
+
+	printf("\n");
+
+	return 0;
+}
+
+void addValue(char *dataBaseName, char *tableName)
 {
 sqlite3 *db;
 char *zErrMsg = 0;
@@ -527,7 +455,7 @@ char *sql;
 const char* data = "Callback function called";
 
 /* Open database */
-/*rc = sqlite3_open("dataBaseName", &db);
+rc = sqlite3_open("dataBaseName", &db);
 if (rc){
 fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 exit(0);
@@ -535,15 +463,17 @@ exit(0);
 else{
 fprintf(stdout, "Opened database successfully\n");
 }
-//char s[30] = strcat("CREATE TABLE ", tableName);
-//printf("%c", s);
-*/
+char *s[30];
+s = "create table";
+strcat(s, tableName);
+printf("%c", s);
+
 /* Create SQL statement */
-/*
-sql = "create table zoo";
-*/
+
+sql = s;
+
 /* Execute SQL statement */
-/*rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 if (rc != SQLITE_OK){
 fprintf(stderr, "SQL error: %s\n", zErrMsg);
 sqlite3_free(zErrMsg);
@@ -552,22 +482,20 @@ else{
 fprintf(stdout, "Value added successfully\n");
 }
 sqlite3_close(db);
-return 0;
-}*/
+
+}
 
 /*void dropTable(char *dataBaseName, char *tableName);
 void addValue(char *dataBaseName, char *tableName);
 void dropValue(char *dataBaseName, char *tableName);
 void alterValue(char *dataBaseName, char *tableName, int Id);
-void printTable(char *dataBaseName, char *tableName);
-char returnValue(char *dataBaseName, char *tableName);
-char returnInformations(char *dataBaseName, char *tableName);
+
 */
 
 //FUNCTIONS
 
-/*
-char* createFile()
+
+void createFile()
 {
 char tableName[10];
 printf("Donnez le nom de la table a ajouter: ");
@@ -580,7 +508,6 @@ system("pause");
 char *s = strcat(d, Id);
 printf("%s\n", s);
 system("pause");
-//createTable("test.db", "rue");
-return  s;
+
 }
-*/
+
