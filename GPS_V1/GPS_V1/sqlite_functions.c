@@ -45,10 +45,10 @@ int sqlite_store_row(char *DataBaseName)
 	sqlite3_stmt *stmt;
 	char *dbName = DataBaseName;
 	int rc;
-	char *sql = "SELECT * from store;";
+	char *sql = "SELECT * from category;";
 	char *description;
-	int ret;
-	
+	int ret = 0;
+
 
 	//Open database
 	db = openDb(dbName);
@@ -70,20 +70,18 @@ int sqlite_store_row(char *DataBaseName)
 	do {
 		rc = sqlite3_step(stmt);
 		if (rc == SQLITE_ROW) { //can read data
-			strcpy(description, sqlite3_column_text(stmt, 0));//récupération de la valeur grâce à la requête
-			printf("Description : %s \n", description);
+			ret++;
 		}
-	} while (rc == SQLITE_ROW);;
+	} while (rc == SQLITE_ROW);
 
-	/* recuperation de la valeur et libération de la mémoire */
-	
-	ret = (int)atof(description);
+	/* récupération de la valeur et libération de la mémoire */
+
 	free(description);
 
 	//Close database
 	closeDb(db);
 
-	// return value
+	// valeur retournée
 	return ret;
 }
 
@@ -93,22 +91,17 @@ store* sqlite_get_store(char *DataBaseName)
 	//SQLITE3
 	sqlite3 *db = NULL;
 	sqlite3_stmt *stmt;
-	char *dbName = "C:/Users/rom/Documents/projet.db";
+	char *dbName = DataBaseName;
 	int rc;
 	char *sql = "SELECT * from store;";
-	char **description;
-	int i = 0;
-	int size_row;
-	size_row = sqlite_store_row(dbName);
 	int storeId = 0;
 	int lengthX = 0;
 	int lengthY = 0;
 	char *name;
-	store *Aucampos;
+	store *newstore;
 	name = (char*)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
 
-
-
+	
 	//Open database
 	db = openDb(dbName);
 
@@ -122,42 +115,27 @@ store* sqlite_get_store(char *DataBaseName)
 
 	printf("SQL prepared ok\n\r");
 
-	/* allocate memory for decsription and venue */
-	//description = (char *)malloc(100);
-	description = (char**)malloc(size_row*sizeof(char*));
-	/* loop reading each row until step returns anything other than SQLITE_ROW */
-	do {
-		rc = sqlite3_step(stmt);
-		if (rc == SQLITE_ROW) { //can read data
-			for (i = 0; i <= 3; i++)
-			{
-				description[i] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
-				
-			}
-			
-		}
-	} while (rc == SQLITE_ROW);
+
+	/* get all store strings */
+	
+	if (sqlite3_step(stmt) == 100)
+	{
+					// récupération des valeurs
+		storeId = (int)atof((char *)sqlite3_column_text(stmt, 0));
+		name = (char *)sqlite3_column_text(stmt, 1);
+		lengthX = (int)atof((char *)sqlite3_column_text(stmt, 2));
+		lengthY = (int)atof((char *)sqlite3_column_text(stmt, 3));
+	}
+	
+	newstore = store_new(storeId, name, lengthX, lengthY);
+	printf("%d %s %d %d \n", storeId, name, lengthX, lengthY);
 
 	//Close database
 	closeDb(db);
-
-	// récupération des valeurs
-	name = description[1];
-	storeId = (int)atof(description[0]);
-	lengthX = (int)atof(description[2]);
-	lengthY = (int)atof(description[3]);
-	Aucampos = store_new(storeId, name, lengthX, lengthY);
-
-	// libération de la mémoire
-	for (i = 0; i <= 3; i++)
-	{
-		free(description[i]);
-	}
-	free(description);
+	free(name);
 
 	// valeur retournée
-	return Aucampos;
+	return newstore;
 }
 
 // return the number of row in a section's query
@@ -168,9 +146,9 @@ int sqlite_section_row(char *DataBaseName)
 	sqlite3_stmt *stmt;
 	char *dbName = DataBaseName;
 	int rc;
-	char *sql = "SELECT * from section;";
+	char *sql = "SELECT * from category;";
 	char *description;
-	int ret;
+	int ret = 0;
 
 
 	//Open database
@@ -193,136 +171,12 @@ int sqlite_section_row(char *DataBaseName)
 	do {
 		rc = sqlite3_step(stmt);
 		if (rc == SQLITE_ROW) { //can read data
-			strcpy(description, sqlite3_column_text(stmt, 0));//récupération de la valeur grâce à la requête
-			printf("Description : %s \n", description);
-		}
-	} while (rc == SQLITE_ROW);;
-
-	/* récupération de la valeur et libération de la mémoire */
-	ret = (int)atof(description);
-	free(description);
-
-	//Close database
-	closeDb(db);
-
-	// valer retournée
-	return ret;
-}
-
-//insert sections from database in the store
-void sqlite_get_section(char *DataBaseName)
-{
-	//SQLITE3 et initialisation des paramètres
-	sqlite3 *db = NULL;
-	sqlite3_stmt *stmt;
-	char *dbName = "C:/Users/rom/Documents/projet.db";
-	int rc;
-	char *sql = "SELECT * from section;";
-	char **description;
-	int i = 0;
-	int size_row;
-	size_row = sqlite_section_row(dbName);
-	int sectionId = 0;
-	int type = 0;
-	int posX = 0;
-	int posY = 0;
-	int lengthX = 0;
-	int lengthY = 0;
-	store* Aucampos;
-	Aucampos = sqlite_get_store(dbName);
-
-	//Open database
-	db = openDb(dbName);
-
-	/* prepare the sql, leave stmt ready for loop */
-	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-	if (rc != SQLITE_OK) {
-		printf("Failed to prepare database\n\r");
-		sqlite3_close(db);
-	}
-
-	printf("SQL prepared ok\n\r");
-
-	/* allocate memory for decsription and venue */
-	//description = (char *)malloc(100);
-	description = (char**)malloc(size_row*sizeof(char*));
-	/* loop reading each row until step returns anything other than SQLITE_ROW */
-	do {
-		rc = sqlite3_step(stmt);
-		if (rc == SQLITE_ROW) { //can read data
-			for (i = 0; i <= 5; i++)
-			{
-				description[i] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
-
-			}
-			/*recupération des valeurs */
-			sectionId = (int)atof(description[0]);
-			type = (int)atof(description[1]);
-			posX = (int)atof(description[2]);
-			posY = (int)atof(description[3]);
-			lengthX = (int)atof(description[4]);
-			lengthY = (int)atof(description[5]);
-
-			// recup row section
-			store_add_new_section(Aucampos, sectionId, type, posX, posY, lengthX, lengthY);
+			ret++;
 		}
 	} while (rc == SQLITE_ROW);
 
-	//Close database
-	closeDb(db);
-	
-	
-	// libération de la mémoire
-	for (i = 0; i <= 5; i++)
-	{
-		free(description[i]);
-	}
-	free(description);
-
-}
-
-// return the number of row in an item's query
-int sqlite_item_row(char *DataBaseName)
-{
-	//SQLITE3
-	sqlite3 *db = NULL;
-	sqlite3_stmt *stmt;
-	char *dbName = DataBaseName;
-	int rc;
-	char *sql = "SELECT * from item;";
-	char *description;
-	int ret;
-
-
-	//Open database
-	db = openDb(dbName);
-
-	/* prepare the sql, leave stmt ready for loop */
-	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-	if (rc != SQLITE_OK) {
-		printf("Failed to prepare database\n\r");
-		sqlite3_close(db);
-		return 2;
-	}
-
-	printf("SQL prepared ok\n\r");
-
-	/* allocate memory for decsription and venue */
-	description = (char *)malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-
-	/* loop reading each row until step returns anything other than SQLITE_ROW */
-	do {
-		rc = sqlite3_step(stmt);
-		if (rc == SQLITE_ROW) { //can read data
-			strcpy(description, sqlite3_column_text(stmt, 0));//récupération de la valeur grâce à la requête
-			printf("Description : %s \n", description);
-		}
-	} while (rc == SQLITE_ROW);;
-
 	/* récupération de la valeur et libération de la mémoire */
-	
-	ret = (int)atof(description);
+
 	free(description);
 
 	//Close database
@@ -332,19 +186,119 @@ int sqlite_item_row(char *DataBaseName)
 	return ret;
 }
 
+//insert sections from database in the store
+store* sqlite_new_store_from_database(char *DataBaseName)
+{
+	//SQLITE3 et initialisation des paramètres
+	int i = 0;
+	
+	store* newstore;
+
+	// création du store
+	newstore = sqlite_get_store(DataBaseName);
+
+	//remplissage des sections
+	int nb_sections;
+	section **all_sections;
+
+	all_sections = sqlite_get_all_sections(DataBaseName, &nb_sections);
+	for (i = 0; i < nb_sections; i++)
+	{
+		store_add_section(newstore, *(all_sections + i));
+	}
+	free(all_sections);
+	
+	return newstore;
+}
+
+//return all sections of a store
+section **sqlite_get_all_sections(char *DataBaseName, int *nb_section)
+{
+	sqlite3_stmt *stmt;
+	int rc;
+	char *sql = "SELECT * from section;";
+	sqlite3 *db = NULL;
+	
+	*nb_section = sqlite_section_row(DataBaseName);
+	int sectionId = 0;
+	int type = 0;
+	int posX = 0;
+	int posY = 0;
+	int lengthX = 0;
+	int lengthY = 0;
+
+	int i;
+	section **all_sections = (section **)calloc(*nb_section, sizeof(section*));
+
+	//Open database
+	db = openDb(DataBaseName);
+
+	/* prepare the sql, leave stmt ready for loop */
+	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	if (rc != SQLITE_OK) {
+		printf("Failed to prepare database\n\r");
+		sqlite3_close(db);
+	}
+
+	printf("SQL prepared ok\n\r");
+
+
+	/* get all section strings */
+	for (i = 0; i < nb_section; i++)
+	{
+		if (sqlite3_step(stmt) == 100)
+		{
+			// récupération des valeurs
+			sectionId = (int)atof((char *)sqlite3_column_text(stmt, 0));
+			type = (int)atof((char *)sqlite3_column_text(stmt, 1));
+			posX = (int)atof((char *)sqlite3_column_text(stmt, 2));
+			posY = (int)atof((char *)sqlite3_column_text(stmt, 3));
+			lengthX = (int)atof((char *)sqlite3_column_text(stmt, 4));
+			lengthY = (int)atof((char *)sqlite3_column_text(stmt, 5));
+
+			// create new section
+			*(all_sections + i) = section_new(sectionId, type);
+			section_set_pos(*(all_sections + i), posX, posY);
+			section_set_size(*(all_sections + i), lengthX, lengthY);
+
+			printf("%d %d %d %d %d %d \n", sectionId, type, posX, posY, lengthX, lengthY);
+		}
+	}
+
+
+	//Close database
+	closeDb(db);
+
+	return all_sections;
+}
+
 //insert items from database in the store
-void sqlite_get_item(char *DataBaseName)
+item **sqlite_get_all_items(char *DataBaseName, int *nb_item)
 {
 	//SQLITE3 et initialisation des variables
+
+	sqlite3_stmt *stmt;
+	int rc;
+	char *sql = "SELECT * from section;";
+	sqlite3 *db = NULL;
+
+	*nb_item = sqlite_section_row(DataBaseName);
+	int itemId = 0;
+	int category = 0;
+	int posX = 0;
+	int posY = 0;
+
+	int i;
+	item **all_items = (item **)calloc(*nb_section, sizeof(item*));
+
 	sqlite3 *db = NULL;
 	sqlite3_stmt *stmt;
-	char *dbName = "C:/Users/rom/Documents/projet.db";
+	char *dbName = DataBaseName;
 	int rc;
 	char *sql = "SELECT * from item;";
-	char **description;
 	int i = 0;
-	int size_row;
-	size_row = sqlite_item_row(dbName);
+	int nb_item;
+	nb_item = sqlite_item_row(dbName);
 	int itemId = 0;
 	char* item_name = 0;
 	int category = 0;
@@ -355,8 +309,8 @@ void sqlite_get_item(char *DataBaseName)
 	int posX = 0;
 	int posY = 0;
 	int sectionId = 0;
-	store* Aucampos;
-	Aucampos = sqlite_get_store(dbName);
+	store* newstore;
+	newstore = sqlite_get_store(dbName);
 	item *newItem;
 
 
@@ -373,59 +327,44 @@ void sqlite_get_item(char *DataBaseName)
 
 	printf("SQL prepared ok\n\r");
 
-	/* allocate memory for decsription and venue */
-	//description = (char *)malloc(100);
-	description = (char**)malloc(size_row*sizeof(char*));
-	/* loop reading each row until step returns anything other than SQLITE_ROW */
-	do {
-		rc = sqlite3_step(stmt);
-		if (rc == SQLITE_ROW) { //can read data
-			for (i = 0; i <= 9; i++)
-			{
-				description[i] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
-
-			}
+	/* get all store strings */
+	for (i = 0; i < nb_item; i++)
+	{
+		if (sqlite3_step(stmt) == 100)
+		{
 			// récupération des valeurs
-			itemId = (int)atof(description[0]);
-			item_name = description[1];
-			category = (int)atof(description[2]);
-			fresh = (int)atof(description[3]);
-			fragility = (int)atof(description[4]);
-			cost = (float)atof(description[5]);
-			promotion = (int)atof(description[6]);
-			posX = (int)atof(description[7]);
-			posY = (int)atof(description[8]);
-			sectionId = (int)atof(description[9]);
+			itemId = (int)atof((char *)sqlite3_column_text(stmt, 0));
+			item_name = (char *)sqlite3_column_text(stmt, 1);
+			category = (int)atof((char *)sqlite3_column_text(stmt, 2));
+			fresh = (int)atof((char *)sqlite3_column_text(stmt, 3));
+			cost = (float)atof((char *)sqlite3_column_text(stmt, 4));
+			promotion = (int)atof((char *)sqlite3_column_text(stmt, 5));
+			posX = (int)atof((char *)sqlite3_column_text(stmt, 6));
+			posY = (int)atof((char *)sqlite3_column_text(stmt, 7));
+			sectionId = (int)atof((char *)sqlite3_column_text(stmt, 8));
 
 			// recup row item
 			newItem = item_new(itemId, category, item_name);
 
 			/*if*/
-			store_add_item(Aucampos, newItem);
+			store_add_item(newstore, newItem);
 
 			if (sectionId != -1)
-				section_add_item(store_find_section_id(Aucampos, sectionId), newItem, posX, posY);
+				section_add_item(store_find_section_id(newstore, sectionId), newItem, posX, posY);
+
 		}
-	} while (rc == SQLITE_ROW);
+	}
+
 
 	//Close database
 	closeDb(db);
 
-		
-	
-
-	// libération de la mémoire
-	for (i = 0; i <= 9; i++)
-	{
-		free(description[i]);
-	}
-	free(description);
 
 }
 
-// return the number of rw in a category's query
-int sqlite_category_row(char *DataBaseName)
+
+// return the number of row in an item's query
+int sqlite_item_row(char *DataBaseName)
 {
 	//SQLITE3
 	sqlite3 *db = NULL;
@@ -434,7 +373,7 @@ int sqlite_category_row(char *DataBaseName)
 	int rc;
 	char *sql = "SELECT * from category;";
 	char *description;
-	int ret;
+	int ret = 0;
 
 
 	//Open database
@@ -457,14 +396,60 @@ int sqlite_category_row(char *DataBaseName)
 	do {
 		rc = sqlite3_step(stmt);
 		if (rc == SQLITE_ROW) { //can read data
-			strcpy(description, sqlite3_column_text(stmt, 0));//récupération de la valeur grâce à la requête
-			printf("Description : %s \n", description);
+			ret++;
 		}
-	} while (rc == SQLITE_ROW);;
+	} while (rc == SQLITE_ROW);
 
 	/* récupération de la valeur et libération de la mémoire */
 
-	ret = (int)atof(description);
+	free(description);
+
+	//Close database
+	closeDb(db);
+
+	// valeur retournée
+	return ret;
+}
+
+// return the number of rw in a category's query
+int sqlite_category_row(char *DataBaseName)
+{
+	//SQLITE3
+	sqlite3 *db = NULL;
+	sqlite3_stmt *stmt;
+	char *dbName = DataBaseName;
+	int rc;
+	char *sql = "SELECT * from category;";
+	char *description;
+	int ret=0;
+
+
+	//Open database
+	db = openDb(dbName);
+
+	/* prepare the sql, leave stmt ready for loop */
+	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	if (rc != SQLITE_OK) {
+		printf("Failed to prepare database\n\r");
+		sqlite3_close(db);
+		return 2;
+	}
+
+	printf("SQL prepared ok\n\r");
+
+	/* allocate memory for decsription and venue */
+	description = (char *)malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
+
+	/* loop reading each row until step returns anything other than SQLITE_ROW */
+	do {
+		rc = sqlite3_step(stmt);
+		if (rc == SQLITE_ROW) { //can read data
+			ret++;
+		}
+	} while (rc == SQLITE_ROW);
+
+	/* récupération de la valeur et libération de la mémoire */
+
 	free(description);
 
 	//Close database
@@ -483,16 +468,12 @@ char** sqlite_get_category(char *DataBaseName)
 	char *dbName = "C:/Users/rom/Documents/projet.db";
 	int rc;
 	char *sql = "SELECT * from category;";
-	char **description;
 	int i = 0;
-	int size_row;
-	size_row = sqlite_category_row(dbName);
+	int nb_category;
+	nb_category = sqlite_category_row(dbName);
 	int category_Id = 0;
 
-	char *category_name;
-	category_name = (char*)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
-	char** category_table;
-	category_table = (char**)malloc(size_row*sizeof(char*));
+	char** category_table = alloc_double_char_pointer(nb_category, MAX_ARRAY_OF_CHAR);
 	
 	//Open database
 	db = openDb(dbName);
@@ -507,38 +488,16 @@ char** sqlite_get_category(char *DataBaseName)
 
 	printf("SQL prepared ok\n\r");
 
-	/* allocate memory for decsription and venue */
-	//description = (char *)malloc(100);
-	description = (char**)malloc(size_row*sizeof(char*));
-	/* loop reading each row until step returns anything other than SQLITE_ROW */
-	do {
+	/* get all category strings */
+	for (i = 0; i < nb_category; i++)
+	{
 		rc = sqlite3_step(stmt);
-		if (rc == SQLITE_ROW) { //can read data
-			for (i = 0; i <= 1; i++)
-			{
-				description[i] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
-				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
-
-			}
-
-		}
-	} while (rc == SQLITE_ROW);
+		strcpy(category_table[i], (char *)sqlite3_column_text(stmt, 1));
+		printf("%s\n", category_table[i]);
+	}
 
 	//Close database
 	closeDb(db);
-
-	//remplissage du tableau category
-	for (i = 0; i <= size_row; i++)
-	{
-		category_table[0] = (int)atof(description[0]);
-		category_table[1] = description[1];
-	}
-	// libération de la mémoire
-	for (i = 0; i <= 1; i++)
-	{
-		free(description[i]);
-	}
-	free(description);
 
 	// valeur retournée
 	return category_table;
@@ -563,24 +522,27 @@ int sqlite_add_value()
 	char *zErrMsg = 0;
 	int  rc;
 	char command[MAX_ARRAY_OF_CHAR];
+	char sectionId = 0;
+	char *DbName = "C:/Users/rom/Documents/projet.db";
 	
 	/* Open database */
-	db = openDb("C:/Users/rom/Documents/projet.db");
+	db = openDb(DbName);
 
 	/* Create SQL statement */
 	unsigned char tableName[10];
 	printf("Donnez le nom de la table où ajouter une valeur : ");
 	scanf("%s", tableName);
-	if (strcmp(tableName, "store") == 0)
+	if (strcmp(tableName, "section") == 0)
 	{
-		printf("Donnez le nom de la table où ajouter une valeur : ");
+		sectionId = sqlite_section_row(DbName)+1;
+		unsigned char table[] = "INSERT INTO section VALUES( ";
+		printf("type :  ");
 		scanf("%s", tableName);
+		sprintf(command, "%s%s", table, tableName);
+		printf("%s\n", command);
+		system("pause");
 	}
-	unsigned char table[] = "CREATE TABLE ";
-	unsigned char Id[] = "(ID INT PRIMARY KEY NOT NULL);";
-	sprintf(command, "%s%s%s", table, tableName, Id);
-	printf("%s\n", command);
-	system("pause");
+	
 
 
 
