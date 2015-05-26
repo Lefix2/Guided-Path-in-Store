@@ -1,3 +1,4 @@
+
 #ifndef STORE_H
 #define STORE_H
 
@@ -43,12 +44,14 @@ int store_free_carto(store * st_source);
 int Store_computeCartography(store * st_source, gboolean optAstar);
 int store_alloc_carto(store * st_source);
 
-int store_add_item(store * st_source, int id, category category, char * name);
+int store_add_new_item(store * st_source, int id, category category, char * name);
+int store_add_item(store * st_source, item * i_source);
 int store_delete_item(store * st_source, item * item);
 int store_delete_stock(store * st_source);
 item *store_find_item_id(store * st_source, int id);
 
-int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size);
+int store_add_new_section(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size);
+int store_add_section(store * st_source, section * s_source);
 int store_delete_section(store * st_source, section * s_source);
 int store_delete_sections(store * st_source);
 section *store_find_section_id(store * st_source, int id);
