@@ -140,7 +140,7 @@ int item_set_section(item * item, section * section)
 
 int item_get_id(item * item)
 {
-	 return item->id;
+	return item->id;
 }
 
 char * item_get_name(item * item)
