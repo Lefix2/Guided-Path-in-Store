@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "Shopping.h"
+#include "courses.h"
 #include "generalMenu.h"
 #include "go_shopping.h"
 #include "tests.h"
@@ -16,7 +17,7 @@ void call_main_menu()
 	GtkWidget *p_window = NULL;
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), p_window);
-
+	
 	/*The window contain a grid that contains all of our widgets*/
 	GtkWidget * v_box = NULL;
 	v_box = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
@@ -73,7 +74,7 @@ gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
 	
 	/*code test*/
 	myShop->List = itemPointerList_new();
-	
+
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 0));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 1));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 2));
@@ -84,7 +85,7 @@ gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 7));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 8));
 	
-	//gtk_widget_destroy(GTK_WIDGET(p_window));
+	//gtk_widget_hide(GTK_WIDGET(p_window));
 	return FALSE;
 }
 
