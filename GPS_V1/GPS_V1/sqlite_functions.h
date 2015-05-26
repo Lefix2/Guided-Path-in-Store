@@ -13,6 +13,7 @@ store* sqlite_get_store(char *DataBaseName); // return a pointer on a store from
 void sqlite_get_section(char *DataBaseName); // insert sections from database in the store
 void sqlite_get_item(char *DataBaseName); // insert items from database in the store
 int sqlite_category_row(char *DataBaseName);
+char** sqlite_get_category(char *DataBaseName);
 int callback(void *NotUsed, int argc, char **argv, char **azColName);
 int sqlite_add_value();
 void sqlite_drop_value(char *dataBaseName, char *tableName);

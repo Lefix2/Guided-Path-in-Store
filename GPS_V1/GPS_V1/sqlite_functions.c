@@ -7,6 +7,7 @@
 #include "store.h"
 #include "Section.h"
 #include "Item.h"
+#include "Common.h"
 
 
 
@@ -227,7 +228,8 @@ void sqlite_get_section(char *DataBaseName)
 	int posY = 0;
 	int lengthX = 0;
 	int lengthY = 0;
-
+	store* Aucampos;
+	Aucampos = sqlite_get_store(dbName);
 
 	//Open database
 	db = openDb(dbName);
@@ -254,30 +256,23 @@ void sqlite_get_section(char *DataBaseName)
 				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
 
 			}
+			/*recupération des valeurs */
+			sectionId = (int)atof(description[0]);
+			type = (int)atof(description[1]);
+			posX = (int)atof(description[2]);
+			posY = (int)atof(description[3]);
+			lengthX = (int)atof(description[4]);
+			lengthY = (int)atof(description[5]);
 
+			// recup row section
+			store_add_new_section(Aucampos, sectionId, type, posX, posY, lengthX, lengthY);
 		}
 	} while (rc == SQLITE_ROW);
 
 	//Close database
 	closeDb(db);
-
-	store* Aucampos;
-	Aucampos = sqlite_get_store(dbName);
-
-	/*recupération des valeurs */
-	sectionId = (int)atof(description[0]);
-	type = (int)atof(description[1]);
-	posX = (int)atof(description[2]);
-	posY = (int)atof(description[3]);
-	lengthX = (int)atof(description[4]);
-	lengthY = (int)atof(description[5]);
-
-	/*recup row section*/
-	for (i = 0; i < size_row; i++)
-	{
-		store_add_new_section(Aucampos, sectionId, type, posX, posY, lengthX, lengthY);
-	}
-
+	
+	
 	// libération de la mémoire
 	for (i = 0; i <= 5; i++)
 	{
@@ -351,7 +346,7 @@ void sqlite_get_item(char *DataBaseName)
 	int size_row;
 	size_row = sqlite_item_row(dbName);
 	int itemId = 0;
-	char* name = 0;
+	char* item_name = 0;
 	int category = 0;
 	int fresh = 0;
 	int fragility = 0;
@@ -360,6 +355,9 @@ void sqlite_get_item(char *DataBaseName)
 	int posX = 0;
 	int posY = 0;
 	int sectionId = 0;
+	store* Aucampos;
+	Aucampos = sqlite_get_store(dbName);
+	item *newItem;
 
 
 
@@ -388,41 +386,34 @@ void sqlite_get_item(char *DataBaseName)
 				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
 
 			}
+			// récupération des valeurs
+			itemId = (int)atof(description[0]);
+			item_name = description[1];
+			category = (int)atof(description[2]);
+			fresh = (int)atof(description[3]);
+			fragility = (int)atof(description[4]);
+			cost = (float)atof(description[5]);
+			promotion = (int)atof(description[6]);
+			posX = (int)atof(description[7]);
+			posY = (int)atof(description[8]);
+			sectionId = (int)atof(description[9]);
 
+			// recup row item
+			newItem = item_new(itemId, category, item_name);
+
+			/*if*/
+			store_add_item(Aucampos, newItem);
+
+			if (sectionId != -1)
+				section_add_item(store_find_section_id(Aucampos, sectionId), newItem, posX, posY);
 		}
 	} while (rc == SQLITE_ROW);
 
 	//Close database
 	closeDb(db);
 
-	// récupération des valeurs
-	itemId = (int)atof(description[0]);
-	name = description[1];
-	category = (int)atof(description[2]); 
-	fresh = (int)atof(description[3]);
-	fragility = (int)atof(description[4]);
-	cost = (float)atof(description[5]);
-	promotion = (int)atof(description[6]);
-	posX = (int)atof(description[7]);
-	posY = (int)atof(description[8]);
-	sectionId = (int)atof(description[9]);
-
-
-	store* Aucampos;
-	Aucampos = sqlite_get_store(dbName);
-
-	item *newItem;
-	/*recup row item*/
-	for (i = 0; i < size_row; i++)
-	{
-		newItem = item_new(itemId, category, name);
-
-		/*if*/
-		store_add_item(Aucampos, newItem);
-
-		if (sectionId != -1)
-			section_add_item(store_find_section_id(Aucampos, sectionId), newItem, posX, posY);
-	}
+		
+	
 
 	// libération de la mémoire
 	for (i = 0; i <= 9; i++)
@@ -441,7 +432,7 @@ int sqlite_category_row(char *DataBaseName)
 	sqlite3_stmt *stmt;
 	char *dbName = DataBaseName;
 	int rc;
-	char *sql = "SELECT * from item;";
+	char *sql = "SELECT * from category;";
 	char *description;
 	int ret;
 
@@ -481,6 +472,76 @@ int sqlite_category_row(char *DataBaseName)
 
 	// valeur retournée
 	return ret;
+}
+
+// return all elements of category's table
+char** sqlite_get_category(char *DataBaseName)
+{
+	//SQLITE3
+	sqlite3 *db = NULL;
+	sqlite3_stmt *stmt;
+	char *dbName = "C:/Users/rom/Documents/projet.db";
+	int rc;
+	char *sql = "SELECT * from category;";
+	char **description;
+	int i = 0;
+	int size_row;
+	size_row = sqlite_category_row(dbName);
+	int category_Id = 0;
+
+	char *category_name;
+	category_name = (char*)malloc(MAX_ARRAY_OF_CHAR*sizeof(char*));
+	char** category_table;
+	category_table = (char**)malloc(size_row*sizeof(char*));
+	
+	//Open database
+	db = openDb(dbName);
+
+	/* prepare the sql, leave stmt ready for loop */
+	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	if (rc != SQLITE_OK) {
+		printf("Failed to prepare database\n\r");
+		sqlite3_close(db);
+		return NULL;
+	}
+
+	printf("SQL prepared ok\n\r");
+
+	/* allocate memory for decsription and venue */
+	//description = (char *)malloc(100);
+	description = (char**)malloc(size_row*sizeof(char*));
+	/* loop reading each row until step returns anything other than SQLITE_ROW */
+	do {
+		rc = sqlite3_step(stmt);
+		if (rc == SQLITE_ROW) { //can read data
+			for (i = 0; i <= 1; i++)
+			{
+				description[i] = malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
+				strcpy(description[i], (char *)sqlite3_column_text(stmt, i));
+
+			}
+
+		}
+	} while (rc == SQLITE_ROW);
+
+	//Close database
+	closeDb(db);
+
+	//remplissage du tableau category
+	for (i = 0; i <= size_row; i++)
+	{
+		category_table[0] = (int)atof(description[0]);
+		category_table[1] = description[1];
+	}
+	// libération de la mémoire
+	for (i = 0; i <= 1; i++)
+	{
+		free(description[i]);
+	}
+	free(description);
+
+	// valeur retournée
+	return category_table;
 }
 
 int callback(void *NotUsed, int argc, char **argv, char **azColName) {
