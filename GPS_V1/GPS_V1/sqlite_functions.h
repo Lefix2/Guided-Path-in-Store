@@ -12,7 +12,7 @@ int sqlite_item_row(char *DataBaseName); // return the number of row in a item's
 store* sqlite_get_store(char *DataBaseName); // return a pointer on a store from database
 void sqlite_get_section(char *DataBaseName); // insert sections from database in the store
 void sqlite_get_item(char *DataBaseName); // insert items from database in the store
-void createFile();
+int sqlite_category_row(char *DataBaseName);
 int callback(void *NotUsed, int argc, char **argv, char **azColName);
 int sqlite_add_value();
 void sqlite_drop_value(char *dataBaseName, char *tableName);

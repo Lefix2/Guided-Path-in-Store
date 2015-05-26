@@ -287,7 +287,7 @@ void sqlite_get_section(char *DataBaseName)
 
 }
 
-// return the number of row in a item's query
+// return the number of row in an item's query
 int sqlite_item_row(char *DataBaseName)
 {
 	//SQLITE3
@@ -431,6 +431,56 @@ void sqlite_get_item(char *DataBaseName)
 	}
 	free(description);
 
+}
+
+// return the number of rw in a category's query
+int sqlite_category_row(char *DataBaseName)
+{
+	//SQLITE3
+	sqlite3 *db = NULL;
+	sqlite3_stmt *stmt;
+	char *dbName = DataBaseName;
+	int rc;
+	char *sql = "SELECT * from item;";
+	char *description;
+	int ret;
+
+
+	//Open database
+	db = openDb(dbName);
+
+	/* prepare the sql, leave stmt ready for loop */
+	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	if (rc != SQLITE_OK) {
+		printf("Failed to prepare database\n\r");
+		sqlite3_close(db);
+		return 2;
+	}
+
+	printf("SQL prepared ok\n\r");
+
+	/* allocate memory for decsription and venue */
+	description = (char *)malloc(MAX_ARRAY_OF_CHAR*sizeof(char));
+
+	/* loop reading each row until step returns anything other than SQLITE_ROW */
+	do {
+		rc = sqlite3_step(stmt);
+		if (rc == SQLITE_ROW) { //can read data
+			strcpy(description, sqlite3_column_text(stmt, 0));//récupération de la valeur grâce à la requête
+			printf("Description : %s \n", description);
+		}
+	} while (rc == SQLITE_ROW);;
+
+	/* récupération de la valeur et libération de la mémoire */
+
+	ret = (int)atof(description);
+	free(description);
+
+	//Close database
+	closeDb(db);
+
+	// valeur retournée
+	return ret;
 }
 
 int callback(void *NotUsed, int argc, char **argv, char **azColName) {
