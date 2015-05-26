@@ -138,6 +138,9 @@
     <Image Include="sprites.png" />
     <Image Include="spritesDebug.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\projet.db" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
