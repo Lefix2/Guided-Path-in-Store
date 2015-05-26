@@ -258,7 +258,7 @@ int Store_computeCartography(store * st_source, gboolean optAstar)
 	return EXIT_SUCCESS;
 }
 
-int store_add_item(store * st_source, int id, category category, char * name)
+int store_add_new_item(store * st_source, int id, category category, char * name)
 {
 	if (st_source == NULL)
 		return EXIT_FAILURE;
@@ -274,6 +274,26 @@ int store_add_item(store * st_source, int id, category category, char * name)
 		return EXIT_FAILURE;
 	}
 	itemPointerList_insert_sort(st_source->allocatedStock, new_i);
+	return EXIT_SUCCESS;
+}
+
+int store_add_item(store * st_source, item * i_source)
+{
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	if (i_source == NULL)
+		return EXIT_FAILURE;
+
+	item * tmp = itemPointerList_find_id(st_source->allocatedStock, i_source->id);
+	if (tmp != NULL)
+	{
+		printf("error : Trying to add an Item with existing id in Store\n");
+		printf("existing : "); item_print(tmp, TRUE);
+		printf("new : "); item_print(i_source, TRUE);
+		printf("\n");
+		return EXIT_FAILURE;
+	}
+	itemPointerList_insert_sort(st_source->allocatedStock, i_source);
 	return EXIT_SUCCESS;
 }
 
@@ -302,8 +322,9 @@ item *store_find_item_id(store * st_source, int id)
 	return itemPointerList_find_id(st_source->allocatedStock, id);
 }
 
-int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size)
+int store_add_new_section(store * st_source, int id, type s_type, int x_pos, int y_pos, int x_size, int y_size)
 {
+	int i, j;
 	if (st_source == NULL)
 		return EXIT_FAILURE;
 	section * tmp = sectionPointerList_find_id(st_source->allocatedSections, id);
@@ -327,6 +348,41 @@ int store_add_section(store * st_source, int id, type s_type, int x_pos, int y_p
 	section_set_pos(new_s, x_pos, y_pos);
 	section_set_size(new_s, x_size, y_size);
 	sectionPointerList_insert_sort(st_source->allocatedSections, new_s);
+
+	return EXIT_SUCCESS;
+}
+
+int store_add_section(store * st_source, section * s_source)
+{
+	int i, j;
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	if (s_source == NULL)
+		return EXIT_FAILURE;
+
+	section * tmp = sectionPointerList_find_id(st_source->allocatedSections, s_source->id);
+	if (tmp != NULL)
+	{
+		printf("error : Trying to add a section with existing id in Store\n");
+		section_print(tmp, TRUE);
+		printf("\n");
+		return EXIT_FAILURE;
+	}
+
+	coord size = section_get_size(s_source);
+	coord pos = section_get_pos(s_source);
+
+	if (((size.x + pos.x) > st_source->size.x) || ((size.y + pos.y) > st_source->size.y)){
+		printf("Error : Trying to add a section out of the store\n");
+		return EXIT_FAILURE;
+	}
+	if (store_detect_collision(st_source, pos.x, pos.y, size.x, size.y))
+	{
+		printf("error : Trying to add a section on an existing section\n");
+		return EXIT_FAILURE;
+	}
+
+	sectionPointerList_insert_sort(st_source->allocatedSections, s_source);
 
 	return EXIT_SUCCESS;
 }
@@ -377,26 +433,26 @@ void testStore(void)
 
 	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
 
-	store_add_section(sttest, 01, t_section, 3, 3, 7, 3);
-	store_add_section(sttest, 02, t_section, 18, 18, 10, 3);
-	store_add_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
-	store_add_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
-	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
-	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
-	store_add_section(sttest, 07, t_wall, 18, 18, 5, 5);
+	store_add_new_section(sttest, 01, t_section, 3, 3, 7, 3);
+	store_add_new_section(sttest, 02, t_section, 18, 18, 10, 3);
+	store_add_new_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
+	store_add_new_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
+	store_add_new_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
+	store_add_new_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
+	store_add_new_section(sttest, 07, t_wall, 18, 18, 5, 5);
 
-	store_add_item(sttest, 22, legumes_vert, "salade");
-	store_add_item(sttest, 23, legumes_vert, "haricot vert");
-	store_add_item(sttest, 24, legumes_vert, "patates");
-	store_add_item(sttest, 25, legumes_vert, "poireau");
-	store_add_item(sttest, 26, legumes_vert, "concombre");
-	store_add_item(sttest, 27, legumes_vert, "petits poids");
-	store_add_item(sttest, 28, legumes_vert, "choux");
-	store_add_item(sttest, 29, legumes_vert, "avocat");
-	store_add_item(sttest, 30, fromage, "comté");
-	store_add_item(sttest, 31, fromage, "gouda");
-	store_add_item(sttest, 32, fromage, "bleu");
-	store_add_item(sttest, 22, legumes_vert, "asperge");
+	store_add_new_item(sttest, 22, legumes_vert, "salade");
+	store_add_new_item(sttest, 23, legumes_vert, "haricot vert");
+	store_add_new_item(sttest, 24, legumes_vert, "patates");
+	store_add_new_item(sttest, 25, legumes_vert, "poireau");
+	store_add_new_item(sttest, 26, legumes_vert, "concombre");
+	store_add_new_item(sttest, 27, legumes_vert, "petits poids");
+	store_add_new_item(sttest, 28, legumes_vert, "choux");
+	store_add_new_item(sttest, 29, legumes_vert, "avocat");
+	store_add_new_item(sttest, 30, fromage, "comté");
+	store_add_new_item(sttest, 31, fromage, "gouda");
+	store_add_new_item(sttest, 32, fromage, "bleu");
+	store_add_new_item(sttest, 22, legumes_vert, "asperge");
 
 	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 22), 6, 2);
 	section_add_item(sectionPointerList_find_id(sttest->allocatedSections, 01), itemPointerList_find_id(sttest->allocatedStock, 23), 6, 2);

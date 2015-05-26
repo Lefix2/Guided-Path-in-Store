@@ -253,6 +253,11 @@ int itemPointerList_insert_after_current(itemList * l, item * i)
 int itemPointerList_insert_sort(itemList * l, item * i)
 {
 	int ret;
+	if (i == NULL)
+	{
+		printf("Trying to insert a null pointer in itemPointerList!\n");
+		return 0;
+	}
 	nodeItemList * tmp = l->current;
 	if (itemPointerList_is_empty(l))
 	{

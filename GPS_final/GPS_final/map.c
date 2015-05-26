@@ -70,7 +70,7 @@ gboolean button5_callback(GtkWidget *window, gpointer data)
 	int x, y, sx, sy, id;
 	printf("Rentreze x, y, size x, size y , id:\n");
 	scanf("%d", &x); scanf("%d", &y); scanf("%d", &sx); scanf("%d", &sy); scanf("%d", &id);
-	store_add_section(((shopping*)data)->Store, id, t_section, x, y, sx, sy);
+	store_add_new_section(((shopping*)data)->Store, id, t_section, x, y, sx, sy);
 	merchant_optimise_shopping((shopping*)data);
 	gtk_widget_queue_draw(drawing_area);
 	return FALSE;
@@ -149,6 +149,9 @@ void init_map(shopping *shopping)
 	GtkImage *imtest = gtk_image_new();
 	GtkWidget *event_box = gtk_event_box_new();
 	GtkWidget *scrollmenuV = gtk_scrolled_window_new(NULL, NULL);
+	
+	//set dfault sprites
+	store_set_sprites(shopping->Store, gdk_pixbuf_new_from_file(".\\ressources\\images\\sprites.png", NULL));
 	drawing_area = gtk_drawing_area_new();
 
 	gtk_box_pack_start(GTK_BOX(v_box), scrollmenuV, TRUE, TRUE, 0);
