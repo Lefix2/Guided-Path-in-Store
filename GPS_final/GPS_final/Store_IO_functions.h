@@ -17,5 +17,6 @@ store* sqlite_new_store_from_database(char *DataBaseName);
 store* sqlite_get_store(char *DataBaseName);
 void sqlite_get_store_sections(char *DataBaseName, store *st_source);
 void sqlite_get_store_items(char *DataBaseName, store *st_source);
+char **sqlite_get_category(char *DataBaseName, int nb_category);
 
 #endif // !STORE_IO_FUNCTIONS

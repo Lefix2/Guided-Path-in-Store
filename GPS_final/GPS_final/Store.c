@@ -28,9 +28,11 @@ store * store_init(store * st_source)
 	st_source->name[0] = 0;
 	st_source->size.x = 0;
 	st_source->size.y = 0;
+	st_source->nb_category = 0;
 	st_source->allocatedStock = NULL;
 	st_source->cartography = NULL;
 	st_source->sprites = NULL;
+	st_source->category = NULL;
 	
 	return st_source;
 }
@@ -42,6 +44,8 @@ int store_delete(store * st_source)
 	store_free_carto(st_source);
 	store_delete_stock(st_source);
 	store_delete_sections(st_source);
+	if (st_source->category != NULL)
+		free_double_char_pointer(st_source->category, st_source->nb_category, MAX_ARRAY_OF_CHAR);
 	if (st_source->sprites != NULL)
 		g_object_unref(st_source->sprites);
 	free(st_source);
@@ -81,6 +85,18 @@ int store_set_sprites(store * st_source, GdkPixbuf *sprites)
 	if (st_source->sprites != NULL)
 		g_object_unref(st_source->sprites);
 	st_source->sprites = sprites;
+	return EXIT_SUCCESS;
+}
+
+
+int store_set_categories(store * st_source, int nb_category, char **category)
+{
+	if (st_source == NULL)
+		return EXIT_FAILURE;
+	if (st_source->nb_category != 0)
+		free_double_char_pointer(st_source->category, st_source->nb_category, MAX_ARRAY_OF_CHAR);
+	st_source->nb_category = nb_category;
+	st_source->category = category;
 	return EXIT_SUCCESS;
 }
 

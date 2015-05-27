@@ -10,9 +10,11 @@
 struct store{
 	int id;							/*!< Store's identifiant */
 	char name[MAX_ARRAY_OF_CHAR];	/*!< Store's name */
-	coord size;					/*!< size in X and Y of the store */
+	coord size;						/*!< size in X and Y of the store */
 	itemList * allocatedStock;		/*!< itemList of item allocated in memory */
-	sectionList * allocatedSections;	/*!< list of sections of the store */
+	sectionList * allocatedSections;/*!< list of sections of the store */
+	int nb_category;				/*!< number of category in the store*/
+	char **category;				/*!< all category strings*/
 	int ** cartography;				/*!< array image of the store's cartography */
 	GdkPixbuf *sprites;				/*!< the sprites used to draw the store*/
 };
@@ -25,6 +27,7 @@ int store_set_id(store * st_source, int id);
 int store_set_name(store * st_source, char * name);
 int store_set_size(store * st_source, int x_size, int y_size);
 int store_set_sprites(store * st_source, GdkPixbuf *sprites);
+int store_set_categories(store * st_source, int nb_category, char **category);
 
 int store_get_id(store * st_source);
 char * store_get_name(store * st_source);

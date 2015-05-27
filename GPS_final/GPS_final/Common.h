@@ -37,7 +37,8 @@ char* sec_type[] = {"none", "wall", "section", "promo", "checkout", "entrance", 
 * \enum category
 * \brief enum of all product's category
 */
-typedef enum category{ c_none, fromage, pain, legumes_vert, alcool }category;
+typedef enum category_test{ c_none, fromage, pain, legumes_vert, alcool }category;
+typedef int category;
 
 #ifdef ITECATDEF
 char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };

@@ -266,6 +266,7 @@ GtkWidget * notebook_new_from_store(store * store_test){
 	GtkWidget *p_notebook = NULL;
 	p_notebook = gtk_notebook_new();
 	char text[20];
+	char *category_string = NULL;
 	GtkWidget *p_onglet[42];
 	GtkWidget *p_grid[42];
 	GtkWidget *p_button[256];
@@ -273,12 +274,13 @@ GtkWidget * notebook_new_from_store(store * store_test){
 
 	itemPointerList_set_on_first(store_test->allocatedStock);
 	while (!itemPointerList_is_out_of(store_test->allocatedStock)){
-		int grid_category_number = grid_find_category(item_get_category_string(store_test->allocatedStock->current->i), p_notebook);
-		char * item_category_name = item_get_category_string(store_test->allocatedStock->current->i);
+		category_string = store_test->category[item_get_category(store_test->allocatedStock->current->i)];
+		int grid_category_number = grid_find_category(category_string, p_notebook);
+
 		p_button[j] = gtk_button_new_with_label(store_test->allocatedStock->current->i->name);
 		if (grid_category_number == -1)
 		{// if there is no notebook tab with the item label
-			sprintf(text, item_get_category_string(store_test->allocatedStock->current->i));
+			sprintf(text, category_string);
 			p_onglet[i] = gtk_label_new(text);
 			p_grid[i] = gtk_grid_new();
 			gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[i], p_onglet[i]);

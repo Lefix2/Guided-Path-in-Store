@@ -64,7 +64,14 @@ gboolean cb_quit(GtkWidget *p_widget, gpointer user_data){
 
 gboolean cb_store_selection(GtkWidget *p_widget, gpointer p_window){
 	//store_selection_window();
-	myShop = shopping_new(sqlite_new_store_from_database(".\\ressources\\projet.db"));//shopping_new(my_test_store_new());
+	//shopping_new(my_test_store_new());
+	int nb_category;
+	char **categories = NULL;
+	char *path = ".\\ressources\\projet.db";
+
+	myShop = shopping_new(sqlite_new_store_from_database(path));
+	categories = sqlite_get_category(path, &nb_category);
+	store_set_categories(myShop->Store, nb_category, categories);
 	//gtk_widget_hide(p_window);
 	return FALSE;
 }
@@ -75,15 +82,15 @@ gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
 	/*code test*/
 	myShop->List = itemPointerList_new();
 	
-	//init_courses(myShop->Store, myShop->List);
+	init_courses(myShop->Store, myShop->List);
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 0));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 1));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 2));
-	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 3));
-	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 20));
+	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 3));
+	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 20));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 5));
-	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 28));
-	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 15));
+	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 28));
+	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 15));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 8));
 	
 	//gtk_widget_hide(GTK_WIDGET(p_window));
@@ -91,6 +98,7 @@ gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
 }
 
 gboolean cb_go_shopping(GtkWidget *p_widget, gpointer p_window){
+	gtk_widget_hide(p_window);
 	go_shopping_window(myShop);
 	//gtk_widget_destroy(GTK_WIDGET(p_window));
 	return FALSE;

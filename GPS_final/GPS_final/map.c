@@ -21,7 +21,6 @@ GtkWidget *drawing_area;
 /* on quitte l'application en fermant la fenêtre */
 void on_window_closed(GtkWidget *window, gpointer data)
 {
-	call_main_menu();
 	gtk_widget_destroy(data);
 }
 

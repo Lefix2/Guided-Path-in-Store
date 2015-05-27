@@ -12,6 +12,7 @@
 * \brief Structure image of an item
 */
 struct item{
+	
 	int id;							/*!< item's identifiant */
 	char name[MAX_ARRAY_OF_CHAR];	/*!< item's name */
 	category category;				/*!< item's category */

@@ -152,7 +152,7 @@ category item_get_category(item * item)
 {
 	return item->category;
 }
-
+//only for test
 char * item_get_category_string(item * item)
 {
 	return item_category[item->category];

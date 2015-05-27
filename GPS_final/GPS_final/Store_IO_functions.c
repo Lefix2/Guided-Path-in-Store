@@ -266,7 +266,7 @@ void sqlite_get_store_items(char *DataBaseName, store *st_source)
 }
 
 // return all elements of category's table
-char** sqlite_get_category(char *DataBaseName)
+char **sqlite_get_category(char *DataBaseName, int *nb_category)
 {
 	//SQLITE3
 	sqlite3 *db = NULL;
@@ -275,10 +275,10 @@ char** sqlite_get_category(char *DataBaseName)
 	char *sql = "SELECT * from category;";
 
 	int i = 0;
-	int nb_category = sqlite_get_row(DataBaseName, SQL_TAB_CATEGORY);
 	int category_Id = 0;
+	*nb_category = sqlite_get_row(DataBaseName, SQL_TAB_CATEGORY);
 
-	char** category_table = alloc_double_char_pointer(nb_category, MAX_ARRAY_OF_CHAR);
+	char **category_table = alloc_double_char_pointer(*nb_category, MAX_ARRAY_OF_CHAR);
 
 	//Open database
 	db = openDb(DataBaseName);
@@ -293,7 +293,7 @@ char** sqlite_get_category(char *DataBaseName)
 	printf("SQL prepared ok\n\r");
 
 	/* get all category strings */
-	for (i = 0; i < nb_category; i++)
+	for (i = 0; i < *nb_category; i++)
 	{
 		rc = sqlite3_step(stmt);
 		strcpy(category_table[i], (char *)sqlite3_column_text(stmt, 1));
