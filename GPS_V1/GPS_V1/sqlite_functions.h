@@ -16,8 +16,11 @@ item **sqlite_get_all_items(char *DataBaseName, int *nb_item);
 int sqlite_category_row(char *DataBaseName);
 char** sqlite_get_category(char *DataBaseName);
 int callback(void *NotUsed, int argc, char **argv, char **azColName);
-int sqlite_add_value();
-void sqlite_drop_value(char *dataBaseName, char *tableName);
-void sqlite_alter_value(char *dataBaseName, char *tableName, int Id);
+void sqlite_add_section_value(char *DataBaseName);
+void sqlite_add_item_value(char *DataBaseName);
+void sqlite_add_value(char *DataBaseName);
+void sqlite_delete_section_value(char *DataBaseName);
+void sqlite_delete_item_value(char *DataBaseName);
+void sqlite_delete_value(char *DataBaseName);
 
 #endif
