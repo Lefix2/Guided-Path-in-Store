@@ -128,10 +128,10 @@ store* sqlite_get_store(char *DataBaseName)
 	if (sqlite3_step(stmt) == 100)
 	{
 		// récupération des valeurs
-		storeId = (int)atof((char *)sqlite3_column_text(stmt, 0));
+		storeId = atoi((char *)sqlite3_column_text(stmt, 0));
 		name = (char *)sqlite3_column_text(stmt, 1);
-		lengthX = (int)atof((char *)sqlite3_column_text(stmt, 2));
-		lengthY = (int)atof((char *)sqlite3_column_text(stmt, 3));
+		lengthX = atoi((char *)sqlite3_column_text(stmt, 2));
+		lengthY = atoi((char *)sqlite3_column_text(stmt, 3));
 	}
 
 	newstore = store_new(storeId, name, lengthX, lengthY);
@@ -179,12 +179,12 @@ void sqlite_get_store_sections(char *DataBaseName, store *st_source)
 		if (sqlite3_step(stmt) == 100)
 		{
 			// récupération des valeurs
-			sectionId = (int)atof((char *)sqlite3_column_text(stmt, 0));
-			type = (int)atof((char *)sqlite3_column_text(stmt, 1));
-			posX = (int)atof((char *)sqlite3_column_text(stmt, 2));
-			posY = (int)atof((char *)sqlite3_column_text(stmt, 3));
-			lengthX = (int)atof((char *)sqlite3_column_text(stmt, 4));
-			lengthY = (int)atof((char *)sqlite3_column_text(stmt, 5));
+			sectionId = atoi((char *)sqlite3_column_text(stmt, 0));
+			type = atoi((char *)sqlite3_column_text(stmt, 1));
+			posX = atoi((char *)sqlite3_column_text(stmt, 2));
+			posY = atoi((char *)sqlite3_column_text(stmt, 3));
+			lengthX = atoi((char *)sqlite3_column_text(stmt, 4));
+			lengthY = atoi((char *)sqlite3_column_text(stmt, 5));
 
 			// create new section
 			tmp_sec = section_new(sectionId, type);
@@ -217,7 +217,7 @@ void sqlite_get_store_items(char *DataBaseName, store *st_source)
 	int promotion;
 	int posX;
 	int posY;
-	int sectionId = 0;
+	int sectionId;
 
 	int i;
 	item *tmp_item;
@@ -239,15 +239,15 @@ void sqlite_get_store_items(char *DataBaseName, store *st_source)
 		if (sqlite3_step(stmt) == 100)
 		{
 			// récupération des valeurs
-			itemId = (int)atof((char *)sqlite3_column_text(stmt, 0));
+			itemId = atoi((char *)sqlite3_column_text(stmt, 0));
 			item_name = (char *)sqlite3_column_text(stmt, 1);
-			category = (int)atof((char *)sqlite3_column_text(stmt, 2));
-			fresh = (int)atof((char *)sqlite3_column_text(stmt, 3));
-			cost = (float)atof((char *)sqlite3_column_text(stmt, 4));
-			promotion = (int)atof((char *)sqlite3_column_text(stmt, 5));
-			posX = (int)atof((char *)sqlite3_column_text(stmt, 6));
-			posY = (int)atof((char *)sqlite3_column_text(stmt, 7));
-			sectionId = (int)atof((char *)sqlite3_column_text(stmt, 8));
+			category = atoi((char *)sqlite3_column_text(stmt, 2));
+			fresh = atoi((char *)sqlite3_column_text(stmt, 4));
+			cost = atof((char *)sqlite3_column_text(stmt, 6));
+			promotion = atoi((char *)sqlite3_column_text(stmt, 7));
+			posX = atoi((char *)sqlite3_column_text(stmt, 8));
+			posY = atoi((char *)sqlite3_column_text(stmt, 9));
+			sectionId = atoi((char *)sqlite3_column_text(stmt, 10));
 
 			// recup row item
 			tmp_item = item_new(itemId, category, item_name);
