@@ -94,8 +94,11 @@
     <ClInclude Include="Section.h" />
     <ClInclude Include="SectionList.h" />
     <ClInclude Include="Shopping.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="sqlite3ext.h" />
     <ClInclude Include="Store.h" />
     <ClInclude Include="StoreImage.h" />
+    <ClInclude Include="Store_IO_functions.h" />
     <ClInclude Include="tests.h" />
   </ItemGroup>
   <ItemGroup>
@@ -114,8 +117,10 @@
     <ClCompile Include="Section.c" />
     <ClCompile Include="SectionList.c" />
     <ClCompile Include="shopping.c" />
+    <ClCompile Include="sqlite3.c" />
     <ClCompile Include="Store.c" />
     <ClCompile Include="StoreImage.c" />
+    <ClCompile Include="Store_IO_functions.c" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\atk-1.0.lib" />
@@ -133,8 +138,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ressources\Images\caddie.jpg" />
+    <Image Include="ressources\Images\mainMenu.png" />
     <Image Include="ressources\Images\sprites.png" />
     <Image Include="ressources\Images\spritesDebug.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\projet.db" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

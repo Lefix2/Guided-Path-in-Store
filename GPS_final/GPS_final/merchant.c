@@ -83,6 +83,13 @@ int merchant_optimise_shopping(shopping *shopping)
 		nbItems++;
 	}
 
+	if (nbItems <= 3)
+	{
+		printf("done\n");
+		printf("warning : 1 item or less in list, no merchant possible\n");
+		return EXIT_SUCCESS;
+	}
+
 	//initializing a tab wich will contain all distance between each item
 	int ** pathLenghts = (int**)calloc(nbItems, sizeof(int*));
 	for (i = 0; i < nbItems; i++)
@@ -174,9 +181,9 @@ int merchant_optimise_shopping(shopping *shopping)
 		itemPointerList_insert_last(shopping->List, itemPointerList_get_current(tmp_list));
 	}
 	printf("done\n");
-
-	merchant_connect_paths(shopping);
 	printf("Merchant : finished!\n\n");
+
+	return EXIT_SUCCESS;
 }
 
 int merchant_connect_paths(shopping *shopping)

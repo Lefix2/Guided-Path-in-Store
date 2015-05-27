@@ -17,4 +17,5 @@ void go_shopping_window(shopping *myShop)
 	init_map(myShop);
 
 	merchant_optimise_shopping(myShop);
+	merchant_connect_paths(myShop);
 }

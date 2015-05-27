@@ -342,12 +342,12 @@ void testAstar(void)
 
 	store * sttest = store_new(0, "Carrefour - rennes", magsizex, magsizey);
 
-	store_add_section(sttest, 01, t_section, 1, 3, 40, 3);
-	store_add_section(sttest, 02, t_section, 10, 18, 39, 3);
-	store_add_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
-	store_add_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
-	store_add_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
-	store_add_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
+	store_add_new_section(sttest, 01, t_section, 1, 3, 40, 3);
+	store_add_new_section(sttest, 02, t_section, 10, 18, 39, 3);
+	store_add_new_section(sttest, 03, t_wall, 0, 1, 1, magsizey - 1);
+	store_add_new_section(sttest, 04, t_wall, 1, magsizey - 1, magsizex - 1, 1);
+	store_add_new_section(sttest, 06, t_wall, magsizex - 1, 0, 1, magsizey - 1);
+	store_add_new_section(sttest, 05, t_wall, 0, 0, magsizex - 1, 1);
 
 	Store_computeCartography(sttest, TRUE);
 	store_print_carto(sttest);
