@@ -35,6 +35,7 @@ struct grid_store_notebook{
 	GtkWidget * grid;
 	GtkWidget * notebook;
 	store * store;
+	itemList * user_list;
 };
 
 shopping_list * shopping_list_new();
