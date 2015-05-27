@@ -19,4 +19,12 @@ void sqlite_get_store_sections(char *DataBaseName, store *st_source);
 void sqlite_get_store_items(char *DataBaseName, store *st_source);
 char **sqlite_get_category(char *DataBaseName, int nb_category);
 
+int callback(void *NotUsed, int argc, char **argv, char **azColName);
+void sqlite_add_section_value(char *DataBaseName);
+void sqlite_add_item_value(char *DataBaseName);
+void sqlite_add_value(char *DataBaseName);
+void sqlite_delete_section_value(char *DataBaseName);
+void sqlite_delete_item_value(char *DataBaseName);
+void sqlite_delete_value(char *DataBaseName);
+
 #endif // !STORE_IO_FUNCTIONS
