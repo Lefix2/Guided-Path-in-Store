@@ -74,15 +74,16 @@ gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
 	
 	/*code test*/
 	myShop->List = itemPointerList_new();
-
+	
+	//init_courses(myShop->Store, myShop->List);
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 0));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 1));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 2));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 3));
-	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 4));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 3));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 20));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 5));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 6));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 7));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 28));
+	itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 15));
 	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 8));
 	
 	//gtk_widget_hide(GTK_WIDGET(p_window));

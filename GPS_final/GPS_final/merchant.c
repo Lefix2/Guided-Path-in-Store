@@ -393,11 +393,11 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 	do
 	{
 		crosspt1 = random(nbr);
-	} while (crosspt1 > nbr / 2);
+	} while (crosspt1 > (nbr-1) / 2);
 	do
 	{
 		crosspt2 = random(nbr);
-	} while (crosspt2 <= nbr / 2 + 1);
+	} while (crosspt2 <= (nbr-1) / 2 + 1);
 
 	for (j = 0; j < nbr; j++)
 	{
