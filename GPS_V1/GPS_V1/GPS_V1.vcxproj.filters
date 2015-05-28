@@ -139,9 +139,6 @@
     <ClInclude Include="StoreImage.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="tests.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>Fichiers d%27en-tête\Structures</Filter>
     </ClInclude>
@@ -183,6 +180,9 @@
     </ClInclude>
     <ClInclude Include="map.h">
       <Filter>Fichiers d%27en-tête\GTK</Filter>
+    </ClInclude>
+    <ClInclude Include="tests.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

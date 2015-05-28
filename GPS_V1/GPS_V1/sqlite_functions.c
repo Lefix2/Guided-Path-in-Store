@@ -271,7 +271,7 @@ section **sqlite_get_all_sections(char *DataBaseName, int *nb_section)
 
 	return all_sections;
 }
-
+/*
 //insert items from database in the store
 item **sqlite_get_all_items(char *DataBaseName, int *nb_item)
 {
@@ -289,26 +289,16 @@ item **sqlite_get_all_items(char *DataBaseName, int *nb_item)
 	int posY = 0;
 
 	int i;
-	item **all_items = (item **)calloc(*nb_section, sizeof(item*));
+	item **all_items = (item **)calloc(*nb_item, sizeof(item*));
 
 	sqlite3 *db = NULL;
 	sqlite3_stmt *stmt;
 	char *dbName = DataBaseName;
-	int rc;
-	char *sql = "SELECT * from item;";
-	int i = 0;
-	int nb_item;
-	nb_item = sqlite_item_row(dbName);
-	int itemId = 0;
+	
 	char* item_name = 0;
-	int category = 0;
 	int fresh = 0;
 	int fragility = 0;
 	float cost = 0.00;
-	int promotion = 0;
-	int posX = 0;
-	int posY = 0;
-	int sectionId = 0;
 	store* newstore;
 	newstore = sqlite_get_store(dbName);
 	item *newItem;
@@ -319,7 +309,7 @@ item **sqlite_get_all_items(char *DataBaseName, int *nb_item)
 	db = openDb(dbName);
 
 	/* prepare the sql, leave stmt ready for loop */
-	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+/*	rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 	if (rc != SQLITE_OK) {
 		printf("Failed to prepare database\n\r");
 		sqlite3_close(db);
@@ -328,7 +318,7 @@ item **sqlite_get_all_items(char *DataBaseName, int *nb_item)
 	printf("SQL prepared ok\n\r");
 
 	/* get all store strings */
-	for (i = 0; i < nb_item; i++)
+/*	for (i = 0; i < nb_item; i++)
 	{
 		if (sqlite3_step(stmt) == 100)
 		{
@@ -347,7 +337,7 @@ item **sqlite_get_all_items(char *DataBaseName, int *nb_item)
 			newItem = item_new(itemId, category, item_name);
 
 			/*if*/
-			store_add_item(newstore, newItem);
+			/*store_add_item(newstore, newItem);
 
 			if (sectionId != -1)
 				section_add_item(store_find_section_id(newstore, sectionId), newItem, posX, posY);
@@ -360,7 +350,7 @@ item **sqlite_get_all_items(char *DataBaseName, int *nb_item)
 	closeDb(db);
 
 
-}
+}*/
 
 
 // return the number of row in an item's query

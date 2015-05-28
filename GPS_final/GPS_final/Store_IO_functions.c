@@ -340,7 +340,7 @@ void sqlite_add_section_value(char *DataBaseName)
 
 	/* Create SQL statement */
 
-	sectionId = sqlite_section_row(DbName) + 1;
+	sectionId = sqlite_get_row(DbName, SQL_TAB_SECTION) + 1;
 
 	unsigned char table[] = "INSERT INTO section VALUES(";
 	printf("type :  ");
@@ -393,7 +393,7 @@ void sqlite_add_item_value(char *DataBaseName)
 	/* Create SQL statement */
 
 
-	itemId = sqlite_item_row(DbName) + 1;
+	itemId = sqlite_get_row(DbName, SQL_TAB_ITEM) + 1;
 
 	unsigned char table[] = "INSERT INTO item VALUES(";
 	printf("item's name :  ");
@@ -467,7 +467,7 @@ void sqlite_delete_section_value(char *DataBaseName)
 	db = openDb(DbName);
 
 	/* Create SQL statement */
-	number_section = sqlite_section_row(DbName);
+	number_section = sqlite_get_row(DbName, SQL_TAB_SECTION);
 	unsigned char table[] = "DELETE FROM SECTION WHERE sectionId =";
 
 	printf("sectionId : ");
@@ -516,7 +516,7 @@ void sqlite_delete_item_value(char *DataBaseName)
 	db = openDb(DbName);
 
 	/* Create SQL statement */
-	number_item = sqlite_item_row(DbName);
+	number_item = sqlite_get_row(DbName, SQL_TAB_ITEM);
 	unsigned char table[] = "DELETE FROM item WHERE itemId =";
 
 	printf("itemId : ");
