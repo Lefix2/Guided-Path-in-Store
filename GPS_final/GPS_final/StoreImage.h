@@ -7,6 +7,7 @@
 #define SPRITE_RES 20
 
 #define SPRITE_PER_LINE 15
+#define ZOOM 0.5
 
 GdkPixbuf *store_image_new_pixbuf_from_store(store *src);
 GdkPixbuf *store_image_new_pixbuf_from_section(section *src, GdkPixbuf *sprites);

@@ -115,3 +115,15 @@ void rotab(int *tab, int size)
 
 	tab[0] = tmp;
 }
+
+void mirrortab(int *tab, int size)
+{
+	int i, tmp;
+
+	for (i = 0; i < size / 2; i++)
+	{
+		tmp = tab[i];
+		tab[i] = tab[size - 1 - i];
+		tab[size - 1 - i] = tmp;
+	}
+}

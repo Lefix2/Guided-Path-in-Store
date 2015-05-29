@@ -44,7 +44,7 @@ grid_store_notebook * grid_store_notebook_new(){
 	return new_gn;
 }
 
-int init_courses(store * store_test, itemList * user_list){
+int init_courses(shopping *myshop){
 	/*Widgets creation */
 	GtkWidget *p_window = NULL;
 	GtkWidget *p_table = NULL;
@@ -53,9 +53,11 @@ int init_courses(store * store_test, itemList * user_list){
 	GtkWidget *p_shopping_list = NULL;
 	GtkWidget *p_notebook = NULL;
 
+	p_shopping_list = gtk_grid_new();
+
 	shopping_list * s_list = NULL;
 	s_list = shopping_list_new();
-	s_list->shopping_itemlist = user_list;
+	s_list->shopping_itemlist = shopping_get_list(myshop);
 	s_list->shopping_list_grid = p_shopping_list;
 
 	char *categories[] = {"Fruits", "Numerique", "entretien", "boissons"};
@@ -66,9 +68,7 @@ int init_courses(store * store_test, itemList * user_list){
 	/*Creation of the window*/
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	shopping * p_shopping = NULL;
-	p_shopping = shopping_new(store_test);
-	p_shopping->List = s_list->shopping_itemlist;
-	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_list_quit), p_shopping);
+	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_list_quit), myshop);
 
 	/*The window contain a grid that contains all of our widgets*/
 	p_table = gtk_grid_new();
@@ -81,7 +81,6 @@ int init_courses(store * store_test, itemList * user_list){
 	GtkWidget * label0 = NULL;
 	GtkWidget * label1 = NULL;
 	char text[20];
-	p_shopping_list = gtk_grid_new();
 
 	sprintf(text, "Product   ");//first title
 	label0 = gtk_label_new(text);
@@ -97,7 +96,7 @@ int init_courses(store * store_test, itemList * user_list){
 	/*shopping_list * s_list = NULL;
 	s_list = shopping_list_new();*/
 
-	p_notebook = notebook_new_from_store(store_test);
+	p_notebook = notebook_new_from_store(shopping_get_store(myshop));
 	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 1, 1, 4, 4);
 	notebook_connect_button(p_notebook, s_list);
 
@@ -115,9 +114,9 @@ int init_courses(store * store_test, itemList * user_list){
 	grid_store_notebook *p_gsn = NULL;
 	p_gsn = grid_store_notebook_new();
 	p_gsn->notebook = p_notebook;
-	p_gsn->store = store_test;
+	p_gsn->store = shopping_get_store(myshop);
 	p_gsn->grid = p_shopping_list;
-	p_gsn->user_list = user_list;
+	p_gsn->user_list = shopping_get_list(myshop);
 
 	g_signal_connect(G_OBJECT(p_search_bar), "activate", G_CALLBACK(cb_activate_search_bar), p_gsn);
 
@@ -127,112 +126,11 @@ int init_courses(store * store_test, itemList * user_list){
 	gtk_grid_attach(GTK_GRID(p_table), p_search_clear_button, 3, 0, 1, 1);
 	g_signal_connect(G_OBJECT(p_search_clear_button), "clicked", G_CALLBACK(cb_search_clear_button), p_gsn);
 
-
-	/*p_button[0] = gtk_button_new_with_label("pates");
-	g_signal_connect(G_OBJECT(p_button[0]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[1] = gtk_button_new_with_label("Fruit de la passion");
-	g_signal_connect(G_OBJECT(p_button[1]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[2] = gtk_button_new_with_label("alcool");
-	g_signal_connect(G_OBJECT(p_button[2]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[3] = gtk_button_new_with_label("jus de fruit");
-	g_signal_connect(G_OBJECT(p_button[3]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[4] = gtk_button_new_with_label("gateaux aperitifs");
-	g_signal_connect(G_OBJECT(p_button[4]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[5] = gtk_button_new_with_label("cookies");
-	g_signal_connect(G_OBJECT(p_button[5]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[6] = gtk_button_new_with_label("pates");
-	g_signal_connect(G_OBJECT(p_button[6]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[7] = gtk_button_new_with_label("riz");
-	g_signal_connect(G_OBJECT(p_button[7]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[8] = gtk_button_new_with_label("puree");
-	g_signal_connect(G_OBJECT(p_button[8]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[9] = gtk_button_new_with_label("pomme");
-	g_signal_connect(G_OBJECT(p_button[9]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[10] = gtk_button_new_with_label("banane");
-	g_signal_connect(G_OBJECT(p_button[10]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-	p_button[11] = gtk_button_new_with_label("kiwi");
-	g_signal_connect(G_OBJECT(p_button[11]), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list); 
-	
-	
-	/*
-	* Creation of every tab of the notebook
-	*
-	*/
-	//char text[20];
-	
-
-
-	/*sprintf(text, "Fruits");
-	p_onglet[0] = gtk_label_new(text);
-	p_grid[0] = gtk_grid_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook),p_grid[0], p_onglet[0]);
-	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[1], 0, 0, 1, 1);
-	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[9], 0, 1, 1, 1);
-	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[10], 0, 2, 1, 1);
-	gtk_grid_attach(GTK_GRID(p_grid[0]), p_button[11], 0, 3, 1, 1);
-
-	sprintf(text, "Feculents");
-	p_onglet[1] = gtk_label_new(text);
-	p_grid[1] = gtk_grid_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[1], p_onglet[1]);
-	gtk_grid_attach(GTK_GRID(p_grid[1]), p_button[0], 0, 0, 1, 1);
-	gtk_grid_attach(GTK_GRID(p_grid[1]), p_button[7], 0, 1, 1, 1);
-	gtk_grid_attach(GTK_GRID(p_grid[1]), p_button[8], 0, 2, 1, 1);
-
-	sprintf(text, "Numerique");
-	p_onglet[2] = gtk_label_new(text);
-	p_grid[2] = gtk_grid_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[2], p_onglet[2]);
-
-	sprintf(text, "Jardinage");
-	p_onglet[3] = gtk_label_new(text);
-	p_grid[3] = gtk_grid_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[3], p_onglet[3]);
-	gtk_grid_attach(GTK_GRID(p_grid[3]), p_button[2], 0, 0, 1, 1);
-	gtk_grid_attach(GTK_GRID(p_grid[3]), p_button[6], 0, 1, 1, 1);
-
-	sprintf(text, "Entretien");
-	p_onglet[4] = gtk_label_new(text);
-	p_grid[4] = gtk_grid_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[4], p_onglet[4]);
-	gtk_grid_attach(GTK_GRID(p_grid[4]), p_button[3], 0, 0, 1, 1);
-	gtk_grid_attach(GTK_GRID(p_grid[4]), p_button[5], 0, 1, 1, 1);
-	
-	sprintf(text, "Boisson");
-	p_onglet[5] = gtk_label_new(text);
-	p_grid[5] = gtk_grid_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[5], p_onglet[5]);
-	gtk_grid_attach(GTK_GRID(p_grid[5]), p_button[4], 0, 0, 1, 1);
-	*/
-	
-
-	
-
-
-
-
-	
-
-
-	/*
-	*
-	*
-	*  Creation of the ending button*/
+	/* Creation of the ending button*/
 	GtkWidget * ending_button = NULL;
 	ending_button = gtk_button_new_with_label("Click here to end your list");
 	gtk_grid_attach(GTK_GRID(p_table), ending_button, 1, 5, 4, 1);
 	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_end_list), p_window);
-
-
-
-
-	/*for (k; k < 3; k++){
-		j = 0;
-		for (j; j < 4; j++){
-			gtk_grid_attach(GTK_GRID(p_table), p_button[(k*4) + j], j+4, k+1, 1, 1);
-
-		}
-	}*/
 	
 
 	GtkWidget *label2 = NULL, *label3 =NULL;

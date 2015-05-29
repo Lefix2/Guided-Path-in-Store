@@ -93,6 +93,7 @@
     <ClInclude Include="myAlloc.h" />
     <ClInclude Include="Section.h" />
     <ClInclude Include="SectionList.h" />
+    <ClInclude Include="SelectFile.h" />
     <ClInclude Include="Shopping.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="sqlite3ext.h" />
@@ -116,6 +117,7 @@
     <ClCompile Include="myAlloc.c" />
     <ClCompile Include="Section.c" />
     <ClCompile Include="SectionList.c" />
+    <ClCompile Include="SelectFile.c" />
     <ClCompile Include="shopping.c" />
     <ClCompile Include="sqlite3.c" />
     <ClCompile Include="Store.c" />

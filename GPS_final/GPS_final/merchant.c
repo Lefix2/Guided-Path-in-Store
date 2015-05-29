@@ -150,7 +150,7 @@ int merchant_optimise_shopping(shopping *shopping)
 
 	while (path[0] != 0)
 	{
-		rotab(path, nbItems);
+		mirrortab(path, nbItems);
 	}
 
 	printf("done\n");
@@ -201,12 +201,17 @@ int merchant_connect_paths(shopping *shopping)
 	itemPointerList_set_on_first(list);
 
 	//first path
-	current = itemPointerList_get_current(list);
+	if (itemPointerList_is_empty(list)){
+		current = shopping->end;
+	}
+	else{
+		current = itemPointerList_get_current(list);
+		itemPointerList_next(list);
+	}
 	c1 = add_coord(item_get_pos(shopping->start), section_get_pos(item_get_section(shopping->start)));
 	c2 = add_coord(item_get_pos(current), section_get_pos(item_get_section(current)));
 	astar(shopping->Store, c1, c2, current->pathTo);
 	old = current;
-	itemPointerList_next(list);
 
 	//other paths
 	while (!itemPointerList_is_out_of(list))
@@ -265,7 +270,7 @@ int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 		ret[i] = path[posmin[0]][i];
 	}
 	*bestfx = fx[posmin[0]];
-	/*
+	
 	for (int g = 0; g < NBPOP; g++)
 	{
 	for (int h = 0; h < nbr; h++)
@@ -273,7 +278,7 @@ int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 	printf("%2d ", path[g][h]);
 	}
 	printf("%d\n",fx[g]);
-	}*/
+	}
 	
 	free_double_int_pointer(path, NBPOP, nbr);
 	free_double_int_pointer(child, 2, nbr);
@@ -313,9 +318,9 @@ void merchant_evaluate(int nbr, int **pathlen, int **path, int *fx, int maxpath)
 	for (i = 0; i < NBPOP; i++)
 	{
 		sum = 0;
-			if (path[i][0] != 0)
+			if (path[i][nbr - 1] != nbr - 1 && path[i][nbr - 1] != 0)
 				sum += PUNISH_START_END*maxpath*nbr;
-			if (path[i][nbr - 1] != nbr - 1)
+			if (path[i][0] != nbr - 1 && path[i][0] != 0)
 				sum += PUNISH_START_END*maxpath*nbr;
 		for (j = 0; j < nbr - 1; j++)
 		{

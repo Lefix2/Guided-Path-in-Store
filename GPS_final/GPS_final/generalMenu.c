@@ -2,6 +2,7 @@
 #include "Shopping.h"
 #include "courses.h"
 #include "generalMenu.h"
+#include "SelectFile.h"
 #include "go_shopping.h"
 #include "tests.h"
 #include "Store_IO_functions.h"
@@ -12,10 +13,12 @@ void call_main_menu()
 {
 	gchar utf8_chain[MAX_ARRAY_OF_CHAR];
 	GtkImage *WelcomeImg = gtk_image_new_from_file(".\\ressources\\Images\\mainMenu.png");
+	myShop = shopping_new();
 
 	/* Window Creation */
-	GtkWidget *p_window = NULL;
+	GtkWidget *p_window;
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
 	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), p_window);
 	
 	/*The window contain a grid that contains all of our widgets*/
@@ -53,53 +56,32 @@ void call_main_menu()
 
 	/*We do the last settings to the window*/
 	gtk_widget_show_all(p_window);
-	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
 
 }
 
 gboolean cb_quit(GtkWidget *p_widget, gpointer user_data){
 	gtk_main_quit();
+	shopping_delete(myShop);
 	return FALSE;
 }
 
 gboolean cb_store_selection(GtkWidget *p_widget, gpointer p_window){
-	//store_selection_window();
-	//shopping_new(my_test_store_new());
-	int nb_category;
-	char **categories = NULL;
-	char *path = ".\\ressources\\projet.db";
 
-	myShop = shopping_new(sqlite_new_store_from_database(path));
-	categories = sqlite_get_category(path, &nb_category);
-	store_set_categories(myShop->Store, nb_category, categories);
 	//gtk_widget_hide(p_window);
+	select_file(myShop);
 	return FALSE;
 }
 
 gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
-	//make_list();
 	
-	/*code test*/
-	myShop->List = itemPointerList_new();
-	
-	init_courses(myShop->Store, myShop->List);
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 0));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 1));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 2));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 3));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 20));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 5));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 28));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 15));
-	//itemPointerList_insert_sort(myShop->List, store_find_item_id(myShop->Store, 8));
-	
+	init_courses(myShop);
+
 	//gtk_widget_hide(GTK_WIDGET(p_window));
 	return FALSE;
 }
 
 gboolean cb_go_shopping(GtkWidget *p_widget, gpointer p_window){
-	gtk_widget_hide(p_window);
+	//gtk_widget_hide(p_window);
 	go_shopping_window(myShop);
-	//gtk_widget_destroy(GTK_WIDGET(p_window));
 	return FALSE;
 }

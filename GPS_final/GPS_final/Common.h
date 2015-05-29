@@ -94,5 +94,6 @@ void free_double_int_pointer(int **pt, int size1, int size2);
 void free_double_char_pointer(char **pt, int size1, int size2);
 
 void rotab(int *tab, int size);
+void mirrortab(int *tab, int size);
 
 #endif // !COMMON_H

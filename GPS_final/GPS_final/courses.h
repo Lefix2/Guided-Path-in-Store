@@ -39,7 +39,7 @@ struct grid_store_notebook{
 };
 
 shopping_list * shopping_list_new();
-int init_courses(store * store_test, itemList * user_list);
+int init_courses(shopping *myshop);
 GtkWidget * notebook_new_from_store(store * store_test);
 int grid_find_category(char * category_name, GtkWidget * p_notebook);
 void notebook_connect_button(GtkWidget * p_notebook, shopping_list * s_list);
