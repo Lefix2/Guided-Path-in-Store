@@ -4,7 +4,7 @@
 #include "Shopping.h"
 #include "SelectFile.h"
 
-void select_file(shopping * myShop)
+void select_file(GtkWidget * parent, shopping * myShop)
 {
 	int nb_category;
 	char **categories = NULL;
@@ -15,7 +15,7 @@ void select_file(shopping * myShop)
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-	dialog = gtk_file_chooser_dialog_new("Ouvrir un magasin", window, action, "_Cancel", GTK_RESPONSE_CANCEL, "_Open", GTK_RESPONSE_ACCEPT, NULL);
+	dialog = gtk_file_chooser_dialog_new("Ouvrir un magasin", parent, action, "_Cancel", GTK_RESPONSE_CANCEL, "_Open", GTK_RESPONSE_ACCEPT, NULL);
 	res = gtk_dialog_run(GTK_DIALOG(dialog));
 	if (res == GTK_RESPONSE_ACCEPT)
 	{

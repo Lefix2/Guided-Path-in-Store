@@ -12,6 +12,6 @@ gboolean button5_callback(GtkWidget *window, gpointer data);
 
 gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data);
 
-void init_map(shopping *shopping);
+void init_map(GtkWidget *p_window, shopping *shopping);
 
 #endif // !MAP_H

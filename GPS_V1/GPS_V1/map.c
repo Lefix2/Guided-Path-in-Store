@@ -104,7 +104,6 @@ void init_map(shopping *shopping)
 	gtk_window_set_title(GTK_WINDOW(window), "Guided Path in Store");
 	gtk_window_set_default_size(GTK_WINDOW(window), MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-	gtk_window_set_default_size(GTK_WINDOW(window), 800, 500);
 	gtk_window_set_icon_from_file(GTK_WINDOW(window), "ressources\\Images\\caddie.jpg", NULL);
 
 	/* créer les widgets */
@@ -142,7 +141,7 @@ void init_map(shopping *shopping)
 	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(button1_callback), NULL);
 	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button2_callback), NULL);
 	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button3_callback), NULL);
-	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
+	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), window);
 
 	GtkImage *imtest = gtk_image_new();
 	GtkWidget *event_box = gtk_event_box_new();

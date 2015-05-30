@@ -18,7 +18,9 @@ void call_main_menu()
 	/* Window Creation */
 	GtkWidget *p_window;
 	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_position(GTK_WINDOW(p_window), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
+	gtk_window_set_resizable(p_window, FALSE);
 	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), p_window);
 	
 	/*The window contain a grid that contains all of our widgets*/
@@ -37,21 +39,21 @@ void call_main_menu()
 	GtkWidget * p_button1 = NULL;
 
 	p_button1 = gtk_button_new_with_label("Ouvrir un magasin");
-	g_signal_connect(GTK_BUTTON(p_button1),	"button_press_event", G_CALLBACK(cb_store_selection), p_window);
+	g_signal_connect(GTK_BUTTON(p_button1), "clicked", G_CALLBACK(cb_store_selection), p_window);
 	gtk_box_pack_start(GTK_BOX(v_box), p_button1, FALSE, FALSE, 0);
 
 	/*The second button is used to create his list*/
 	GtkWidget * p_button2 = NULL;
 
 	p_button2 = gtk_button_new_with_label("Faire sa liste de course");
-	g_signal_connect(GTK_BUTTON(p_button2), "button_press_event", G_CALLBACK(cb_make_list), p_window);
+	g_signal_connect(GTK_BUTTON(p_button2), "clicked", G_CALLBACK(cb_make_list), p_window);
 	gtk_box_pack_start(GTK_BOX(v_box), p_button2, FALSE, FALSE, 0);
 
 	/*The third is to start the shopping*/
 	GtkWidget * p_button3 = NULL;
 
 	p_button3 = gtk_button_new_with_label("Demarrer ses courses");
-	g_signal_connect(GTK_BUTTON(p_button3), "button_press_event", G_CALLBACK(cb_go_shopping), p_window);
+	g_signal_connect(GTK_BUTTON(p_button3), "clicked", G_CALLBACK(cb_go_shopping), p_window);
 	gtk_box_pack_start(GTK_BOX(v_box), p_button3, FALSE, FALSE, 0);
 
 	/*We do the last settings to the window*/
@@ -68,20 +70,21 @@ gboolean cb_quit(GtkWidget *p_widget, gpointer user_data){
 gboolean cb_store_selection(GtkWidget *p_widget, gpointer p_window){
 
 	//gtk_widget_hide(p_window);
-	select_file(myShop);
+	select_file(p_window, myShop);
 	return FALSE;
 }
 
 gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
 	
-	init_courses(myShop);
+	init_courses(p_window, myShop);
 
-	//gtk_widget_hide(GTK_WIDGET(p_window));
+	gtk_widget_set_sensitive(p_window, FALSE);
 	return FALSE;
 }
 
 gboolean cb_go_shopping(GtkWidget *p_widget, gpointer p_window){
 	//gtk_widget_hide(p_window);
-	go_shopping_window(myShop);
+	go_shopping_window(p_window, myShop);
+	gtk_widget_set_sensitive(p_window, FALSE);
 	return FALSE;
 }

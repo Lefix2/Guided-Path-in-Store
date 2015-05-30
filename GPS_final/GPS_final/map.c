@@ -16,12 +16,14 @@
 #define M_PI 3.1415
 
 GtkWidget *drawing_area;
+GtkWidget *window;
 
 
 /* on quitte l'application en fermant la fenêtre */
 void on_window_closed(GtkWidget *window, gpointer data)
 {
-	gtk_widget_destroy(data);
+	gtk_widget_destroy(window);
+	gtk_widget_set_sensitive(data, TRUE);
 }
 
 gboolean changer_texte(GtkWidget *window, gpointer data)
@@ -94,10 +96,10 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 	return FALSE;
 }
 
-void init_map(shopping *shopping)
+void init_map(GtkWidget *p_window, shopping *shopping)
 {
 	/* déclaration des variables */
-	GtkWidget *window, *label, *h_box, *b_box, *v_box, *button, *button1, *button2, *button3, *button4, *button5;
+	GtkWidget *label, *h_box, *b_box, *v_box, *button, *button1, *button2, *button3, *button4, *button5;
 	gchar *txtSchema = NULL;
 
 	/* créer la fenêtre avec son titre */
@@ -138,7 +140,7 @@ void init_map(shopping *shopping)
 	gtk_box_pack_start(GTK_BOX(v_box), label, FALSE, FALSE, 0);
 
 	/* connecter le bouton à une fonction de callback */
-	g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), window);
+	g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), p_window);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(changer_texte), label);
 	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(button1_callback), NULL);
 	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button2_callback), NULL);

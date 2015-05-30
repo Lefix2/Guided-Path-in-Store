@@ -12,9 +12,9 @@
 #include "StoreImage.h"
 #include "map.h"
 
-void go_shopping_window(shopping *myShop)
+void go_shopping_window(GtkWidget *p_window, shopping *myShop)
 {
-	init_map(myShop);
+	init_map(p_window, myShop);
 
 	merchant_optimise_shopping(myShop);
 	merchant_connect_paths(myShop);

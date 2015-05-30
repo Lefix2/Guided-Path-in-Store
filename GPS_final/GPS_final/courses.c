@@ -9,6 +9,7 @@
 #include "common.h"
 #include "Shopping.h"
 
+GtkWidget *window;
 
 shopping_list * shopping_list_new()
 {
@@ -44,9 +45,8 @@ grid_store_notebook * grid_store_notebook_new(){
 	return new_gn;
 }
 
-int init_courses(shopping *myshop){
+int init_courses(GtkWidget *p_window, shopping *myshop){
 	/*Widgets creation */
-	GtkWidget *p_window = NULL;
 	GtkWidget *p_table = NULL;
 	GtkWidget *p_label = NULL;
 	GtkWidget *p_scrollbar = NULL;
@@ -66,13 +66,13 @@ int init_courses(shopping *myshop){
 	
 	
 	/*Creation of the window*/
-	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	shopping * p_shopping = NULL;
-	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_list_quit), myshop);
+	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(cb_list_quit), myshop);
 
 	/*The window contain a grid that contains all of our widgets*/
 	p_table = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(p_window), p_table);
+	gtk_container_add(GTK_CONTAINER(window), p_table);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
 	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 1,3);
@@ -144,12 +144,12 @@ int init_courses(shopping *myshop){
 	
 
 
-	gtk_widget_show_all(p_window);
+	gtk_widget_show_all(window);
 	gtk_grid_set_column_spacing(GTK_GRID(p_table), 10);
 	gtk_grid_set_row_spacing(GTK_GRID(p_table), 2);
 	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), TRUE);
 	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), TRUE);
-	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
+	gtk_window_set_title(GTK_WINDOW(window), "Guided Path in Store");
 
 
 	return EXIT_SUCCESS;
@@ -447,8 +447,8 @@ void cb_add_item(GtkWidget *p_widget, shopping_list * s_list){
 }
 
 void cb_end_list(GtkWidget *p_button, GtkWidget *p_window){
-	//init_window();
-	gtk_widget_destroy(GTK_WIDGET(p_window));
+	gtk_widget_destroy(GTK_WIDGET(window));
+	gtk_widget_set_sensitive(p_window, TRUE);
 }
 
 void cb_list_quit(GtkWidget *p_button, shopping * p_shopping){
