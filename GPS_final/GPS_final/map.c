@@ -100,7 +100,7 @@ void init_map(GtkWidget *p_window, shopping *shopping)
 {
 	/* déclaration des variables */
 	GtkWidget *label, *h_box, *b_box, *v_box, *button, *button1, *button2, *button3, *button4, *button5;
-	gchar *txtSchema = NULL;
+	gchar *txtSchema, *utfstring = NULL;
 
 	/* créer la fenêtre avec son titre */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -109,15 +109,21 @@ void init_map(GtkWidget *p_window, shopping *shopping)
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 500);
 	gtk_window_set_icon_from_file(GTK_WINDOW(window), "ressources\\Images\\caddie.jpg", NULL);
+	//gtk_window_set_keep_above(window, TRUE);
 
 	/* créer les widgets */
 	h_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	b_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	v_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	txtSchema = g_locale_to_utf8("<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Petite superette</b></span>", -1, NULL, NULL, NULL);
-	label = gtk_label_new(txtSchema);
+	txtSchema = (char*)calloc(MAX_ARRAY_OF_CHAR, sizeof(char));
+
+	sprintf(txtSchema, "<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>%s</b></span>", store_get_name(shopping_get_store(shopping)));
+	utfstring = g_locale_to_utf8(txtSchema, -1, NULL, NULL, NULL);
+	label = gtk_label_new(utfstring);
 	gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
-	g_free(txtSchema);
+
+	free(txtSchema);
+	g_free(utfstring);
 	button = gtk_button_new_with_label("Pimp my text");
 	button1 = gtk_button_new_with_label("Test Item");
 	button2 = gtk_button_new_with_label("Test Section");

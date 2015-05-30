@@ -62,12 +62,10 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 
 	char *categories[] = {"Fruits", "Numerique", "entretien", "boissons"};
 	char *produits[] = { "pommes", "orange", "raisin", "poire" };
-
-	
 	
 	/*Creation of the window*/
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	shopping * p_shopping = NULL;
+	gtk_window_set_keep_above(window, TRUE);
 	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(cb_list_quit), myshop);
 
 	/*The window contain a grid that contains all of our widgets*/

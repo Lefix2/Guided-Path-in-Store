@@ -15,8 +15,10 @@
 
 int merchant_optimise_shopping(shopping *shopping)
 {
+
 	int i, j;
 
+	printf("Allocated block : %d\n", myCheck());
 	printf("Merchant : starting...\n");
 	/*---------------------------------------------------------------*/
 	/***************initialize start and end position*****************/
@@ -55,6 +57,7 @@ int merchant_optimise_shopping(shopping *shopping)
 	item_set_pos(shopping->end, tmp_size.x, tmp_size.y);
 	printf("done\n");
 
+	printf("Allocated block : %d\n", myCheck());
 	/*---------------------------------------------------------------*/
 	/**********************get all paths******************************/
 	/*---------------------------------------------------------------*/
@@ -73,6 +76,7 @@ int merchant_optimise_shopping(shopping *shopping)
 	itemPointerList_insert_first(tmp_list, shopping->start);
 	itemPointerList_insert_last(tmp_list, shopping->end);
 
+
 	//counting the number of item in the list
 	int nbItems = 0;
 	int s, e;
@@ -83,19 +87,8 @@ int merchant_optimise_shopping(shopping *shopping)
 		nbItems++;
 	}
 
-	if (nbItems <= 3)
-	{
-		printf("done\n");
-		printf("warning : 1 item or less in list, no merchant possible\n");
-		return EXIT_SUCCESS;
-	}
-
 	//initializing a tab wich will contain all distance between each item
-	int ** pathLenghts = (int**)calloc(nbItems, sizeof(int*));
-	for (i = 0; i < nbItems; i++)
-	{
-		*(pathLenghts + i) = (int*)calloc(nbItems, sizeof(int));
-	}
+	int **pathLenghts = alloc_double_int_pointer(nbItems, nbItems);
 
 	//set all pathlengt of each item with itself to 0
 	for (i = 0; i < nbItems; i++)
@@ -109,17 +102,17 @@ int merchant_optimise_shopping(shopping *shopping)
 	//compute the map for the astar
 	Store_computeCartography(shopping->Store, TRUE);
 
-	for (s = 0; s < nbItems-1; s++)
+	for (s = 0; s < nbItems - 1; s++)
 	{
 		//set current item of the list on the s'th position
 		itemPointerList_set_on_first(tmp_list);
-		for (i = 0; i < s;i++)
+		for (i = 0; i < s; i++)
 			itemPointerList_next(tmp_list);
 
 		//get the start point
 		currentItem = itemPointerList_get_current(tmp_list);
 		start = add_coord(item_get_pos(currentItem), section_get_pos(item_get_section(currentItem)));
-		for (e = s+1; e < nbItems; e++)
+		for (e = s + 1; e < nbItems; e++)
 		{
 			itemPointerList_next(tmp_list);//set current item of the list on the s+e'th position
 			currentItem = itemPointerList_get_current(tmp_list);
@@ -135,16 +128,23 @@ int merchant_optimise_shopping(shopping *shopping)
 	/*---------------------------------------------------------------*/
 	printf("Merchant : compute algo...");
 	int fx = 0,
-		minfx = 0;
-	int *path;
+		minfx = -1;
+	int *path = NULL, *tmp_path = NULL;
 
 	for (i = 0; i < MERCHANT_ITERATION; i++)
 	{
-		path = merchant_find_path(nbItems, pathLenghts, &fx);
-		if (fx < minfx)
+		tmp_path = merchant_find_path(nbItems, pathLenghts, &fx);
+		if (fx < minfx || minfx == -1)
 		{
+			if (path != NULL)
+				free(path);
+			path = tmp_path;
 			minfx = fx;
 			i = 0;
+		}
+		else
+		{
+			free(tmp_path);
 		}
 	}
 
@@ -154,7 +154,6 @@ int merchant_optimise_shopping(shopping *shopping)
 	}
 
 	printf("done\n");
-
 	/*---------------------------------------------------------------*/
 	/***********************create sorted list************************/
 	/*---------------------------------------------------------------*/
@@ -181,7 +180,18 @@ int merchant_optimise_shopping(shopping *shopping)
 		itemPointerList_insert_last(shopping->List, itemPointerList_get_current(tmp_list));
 	}
 	printf("done\n");
+
+	/*---------------------------------------------------------------*/
+	/***********************finish*******************/
+	/*---------------------------------------------------------------*/
+	printf("freeing memory\n");
+	free_double_int_pointer(pathLenghts, nbItems, nbItems);
+	itemPointerList_delete(tmp_list);
+	free(path);
+
 	printf("Merchant : finished!\n\n");
+
+	printf("Allocated block : %d\n", myCheck());
 
 	return EXIT_SUCCESS;
 }
@@ -246,6 +256,7 @@ int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 	int *ret = (int*)calloc(nbr, sizeof(int));
 
 	merchant_init_population(nbr, pathlen, path);
+
 	merchant_evaluate(nbr, pathlen, path, fx, maxpath);
 	merchant_selection(fx, posmin, posmax);
 	merchant_crossover(nbr, posmin, path, child);
@@ -264,13 +275,13 @@ int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 
 	merchant_evaluate(nbr, pathlen, path, fx, maxpath);
 	merchant_selection(fx, posmin, posmax);
-
 	for (int i = 0; i < nbr; i++)
 	{
 		ret[i] = path[posmin[0]][i];
 	}
 	*bestfx = fx[posmin[0]];
-	
+
+	/*
 	for (int g = 0; g < NBPOP; g++)
 	{
 	for (int h = 0; h < nbr; h++)
@@ -278,7 +289,7 @@ int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 	printf("%2d ", path[g][h]);
 	}
 	printf("%d\n",fx[g]);
-	}
+	}*/
 	
 	free_double_int_pointer(path, NBPOP, nbr);
 	free_double_int_pointer(child, 2, nbr);
@@ -402,7 +413,7 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 	do
 	{
 		crosspt2 = random(nbr);
-	} while (crosspt2 <= (nbr-1) / 2 + 1);
+	} while (crosspt2 <= (nbr-1) / 2);
 
 	for (j = 0; j < nbr; j++)
 	{
