@@ -119,11 +119,11 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 	GtkWidget * label1 = NULL;
 	char text[20];
 
-	sprintf(text, "Product   ");//first title
+	sprintf(text, "     Produit   ");//first title
 	label0 = gtk_label_new(text);
 	gtk_grid_attach(GTK_GRID(p_shopping_list), label0, 0, 0, 1, 1);
 
-	sprintf(text, "Number");//second title
+	sprintf(text, "      Nombre");//second title
 	label1 = gtk_label_new(text);
 	gtk_grid_attach(GTK_GRID(p_shopping_list), label1, 1, 0, 1, 1);
 
@@ -145,7 +145,7 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 	GtkWidget *p_search_bar;
 	p_search_bar = gtk_entry_new();
 	gtk_grid_attach(GTK_GRID(p_table), p_search_bar, 2, 0, 1, 1);
-	gtk_entry_set_placeholder_text(GTK_ENTRY(p_search_bar), "Product name");
+	gtk_entry_set_placeholder_text(GTK_ENTRY(p_search_bar), "Nom du produit");
 	gtk_entry_set_icon_from_stock(GTK_ENTRY(p_search_bar),GTK_ENTRY_ICON_PRIMARY,GTK_STOCK_FIND);
 	
 	grid_store_notebook *p_gsn = NULL;
@@ -165,17 +165,17 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 
 	/* Creation of the ending button*/
 	GtkWidget * ending_button = NULL;
-	ending_button = gtk_button_new_with_label("Click here to end your list");
+	ending_button = gtk_button_new_with_label("Cliquez ici pour finir votre liste");
 	gtk_grid_attach(GTK_GRID(p_table), ending_button, 1, 5, 4, 1);
 	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_end_list), p_window);
 	
 
 	GtkWidget *label2 = NULL, *label3 =NULL;
-	char texte[20];
-	sprintf(texte, "Your shopping list");
+	char texte[40];
+	sprintf(texte, "Votre liste de courses");
 	label2 = gtk_label_new(texte);
 	gtk_grid_attach(GTK_GRID(p_table), label2, 0, 0, 1, 1);
-	sprintf(texte, "Select products");
+	sprintf(texte, "Selectionnez des produits");
 	label3 = gtk_label_new(texte);
 	gtk_grid_attach(GTK_GRID(p_table), label3, 1, 0, 1, 1);
 	
