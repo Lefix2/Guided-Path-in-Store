@@ -16,6 +16,8 @@
 /*!<All costs to go  to another node*/
 #define MY_INFINITY 9999
 #define GENERAL_COST 0
+#define LOW_COST 1
+#define LOW_COST2 2
 #define MEDIUM_COST 5
 #define STRONG_COST 8
 #define INFINITY_COST 9

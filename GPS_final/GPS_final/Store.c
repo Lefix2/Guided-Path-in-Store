@@ -264,7 +264,9 @@ int Store_computeCartography(store * st_source, gboolean optAstar)
 					if (is_in_square(c, pos1, size))
 						continue;
 					if (st_source->cartography[c.x][c.y] == GENERAL_COST)
-					st_source->cartography[c.x][c.y] = MEDIUM_COST;
+					st_source->cartography[c.x][c.y] = LOW_COST;
+					else if (st_source->cartography[c.x][c.y] == LOW_COST)
+						st_source->cartography[c.x][c.y] = LOW_COST2;
 				}
 			}
 			sectionPointerList_next(st_source->allocatedSections);
@@ -347,17 +349,24 @@ int store_add_new_section(store * st_source, int id, type s_type, int x_pos, int
 	if (tmp != NULL)
 	{
 		printf("error : Trying to add a section with existing id in Store\n");
+		printf("existing : "); section_print(tmp, TRUE);
+		printf("new : "); printf("%d", id);
+		printf("\n");
 		section_print(tmp, TRUE);
 		printf("\n");
 		return EXIT_FAILURE;
 	}
 	if (((x_size + x_pos) > st_source->size.x) || ((y_size + y_pos) > st_source->size.y)){
 		printf("Error : Trying to add a section out of the store\n");
+		printf("new : "); printf("%d", id);
+		printf("\n");
 		return EXIT_FAILURE;
 	}
 	if (store_detect_collision(st_source, x_pos, y_pos, x_size, y_size))
 	{
 		printf("error : Trying to add a section on an existing section\n");
+		printf("new : "); printf("%d", id);
+		printf("\n");
 		return EXIT_FAILURE;
 	}
 	section * new_s = section_new(id, s_type);
@@ -380,6 +389,9 @@ int store_add_section(store * st_source, section * s_source)
 	if (tmp != NULL)
 	{
 		printf("error : Trying to add a section with existing id in Store\n");
+		printf("existing : "); section_print(tmp, TRUE);
+		printf("new : "); section_print(tmp, TRUE);
+		printf("\n");
 		section_print(tmp, TRUE);
 		printf("\n");
 		return EXIT_FAILURE;
@@ -390,11 +402,15 @@ int store_add_section(store * st_source, section * s_source)
 
 	if (((size.x + pos.x) > st_source->size.x) || ((size.y + pos.y) > st_source->size.y)){
 		printf("Error : Trying to add a section out of the store\n");
+		printf("new : "); section_print(s_source, TRUE);
+		printf("\n");
 		return EXIT_FAILURE;
 	}
 	if (store_detect_collision(st_source, pos.x, pos.y, size.x, size.y))
 	{
 		printf("error : Trying to add a section on an existing section\n");
+		printf("new : "); section_print(s_source, TRUE);
+		printf("\n");
 		return EXIT_FAILURE;
 	}
 
