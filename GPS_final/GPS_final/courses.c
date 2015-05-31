@@ -22,6 +22,20 @@ shopping_list * shopping_list_new()
 	return new_shopping_list;
 }
 
+int shopping_list_delete(shopping_list * sl, gboolean freeList)
+{
+	if (sl == NULL)
+		return EXIT_FAILURE;
+	if (sl->shopping_list_grid != NULL)
+		gtk_widget_destroy(sl->shopping_list_grid);
+	if (freeList){
+		if (sl->shopping_itemlist != NULL)
+			itemPointerList_delete(sl->shopping_itemlist);
+	}
+	free(sl);
+	return EXIT_SUCCESS;
+}
+
 store_notebook * store_notebook_new()
 {
 	store_notebook * new_sn;
@@ -31,6 +45,20 @@ store_notebook * store_notebook_new()
 	new_sn->store = NULL;
 
 	return new_sn;
+}
+
+int store_notebook_delete(store_notebook *sn, gboolean freestore)
+{
+	if (sn == NULL)
+		return EXIT_FAILURE;
+	if (sn->notebook != NULL)
+		gtk_widget_destroy(sn->notebook);
+	if (freestore){
+		if (sn->store != NULL)
+			store_delete(sn->store);
+	}
+	free(sn);
+	return EXIT_SUCCESS;
 }
 
 grid_store_notebook * grid_store_notebook_new(){
@@ -44,6 +72,14 @@ grid_store_notebook * grid_store_notebook_new(){
 
 	return new_gn;
 }
+
+int grid_store_notebook_delete(grid_store_notebook * gsn){
+	if (gsn == NULL)
+		return EXIT_FAILURE;
+	free(gsn);
+	return EXIT_SUCCESS;
+}
+
 
 int init_courses(GtkWidget *p_window, shopping *myshop){
 	/*Widgets creation */
@@ -60,8 +96,11 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 	s_list->shopping_itemlist = shopping_get_list(myshop);
 	s_list->shopping_list_grid = p_shopping_list;
 
-	char *categories[] = {"Fruits", "Numerique", "entretien", "boissons"};
-	char *produits[] = { "pommes", "orange", "raisin", "poire" };
+
+	shop_struct p_shop_struct;
+	p_shop_struct.shopping = myshop;
+	p_shop_struct.list_grid = gtk_grid_new();
+	p_shop_struct.notebook = notebook_new_from_store(shopping_get_store(myshop));
 	
 	/*Creation of the window*/
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -73,7 +112,7 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 	gtk_container_add(GTK_CONTAINER(window), p_table);
 
 	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
-	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 2, 1,3);
+	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 1, 1,4);
 
 	/*We create now a grid that contains the shopping list created by the user*/
 	GtkWidget * label0 = NULL;
@@ -148,6 +187,8 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), TRUE);
 	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), TRUE);
 	gtk_window_set_title(GTK_WINDOW(window), "Guided Path in Store");
+
+
 
 
 	return EXIT_SUCCESS;
@@ -396,7 +437,7 @@ void cb_activate_search_bar(GtkWidget *p_entry, grid_store_notebook *g_notebook)
 		}
 		gtk_notebook_set_current_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1);
 	}
-	free(p_shopping_list);
+	//shopping_list_delete(p_shopping_list, FALSE);
 
 
 }

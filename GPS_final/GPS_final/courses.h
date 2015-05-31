@@ -38,7 +38,20 @@ struct grid_store_notebook{
 	itemList * user_list;
 };
 
+/*test*/
+typedef struct shop_struct shop_struct;
+struct shop_struct{
+	shopping *shopping;
+	GtkWidget *list_grid;
+	GtkWidget *notebook;
+};
+
 shopping_list * shopping_list_new();
+int shopping_list_delete(shopping_list * sl, gboolean freeList);
+
+store_notebook * store_notebook_new();
+int store_notebook_delete(store_notebook *sn, gboolean freestore);
+
 int init_courses(GtkWidget *p_window, shopping *myshop);
 GtkWidget * notebook_new_from_store(store * store_test);
 int grid_find_category(char * category_name, GtkWidget * p_notebook);
