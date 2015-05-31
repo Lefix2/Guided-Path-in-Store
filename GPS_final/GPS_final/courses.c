@@ -185,7 +185,7 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 	gtk_grid_set_column_spacing(GTK_GRID(p_table), 10);
 	gtk_grid_set_row_spacing(GTK_GRID(p_table), 2);
 	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), TRUE);
-	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), TRUE);
+	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), FALSE);
 	gtk_window_set_title(GTK_WINDOW(window), "Guided Path in Store");
 
 
