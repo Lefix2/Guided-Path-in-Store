@@ -270,7 +270,6 @@ int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 		merchant_crossover(nbr, posmin, path, child);
 		merchant_mutation(nbr, child);
 		merchant_insert(nbr, child, posmax, path);
-
 	}
 
 	merchant_evaluate(nbr, pathlen, path, fx, maxpath);
@@ -452,7 +451,7 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 							if (child[m][k] == temp2) //if still the path repeats then repeat the process again
 							{
 								temp2 = random(nbr);
-								k = 0;
+								k = -1;
 							}
 						}
 
@@ -466,7 +465,7 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 							if (child[m][k] == temp2)
 							{
 								temp2 = random(nbr);
-								k = 0;
+								k = -1;
 							}
 						}
 						child[m][i] = temp2;
@@ -493,7 +492,7 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 							if (child[m][k] == temp2)
 							{
 								temp2 = random(nbr);
-								k = 0;
+								k = -1;
 							}
 						}
 						child[m][i] = temp2; //finally assigning the value
@@ -501,12 +500,12 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 					else //for child 2
 					{
 						temp2 = temp[0][j];
-						for (k = 0; k < cnt; k++)
+						for (k = 0; k < nbr; k++)
 						{
 							if (child[m][k] == temp2)
 							{
 								temp2 = random(nbr);
-								k = 0;
+								k = -1;
 							}
 						}
 						child[m][i] = temp2;
@@ -515,7 +514,6 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 			}
 		}
 	}
-
 	free_double_int_pointer(temp, 2, nbr);
 }
 
