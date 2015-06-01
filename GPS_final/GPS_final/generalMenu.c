@@ -7,26 +7,29 @@
 #include "tests.h"
 #include "Store_IO_functions.h"
 
-shopping * myShop;
-
 void call_main_menu()
 {
+	generalmenu_struct *main_menu;
+
+	main_menu = g_new(generalmenu_struct, 1);
 	gchar utf8_chain[MAX_ARRAY_OF_CHAR];
 	GtkImage *WelcomeImg = gtk_image_new_from_file(".\\ressources\\Images\\mainMenu.png");
-	myShop = shopping_new();
+
+	printf("%d\n", myCheck());
+	main_menu->myShop = shopping_new();
 
 	/* Window Creation */
-	GtkWidget *p_window;
-	p_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_position(GTK_WINDOW(p_window), GTK_WIN_POS_CENTER);
-	gtk_window_set_title(GTK_WINDOW(p_window), "Guided Path in Store");
-	gtk_window_set_resizable(p_window, FALSE);
-	g_signal_connect(G_OBJECT(p_window), "destroy", G_CALLBACK(cb_quit), p_window);
+	main_menu->main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+	gtk_window_set_position(GTK_WINDOW(main_menu->main_window), GTK_WIN_POS_CENTER);
+	gtk_window_set_title(GTK_WINDOW(main_menu->main_window), "Guided Path in Store");
+	gtk_window_set_resizable(main_menu->main_window, FALSE);
+	g_signal_connect(G_OBJECT(main_menu->main_window), "destroy", G_CALLBACK(cb_quit), main_menu);
 	
 	/*The window contain a grid that contains all of our widgets*/
 	GtkWidget * v_box = NULL;
 	v_box = gtk_box_new(GTK_ORIENTATION_VERTICAL,0);
-	gtk_container_add(GTK_CONTAINER(p_window), v_box);
+	gtk_container_add(GTK_CONTAINER(main_menu->main_window), v_box);
 
 	/*add a title*/
 	GtkWidget *title;
@@ -36,55 +39,58 @@ void call_main_menu()
 	gtk_box_pack_start(GTK_BOX(v_box), WelcomeImg, TRUE, TRUE, 0);
 
 	/*The first button is used to open the database to choose a store*/
-	GtkWidget * p_button1 = NULL;
-
-	p_button1 = gtk_button_new_with_label("Ouvrir un magasin");
-	g_signal_connect(GTK_BUTTON(p_button1), "clicked", G_CALLBACK(cb_store_selection), p_window);
-	gtk_box_pack_start(GTK_BOX(v_box), p_button1, FALSE, FALSE, 0);
+	main_menu->button_selec = gtk_button_new_with_label("Ouvrir un magasin");
+	g_signal_connect(GTK_BUTTON(main_menu->button_selec), "clicked", G_CALLBACK(cb_store_selection), main_menu);
+	gtk_box_pack_start(GTK_BOX(v_box), main_menu->button_selec, FALSE, FALSE, 0);
 
 	/*The second button is used to create his list*/
-	GtkWidget * p_button2 = NULL;
-
-	p_button2 = gtk_button_new_with_label("Faire sa liste de course");
-	g_signal_connect(GTK_BUTTON(p_button2), "clicked", G_CALLBACK(cb_make_list), p_window);
-	gtk_box_pack_start(GTK_BOX(v_box), p_button2, FALSE, FALSE, 0);
+	main_menu->button_makel = gtk_button_new_with_label("Faire sa liste de course");
+	g_signal_connect(GTK_BUTTON(main_menu->button_makel), "clicked", G_CALLBACK(cb_make_list), main_menu);
+	gtk_box_pack_start(GTK_BOX(v_box), main_menu->button_makel, FALSE, FALSE, 0);
+	gtk_widget_set_sensitive(main_menu->button_makel, FALSE);
 
 	/*The third is to start the shopping*/
-	GtkWidget * p_button3 = NULL;
+	main_menu->button_gosho = gtk_button_new_with_label("Demarrer ses courses");
+	g_signal_connect(GTK_BUTTON(main_menu->button_gosho), "clicked", G_CALLBACK(cb_go_shopping), main_menu);
+	gtk_box_pack_start(GTK_BOX(v_box), main_menu->button_gosho, FALSE, FALSE, 0);
+	gtk_widget_set_sensitive(main_menu->button_gosho, FALSE);
 
-	p_button3 = gtk_button_new_with_label("Demarrer ses courses");
-	g_signal_connect(GTK_BUTTON(p_button3), "clicked", G_CALLBACK(cb_go_shopping), p_window);
-	gtk_box_pack_start(GTK_BOX(v_box), p_button3, FALSE, FALSE, 0);
 
 	/*We do the last settings to the window*/
-	gtk_widget_show_all(p_window);
+	gtk_widget_show_all(main_menu->main_window);
 
 }
 
-gboolean cb_quit(GtkWidget *p_widget, gpointer user_data){
+gboolean cb_quit(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	gtk_main_quit();
-	shopping_delete(myShop);
+	shopping_delete(main_menu->myShop);
+	g_free(main_menu);
+	printf("%d\n", myCheck());
+	getch();
 	return FALSE;
 }
 
-gboolean cb_store_selection(GtkWidget *p_widget, gpointer p_window){
+gboolean cb_store_selection(GtkWidget *p_widget, generalmenu_struct *main_menu){
 
-	//gtk_widget_hide(p_window);
-	select_file(p_window, myShop);
+	select_file(main_menu->main_window, main_menu->myShop);
+	if (main_menu->myShop->Store != NULL)
+		gtk_widget_set_sensitive(main_menu->button_makel, TRUE);
+	else
+		gtk_widget_set_sensitive(main_menu->button_makel, FALSE);
+
 	return FALSE;
 }
 
-gboolean cb_make_list(GtkWidget *p_widget, gpointer p_window){
-	
-	init_courses(p_window, myShop);
+gboolean cb_make_list(GtkWidget *p_widget, generalmenu_struct *main_menu){
 
-	gtk_widget_set_sensitive(p_window, FALSE);
+	gtk_widget_set_sensitive(main_menu->main_window, FALSE);
+	init_courses(main_menu, main_menu->myShop);
+
 	return FALSE;
 }
 
-gboolean cb_go_shopping(GtkWidget *p_widget, gpointer p_window){
-	//gtk_widget_hide(p_window);
-	go_shopping_window(p_window, myShop);
-	gtk_widget_set_sensitive(p_window, FALSE);
+gboolean cb_go_shopping(GtkWidget *p_widget, generalmenu_struct *main_menu){
+	gtk_widget_set_sensitive(main_menu->main_window, FALSE);
+	go_shopping_window(main_menu->main_window, main_menu->myShop);
 	return FALSE;
 }

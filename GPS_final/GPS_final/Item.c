@@ -29,6 +29,7 @@ item * item_init(item * item)
 	item->posInSec.x = 0;
 	item->posInSec.y = 0;
 	item->section = NULL;
+	item->stock = 0;
 	item->pathTo = path_new();
 
 	return item;
@@ -39,7 +40,7 @@ int item_delete(item * item)
 	if (item == NULL)
 		return EXIT_FAILURE;
 	if (item->pathTo != NULL)
-		free(item->pathTo);
+		path_delete(item->pathTo);
 	free(item);
 	return EXIT_SUCCESS;
 }

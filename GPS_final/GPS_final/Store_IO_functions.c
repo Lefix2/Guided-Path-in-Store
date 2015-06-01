@@ -13,7 +13,6 @@ static sqlite3 *openDb(char *dbName)
 {
 	sqlite3 *db = NULL;
 	int rc;
-
 	rc = sqlite3_open(dbName, &db);
 	if (rc)
 	{
@@ -22,7 +21,7 @@ static sqlite3 *openDb(char *dbName)
 	}
 	else
 	{
-		fprintf(stderr, "Opened database successfully\n");
+		//fprintf(stderr, "Opened database successfully\n");
 	}
 	return db;
 }
@@ -31,7 +30,7 @@ static sqlite3 *openDb(char *dbName)
 static void closeDb(sqlite3 *db)
 {
 	sqlite3_close(db);
-	printf("Database closed\n");
+	//printf("Database closed\n");
 }
 
 //return the number of row in a store's query
@@ -57,7 +56,7 @@ int sqlite_get_row(char *DataBaseName, char *DataBaseTab)
 		sqlite3_close(db);
 		return 2;
 	}
-	printf("SQL prepared ok\n\r");
+	//printf("SQL prepared ok\n\r");
 
 	/* loop reading each row until step returns anything other than SQLITE_ROW */
 	do {
@@ -69,6 +68,7 @@ int sqlite_get_row(char *DataBaseName, char *DataBaseTab)
 
 	//Close database
 	closeDb(db);
+	free(sql);
 
 	return ret;
 }
@@ -82,10 +82,6 @@ store* sqlite_new_store_from_database(char *DataBaseName)
 
 	// create and initialise the new store
 	newstore = sqlite_get_store(DataBaseName);
-
-	//remplissage des sections
-	int nb_sections;
-	section **all_sections;
 
 	sqlite_get_store_sections(DataBaseName, newstore);
 	sqlite_get_store_items(DataBaseName, newstore);
@@ -102,13 +98,11 @@ store* sqlite_get_store(char *DataBaseName)
 	int rc;
 	char *sql = "SELECT * from store;";
 	
-
 	store *newstore;
 	int storeId = 0;
 	int lengthX = 0;
 	int lengthY = 0;
 	char *name = NULL;
-
 
 	//Open database
 	db = openDb(DataBaseName);
@@ -121,7 +115,7 @@ store* sqlite_get_store(char *DataBaseName)
 		return NULL;
 	}
 
-	printf("SQL prepared ok\n\r");
+	//printf("SQL prepared ok\n\r");
 
 
 	/* get all store strings */
@@ -171,7 +165,7 @@ void sqlite_get_store_sections(char *DataBaseName, store *st_source)
 		printf("Failed to prepare database\n\r");
 		sqlite3_close(db);
 	}
-	printf("SQL prepared ok\n\r");
+	//printf("SQL prepared ok\n\r");
 
 	/* get all section strings */
 	for (i = 0; i < nb_section; i++)
@@ -193,7 +187,7 @@ void sqlite_get_store_sections(char *DataBaseName, store *st_source)
 			store_add_section(st_source, tmp_sec);
 		}
 	}
-	
+
 	//Close database
 	closeDb(db);
 }
@@ -231,7 +225,7 @@ void sqlite_get_store_items(char *DataBaseName, store *st_source)
 		printf("Failed to prepare database\n\r");
 		sqlite3_close(db);
 	}
-	printf("SQL prepared ok\n\r");
+	//printf("SQL prepared ok\n\r");
 
 	/* get all store strings */
 	for (i = 0; i < nb_item; i++)
@@ -290,7 +284,7 @@ char **sqlite_get_category(char *DataBaseName, int *nb_category)
 		sqlite3_close(db);
 		return NULL;
 	}
-	printf("SQL prepared ok\n\r");
+	//printf("SQL prepared ok\n\r");
 
 	/* get all category strings */
 	for (i = 0; i < *nb_category; i++)

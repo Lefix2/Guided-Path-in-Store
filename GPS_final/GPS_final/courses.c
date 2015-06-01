@@ -10,186 +10,91 @@
 #include "Shopping.h"
 
 GtkWidget *window;
-
-shopping_list * shopping_list_new()
-{
-	shopping_list * new_shopping_list;
-	new_shopping_list = (shopping_list *)malloc(sizeof(shopping_list));
-
-	new_shopping_list->shopping_itemlist = NULL;
-	new_shopping_list->shopping_list_grid = NULL;
-
-	return new_shopping_list;
-}
-
-int shopping_list_delete(shopping_list * sl, gboolean freeList)
-{
-	if (sl == NULL)
-		return EXIT_FAILURE;
-	if (sl->shopping_list_grid != NULL)
-		gtk_widget_destroy(sl->shopping_list_grid);
-	if (freeList){
-		if (sl->shopping_itemlist != NULL)
-			itemPointerList_delete(sl->shopping_itemlist);
-	}
-	free(sl);
-	return EXIT_SUCCESS;
-}
-
-store_notebook * store_notebook_new()
-{
-	store_notebook * new_sn;
-	new_sn = (store_notebook *)malloc(sizeof(store_notebook));
-
-	new_sn->notebook = NULL;
-	new_sn->store = NULL;
-
-	return new_sn;
-}
-
-int store_notebook_delete(store_notebook *sn, gboolean freestore)
-{
-	if (sn == NULL)
-		return EXIT_FAILURE;
-	if (sn->notebook != NULL)
-		gtk_widget_destroy(sn->notebook);
-	if (freestore){
-		if (sn->store != NULL)
-			store_delete(sn->store);
-	}
-	free(sn);
-	return EXIT_SUCCESS;
-}
-
-grid_store_notebook * grid_store_notebook_new(){
-	grid_store_notebook * new_gn;
-	new_gn = (grid_store_notebook *)malloc(sizeof(grid_store_notebook));
-
-	new_gn->notebook = NULL;
-	new_gn->grid = NULL;
-	new_gn->store = NULL;
-	new_gn->user_list = NULL;
-
-	return new_gn;
-}
-
-int grid_store_notebook_delete(grid_store_notebook * gsn){
-	if (gsn == NULL)
-		return EXIT_FAILURE;
-	free(gsn);
-	return EXIT_SUCCESS;
-}
+generalmenu_struct *parent_menu;
 
 
-int init_courses(GtkWidget *p_window, shopping *myshop){
+int init_courses(generalmenu_struct *parent, shopping *myshop){
+	parent_menu = parent;
 	/*Widgets creation */
-	GtkWidget *p_table = NULL;
-	GtkWidget *p_label = NULL;
+	GtkWidget *main_grid = NULL;
 	GtkWidget *p_scrollbar = NULL;
 	GtkWidget *p_shopping_list = NULL;
-	GtkWidget *p_notebook = NULL;
 
-	p_shopping_list = gtk_grid_new();
+	shop_struct * p_shop_struct = (shop_struct*)malloc(sizeof(shop_struct));
+	p_shop_struct->shopping = myshop;
 
-	shopping_list * s_list = NULL;
-	s_list = shopping_list_new();
-	s_list->shopping_itemlist = shopping_get_list(myshop);
-	s_list->shopping_list_grid = p_shopping_list;
+	//creating a temporary list to make shopping
+	p_shop_struct->tmp_list = itemPointerList_new();
 
-
-	shop_struct p_shop_struct;
-	p_shop_struct.shopping = myshop;
-	p_shop_struct.list_grid = gtk_grid_new();
-	p_shop_struct.notebook = notebook_new_from_store(shopping_get_store(myshop));
+	itemPointerList_set_on_first(myshop->List);
+	while (!itemPointerList_is_out_of(myshop->List))
+	{
+		itemPointerList_insert_last(p_shop_struct->tmp_list, itemPointerList_get_current(myshop->List));
+		itemPointerList_next(myshop->List);
+	}
 	
 	/*Creation of the window*/
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_keep_above(window, TRUE);
-	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(cb_list_quit), myshop);
+	gtk_window_set_title(GTK_WINDOW(window), "Guided Path in Store");
+
+	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(cb_course_quit), p_shop_struct);
 
 	/*The window contain a grid that contains all of our widgets*/
-	p_table = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(window), p_table);
-
-	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
-	gtk_grid_attach(GTK_GRID(p_table), p_scrollbar, 0, 1, 1,4);
+	main_grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(window), main_grid);
+	gtk_grid_set_column_spacing(GTK_GRID(main_grid), 0);
+	gtk_grid_set_row_spacing(GTK_GRID(main_grid), 2);
+	gtk_grid_set_column_homogeneous(GTK_GRID(main_grid), TRUE);
+	gtk_grid_set_row_homogeneous(GTK_GRID(main_grid), FALSE);
 
 	/*We create now a grid that contains the shopping list created by the user*/
-	GtkWidget * label0 = NULL;
-	GtkWidget * label1 = NULL;
-	char text[20];
+	p_scrollbar = gtk_scrolled_window_new(NULL, NULL);
+	gtk_grid_attach(GTK_GRID(main_grid), p_scrollbar, 0, 1, 1,4);
 
-	sprintf(text, "Product   ");//first title
-	label0 = gtk_label_new(text);
-	gtk_grid_attach(GTK_GRID(p_shopping_list), label0, 0, 0, 1, 1);
-
-	sprintf(text, "Number");//second title
-	label1 = gtk_label_new(text);
-	gtk_grid_attach(GTK_GRID(p_shopping_list), label1, 1, 0, 1, 1);
-
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shopping_list);
+	p_shop_struct->list_grid = gtk_grid_new();
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(p_scrollbar), p_shop_struct->list_grid);
 	
 	/*We create now a notebook */
-	/*shopping_list * s_list = NULL;
-	s_list = shopping_list_new();*/
+	p_shop_struct->notebook = notebook_new_from_shopping(p_shop_struct);
 
-	p_notebook = notebook_new_from_store(shopping_get_store(myshop));
-	gtk_grid_attach(GTK_GRID(p_table), p_notebook, 1, 1, 4, 4);
-	notebook_connect_button(p_notebook, s_list);
+	gtk_grid_attach(GTK_GRID(main_grid), p_shop_struct->notebook, 1, 1, 4, 4);
 
-	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(p_notebook), GTK_POS_LEFT);
-	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(p_notebook), TRUE);
+	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(p_shop_struct->notebook), GTK_POS_LEFT);
+	gtk_notebook_set_show_tabs(GTK_NOTEBOOK(p_shop_struct->notebook), TRUE);
 	
 
 	/*We create now the entry for the product research*/
-	GtkWidget *p_search_bar;
-	p_search_bar = gtk_entry_new();
-	gtk_grid_attach(GTK_GRID(p_table), p_search_bar, 2, 0, 1, 1);
-	gtk_entry_set_placeholder_text(GTK_ENTRY(p_search_bar), "Product name");
-	gtk_entry_set_icon_from_stock(GTK_ENTRY(p_search_bar),GTK_ENTRY_ICON_PRIMARY,GTK_STOCK_FIND);
-	
-	grid_store_notebook *p_gsn = NULL;
-	p_gsn = grid_store_notebook_new();
-	p_gsn->notebook = p_notebook;
-	p_gsn->store = shopping_get_store(myshop);
-	p_gsn->grid = p_shopping_list;
-	p_gsn->user_list = shopping_get_list(myshop);
+	p_shop_struct->entry = gtk_entry_new();
+	gtk_grid_attach(GTK_GRID(main_grid), p_shop_struct->entry, 2, 0, 1, 1);
+	gtk_entry_set_placeholder_text(GTK_ENTRY(p_shop_struct->entry), "Product name");
+	gtk_entry_set_icon_from_stock(GTK_ENTRY(p_shop_struct->entry), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
 
-	g_signal_connect(G_OBJECT(p_search_bar), "activate", G_CALLBACK(cb_activate_search_bar), p_gsn);
+	g_signal_connect(G_OBJECT(p_shop_struct->entry), "activate", G_CALLBACK(cb_activate_search_bar), p_shop_struct);
 
 	/*We create next to it a button to clear the search*/
 	GtkWidget *p_search_clear_button;
 	p_search_clear_button = gtk_button_new_from_stock(GTK_STOCK_STOP);
-	gtk_grid_attach(GTK_GRID(p_table), p_search_clear_button, 3, 0, 1, 1);
-	g_signal_connect(G_OBJECT(p_search_clear_button), "clicked", G_CALLBACK(cb_search_clear_button), p_gsn);
+	gtk_grid_attach(GTK_GRID(main_grid), p_search_clear_button, 3, 0, 1, 1);
+	g_signal_connect(G_OBJECT(p_search_clear_button), "clicked", G_CALLBACK(cb_search_clear_button), p_shop_struct);
 
 	/* Creation of the ending button*/
 	GtkWidget * ending_button = NULL;
 	ending_button = gtk_button_new_with_label("Click here to end your list");
-	gtk_grid_attach(GTK_GRID(p_table), ending_button, 1, 5, 4, 1);
-	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_end_list), p_window);
+	gtk_grid_attach(GTK_GRID(main_grid), ending_button, 1, 5, 4, 1);
+	g_signal_connect(G_OBJECT(ending_button), "clicked", G_CALLBACK(cb_end_list), p_shop_struct);
 	
 
 	GtkWidget *label2 = NULL, *label3 =NULL;
 	char texte[20];
 	sprintf(texte, "Your shopping list");
 	label2 = gtk_label_new(texte);
-	gtk_grid_attach(GTK_GRID(p_table), label2, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(main_grid), label2, 0, 0, 1, 1);
 	sprintf(texte, "Select products");
 	label3 = gtk_label_new(texte);
-	gtk_grid_attach(GTK_GRID(p_table), label3, 1, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(main_grid), label3, 1, 0, 1, 1);
 	
-
-
+	display_list(p_shop_struct);
 	gtk_widget_show_all(window);
-	gtk_grid_set_column_spacing(GTK_GRID(p_table), 10);
-	gtk_grid_set_row_spacing(GTK_GRID(p_table), 2);
-	gtk_grid_set_column_homogeneous(GTK_GRID(p_table), TRUE);
-	gtk_grid_set_row_homogeneous(GTK_GRID(p_table), TRUE);
-	gtk_window_set_title(GTK_WINDOW(window), "Guided Path in Store");
-
-
-
 
 	return EXIT_SUCCESS;
 }
@@ -199,350 +104,292 @@ int init_courses(GtkWidget *p_window, shopping *myshop){
 *\param[in] a store
 *\param[out] a notebook (GtkWidget)
 */
-GtkWidget * notebook_new_from_store(store * store_test){
-	GtkWidget *p_notebook = NULL;
-	p_notebook = gtk_notebook_new();
-	char text[20];
+GtkWidget * notebook_new_from_shopping(shop_struct * p_shop_struct){
+
+	char text[MAX_ARRAY_OF_CHAR];
 	char *category_string = NULL;
-	GtkWidget *p_onglet[42];
-	GtkWidget *p_grid[42];
-	GtkWidget *p_button[256];
-	int i = 0, j=0;
+	GtkWidget *p_notebook = gtk_notebook_new();
+	GtkWidget *tab_label;
+	GtkWidget *p_grid;
+	GtkWidget *p_button;
+	store * store = p_shop_struct->shopping->Store;
 
-	itemPointerList_set_on_first(store_test->allocatedStock);
-	while (!itemPointerList_is_out_of(store_test->allocatedStock)){
-		category_string = store_test->category[item_get_category(store_test->allocatedStock->current->i)];
-		int grid_category_number = grid_find_category(category_string, p_notebook);
+	itemPointerList_set_on_first(store_get_allocatedStock(store));
 
-		p_button[j] = gtk_button_new_with_label(store_test->allocatedStock->current->i->name);
-		if (grid_category_number == -1)
+	while (!itemPointerList_is_out_of(store_get_allocatedStock(store))){
+		category_string = store->category[item_get_category(store_get_allocatedStock(store)->current->i)];
+		GtkWidget * found_child = grid_find_category(category_string, p_notebook);
+
+		p_button = gtk_button_new_with_label(store_get_allocatedStock(store)->current->i->name);
+		g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), p_shop_struct);
+
+		if (found_child == NULL)
 		{// if there is no notebook tab with the item label
 			sprintf(text, category_string);
-			p_onglet[i] = gtk_label_new(text);
-			p_grid[i] = gtk_grid_new();
-			gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid[i], p_onglet[i]);
-			gtk_grid_attach(GTK_GRID(p_grid[i]), p_button[j], 0, 0, 1, 1);
-			i++; // i is the tab max number
+			tab_label = gtk_label_new(text);
+			p_grid = gtk_grid_new();
+			gtk_notebook_append_page(GTK_NOTEBOOK(p_notebook), p_grid, tab_label);
+			gtk_grid_attach(GTK_GRID(p_grid), p_button, 0, 0, 1, 1);
 		}
 		else
 		{
-			gtk_grid_attach_next_to(GTK_GRID(p_grid[grid_category_number]), p_button[j], NULL,GTK_POS_RIGHT, 1, 1);
+			gtk_grid_attach_next_to(GTK_GRID(found_child), p_button, NULL, GTK_POS_RIGHT, 1, 1);
 		}
-		j++; // j is the item number (in the itemList)
-		itemPointerList_next(store_test->allocatedStock);
+		itemPointerList_next(store_get_allocatedStock(store));
 	}
-	
-
 	return p_notebook;
 }
 /**
 *\brief Function that returns the number of the tab with the same name as category_name
 *\param[out] returns -1 if there is no tab with the same name as category_name, the number of pages otherwise
 */ 
-int grid_find_category(char * category_name, GtkWidget * p_notebook){
-	int i = -1,j=0;
+GtkWidget * grid_find_category(char * category_name, GtkWidget * p_notebook){
+	GtkWidget * currentNotebookTab;
+	GtkWidget * ret = NULL;
+	int j=0;
 	for (j; j < gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); j++){
-		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_notebook_get_tab_label(GTK_NOTEBOOK(p_notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), j)))), category_name) == 0){
-			i = j;
+		currentNotebookTab = gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), j);
+		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_notebook_get_tab_label(GTK_NOTEBOOK(p_notebook), currentNotebookTab))), category_name) == 0){
+			ret = currentNotebookTab;
 		}
 	}
-	return i;
+	return ret;
 }
-
-/**
-*
-*
-*\brief Connecte tous les boutons du notebook au callback cb_shopping_list
-*/
-void notebook_connect_button(GtkWidget * p_notebook, shopping_list * s_list){
-	int i = 0,j;
-	GtkWidget * p_button = NULL;
-	for (i; i < gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); i++){ // i numéro de la page du notebook
-		j = 0;
-		p_button = gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)), j, 0);
-		while (p_button != NULL){
-			g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), s_list);
-			printf("Selection du bouton avec le label : %s\nPage :%d\nNumero=%d\n", gtk_button_get_label(GTK_BUTTON(p_button)),i,j);
-			j++;
-			p_button = gtk_grid_get_child_at(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)), j, 0);
-		}
-	}
-}
-
-GtkWidget * new_menu(GtkWidget * p_table, GtkWidget * p_notebook){
-	/*****Creation of the menu*/
-	GtkWidget *p_menu_bar = NULL;
-	p_menu_bar = gtk_menu_bar_new();
-
-	GtkWidget *p_menu = NULL;
-	p_menu = gtk_menu_new();
-
-	/*Creation of the categories*/
-	GtkWidget *p_menu_item[6];
-	p_menu_item[0] = gtk_image_menu_item_new_with_label("Fruits");
-	p_menu_item[1] = gtk_image_menu_item_new_with_label("Feculents");
-	p_menu_item[2] = gtk_image_menu_item_new_with_label("Numerique");
-	p_menu_item[3] = gtk_image_menu_item_new_with_label("Jardinage");
-	p_menu_item[4] = gtk_image_menu_item_new_with_label("Entretien");
-	p_menu_item[5] = gtk_image_menu_item_new_with_label("Boisson");
-	//gtk_image_menu_item_set_image(p_menu_item, GTK_IMAGE_);
-	int i = 0;
-	for (i; i < 6; i++){
-		g_signal_connect(G_OBJECT(p_menu_item[i]), "activate", G_CALLBACK(cb_open_tab), p_notebook);
-	}
-	/*Addition of these categories to the menu*/
-	i = 0;
-	for (i; i < 6; i++){
-		gtk_menu_shell_append(GTK_MENU_SHELL(p_menu), p_menu_item[i]);
-	}
-
-
-	/*Creation of a box that will contain the menu, and go into the menubar*/
-	GtkWidget *p_menu_link = NULL;
-	p_menu_link = gtk_menu_item_new_with_label("Categories");
-
-	/*Association with the menu*/
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(p_menu_link), p_menu);
-
-	/*And finally add the linker to the menu_bar*/
-	gtk_menu_shell_append(GTK_MENU_SHELL(p_menu_bar), p_menu_link);
-
-	gtk_grid_attach(GTK_GRID(p_table), p_menu_bar, 6, 0, 1, 1);
-
-}
-
 
 /*callbacks*/
 
 
-void cb_shopping_list(GtkWidget *p_widget, shopping_list * s_list){
-	const gchar * text;
-	text = gtk_button_get_label(GTK_BUTTON(p_widget));
+void cb_shopping_list(GtkWidget *p_widget, shop_struct *p_shop_struct){
 
-	/*Test de la présence dans la liste*/
-	int i = 0;
-	while (gtk_grid_get_child_at(GTK_GRID(s_list->shopping_list_grid), 0, i + 1) != NULL){
-		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_grid_get_child_at(GTK_GRID(s_list->shopping_list_grid), 0, i + 1))), text) == 0)
+	itemList * list = store_get_allocatedStock(shopping_get_store(p_shop_struct->shopping));
+	itemList * tmp_list = p_shop_struct->tmp_list;
+	item * found_item;
+	gchar *b_label, *i_name;
+
+	b_label = gtk_button_get_label(GTK_BUTTON(p_widget));
+
+	itemPointerList_set_on_first(list);
+	while (!itemPointerList_is_out_of(list))
+	{
+		i_name = item_get_name(itemPointerList_get_current(list));
+		if (g_strcmp0(b_label, i_name) == 0)
 		{
-			int j;
-			GtkWidget *spin_button = NULL;
-			spin_button = gtk_grid_get_child_at(GTK_GRID(s_list->shopping_list_grid), 1, i + 1);
-			j = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_button));
-			gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_button), j + 1);
-			printf("Increment du nombre de %s dans la liste (cb_shopping_list)\n", text);
-			return;
+			found_item = itemPointerList_find(tmp_list, itemPointerList_get_current(list));
+			if (found_item == NULL)
+				itemPointerList_insert_last(tmp_list, itemPointerList_get_current(list));
+			itemPointerList_get_current(list)->stock++;
 		}
-		i++;
+		itemPointerList_next(list);
 	}
-	printf("cb_shopping_list appelle cb_add_item\n");
-	cb_add_item(p_widget, s_list);
+	display_list(p_shop_struct);
 }
 
-
-void cb_activate_search_bar(GtkWidget *p_entry, grid_store_notebook *g_notebook)
+void display_list(shop_struct *p_shop_struct)
 {
-	const gchar *sText;
-	const gchar * item_name;
-	char text[20];
-	sprintf(text, "recherche");
-	sText = gtk_entry_get_text(GTK_ENTRY(p_entry));
+	itemList *tmp_list = p_shop_struct->tmp_list;
+	gchar * i_name;
+	item * current;
+	int currentstock;
+	GtkWidget * s_label, *p_label, *n_label;
+	GtkWidget * spin_button;
+	GtkWidget * list_grid = p_shop_struct->list_grid;
+	int lines = 0;
+	int i = 0;
 
+	while (gtk_grid_get_child_at(list_grid, 0, lines) != NULL)
+	{
+		lines++;
+	}
+
+	for (i = 0; i < lines; i++)
+	{
+		gtk_widget_destroy(gtk_grid_get_child_at(list_grid, 0, i));
+		gtk_widget_destroy(gtk_grid_get_child_at(list_grid, 1, i));
+	}
+
+	p_label = gtk_label_new("Produit");
+	n_label = gtk_label_new("Quantite");
+	gtk_grid_attach(GTK_GRID(list_grid), p_label, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(list_grid), n_label, 1, 0, 1, 1);
+
+	i = 1;
+	itemPointerList_set_on_first(tmp_list);
+	while (!itemPointerList_is_out_of(tmp_list))
+	{
+		current = itemPointerList_get_current(tmp_list);
+		currentstock = item_get_stock(current);
+
+		if (currentstock <= 0)
+		{
+			itemPointerList_delete_current(tmp_list);
+		}
+		else
+		{
+			i_name = item_get_name(current);
+			s_label = gtk_label_new(i_name);
+
+			spin_button = gtk_spin_button_new_with_range(0, 1000, 1);
+			gtk_spin_button_set_value(spin_button, currentstock);
+			g_signal_connect(GTK_SPIN_BUTTON(spin_button), "value-changed", cb_update_spin_button, current);
+
+			gtk_grid_attach(GTK_GRID(list_grid), s_label, 0, i, 1, 1);
+			gtk_grid_attach(GTK_GRID(list_grid), spin_button, 1, i, 1, 1);
+
+			i++;
+		}
+		itemPointerList_next(tmp_list);
+	}
+	gtk_widget_show_all(list_grid);
+}
+
+gboolean cb_update_spin_button(GtkWidget *p_widget, gpointer *associated_item)
+{
+	item_set_stock((item*)associated_item, (int)gtk_spin_button_get_value(p_widget));
+	return FALSE;
+}
+
+void cb_activate_search_bar(GtkWidget *p_entry, shop_struct *p_shop_struct)
+{
 	GtkWidget * p_button = NULL;
 	GtkWidget * new_grid = NULL;
 	GtkWidget * p_onglet = NULL;
 	GtkWidget * p_grid = NULL;
-	shopping_list * p_shopping_list = NULL;
-	p_shopping_list = shopping_list_new();
-	p_shopping_list->shopping_itemlist = g_notebook->user_list;
-	p_shopping_list->shopping_list_grid = g_notebook->grid;
+	GtkWidget * notebook = p_shop_struct->notebook;
 
 	gboolean searching_tab_exists = FALSE;
-	gboolean search_success = FALSE;
-	int i = 0;
-	gint nbpages;
-	nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(g_notebook->notebook));
+	gint i = 0;
+	gint nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(notebook));
+	gchar *sText;
+	gchar * item_name;
+	gchar text[MAX_ARRAY_OF_CHAR];
+
+	itemList * a_stock = store_get_allocatedStock(shopping_get_store(p_shop_struct->shopping));
 
 
 	/**Pour commencer, on teste si l'onglet de recherche a deja ete cree
 	*/
-	printf("last tab label :\n");
-	printf(gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(g_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1)));
-	printf("\n");
-	if (g_strcmp0(text, gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(g_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1))) == 0)
+	sprintf(text, "recherche");
+	sText = gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), nbpages - 1));
+	if (g_strcmp0(text, sText) == 0)
 	{
 		searching_tab_exists = TRUE;
 	}
-
 
 	/**
 	*On teste maintenant si l'utilisateur n'a pas clear sa recherche :
 	*Si c'est le cas, on détruit la dernière page du notebook
 	*/
+	sText = gtk_entry_get_text(GTK_ENTRY(p_entry));
+
 	if (g_strcmp0(sText, "") == 0)
 	{
-		printf("the user cleared his research\n");
 		if (searching_tab_exists)
 		{
-			printf("trying to remove last page");
-			gtk_notebook_remove_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1);
+			gtk_notebook_remove_page(GTK_NOTEBOOK(notebook), nbpages - 1);
 			nbpages--;
 		}
-		gtk_notebook_set_current_page(GTK_NOTEBOOK(g_notebook->notebook), 0);
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
 	}
 	else
 	{
 		if (searching_tab_exists)
 			/*We destroy the existing tab*/
 		{
-			gtk_notebook_remove_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1);
+			gtk_notebook_remove_page(GTK_NOTEBOOK(notebook), nbpages - 1);
 			nbpages--;
 		}
 		/*We create the last tab only activated when the user is searching*/
 		printf("We create the last tab only activated when the user is searching\n");
 		p_onglet = gtk_label_new(text);
 		p_grid = gtk_grid_new();
-		gtk_notebook_append_page(GTK_NOTEBOOK(g_notebook->notebook), p_grid, p_onglet);
-		gtk_widget_show_all(g_notebook->notebook);
+		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), p_grid, p_onglet);
+		gtk_widget_show_all(notebook);
 		nbpages++;
 
 
 		/*On parcours la liste des items et on crée un button pour chacun de ceux qui correspondent*/
-		itemPointerList_set_on_first(g_notebook->store->allocatedStock);
-		while (!itemPointerList_is_out_of(g_notebook->store->allocatedStock))
+		itemPointerList_set_on_first(a_stock);
+		while (!itemPointerList_is_out_of(a_stock))
 		{
-			item_name = (const gchar *)item_get_name(g_notebook->store->allocatedStock->current->i);
+			item_name = (const gchar *)item_get_name(itemPointerList_get_current(a_stock));
 
 			if (g_str_has_prefix(item_name, sText) != 0)
 			{//The item matched with the research, we create a new button
-				printf(item_name);
-				printf("\n");
 				p_button = gtk_button_new_with_label(item_name);
-				gtk_grid_attach(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
-				g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), p_shopping_list);
-				gtk_widget_show(p_button);
-				search_success = TRUE;
+				gtk_grid_attach(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
+				g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), p_shop_struct);
 			}
-			itemPointerList_next(g_notebook->store->allocatedStock);
+			itemPointerList_next(a_stock);
 		}
 
-		/**On teste si on a trouvé un item dans notre recherche
-		*Si non, on crée un bouton comme quoi notre recherche a échouée*/
-		if (!search_success)
-		{
-			sprintf(item_name, "Aucun item correspondant");
-			p_button = gtk_button_new_with_label(item_name);
-			gtk_grid_attach(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
-			gtk_widget_show(p_button);
-
-		}
-		gtk_notebook_set_current_page(GTK_NOTEBOOK(g_notebook->notebook), nbpages - 1);
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), nbpages - 1);
+		gtk_widget_show_all(notebook);
 	}
-	//shopping_list_delete(p_shopping_list, FALSE);
-
-
 }
 
-void cb_search_clear_button(GtkWidget *p_button, store_notebook *s_notebook){
-	gboolean searching_tab_exists = FALSE;
-	char text[20];
-	sprintf(text, "recherche");
+void cb_search_clear_button(GtkWidget *p_button, shop_struct *p_shop_struct){
+	
 	gint nbpages;
-	nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(s_notebook->notebook));
+	gboolean searching_tab_exists = FALSE;
+	char text[MAX_ARRAY_OF_CHAR];
+	sprintf(text, "recherche");
 
-	if (g_strcmp0(text, gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(s_notebook->notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1))) == 0)
+	GtkWidget *notebook = p_shop_struct->notebook;
+
+	nbpages = gtk_notebook_get_n_pages(GTK_NOTEBOOK(notebook));
+
+	if (g_strcmp0(text, gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), nbpages - 1))) == 0)
 	{
 		searching_tab_exists = TRUE;
-		printf("clear_button : searching tab exists\n");
 	}
 
 	if (searching_tab_exists)
 		/*We destroy the existing tab*/
 	{
-		gtk_notebook_remove_page(GTK_NOTEBOOK(s_notebook->notebook), nbpages - 1);
+		gtk_notebook_remove_page(GTK_NOTEBOOK(notebook), nbpages - 1);
 	}
-	gtk_notebook_set_current_page(GTK_NOTEBOOK(s_notebook->notebook), 0);
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
+	gtk_entry_set_text(p_shop_struct->entry, "");
 }
 
-
-void cb_add_item(GtkWidget *p_widget, shopping_list * s_list){
-	GtkWidget *p_new_label;
-	GtkWidget *p_spin_button;
-	const gchar * text;
-	text = gtk_button_get_label(GTK_BUTTON(p_widget));
-
-	item * n_item = item_new(0, fromage, text);
-	itemPointerList_insert_first(s_list->shopping_itemlist, n_item);
-
-	p_new_label = gtk_label_new(text);
-	gtk_grid_insert_row(GTK_GRID(s_list->shopping_list_grid), 1);
-	gtk_grid_attach(GTK_GRID(s_list->shopping_list_grid), p_new_label, 0, 1, 1, 1);
+gboolean cb_course_quit(GtkWidget *p_button, shop_struct * p_shop_struct){
 
 
-	p_spin_button = gtk_spin_button_new_with_range(1, 42, 1);
-	gtk_grid_attach(GTK_GRID(s_list->shopping_list_grid), p_spin_button, 1, 1, 1, 1);
-	gtk_widget_show(p_new_label);
-	gtk_widget_show(p_spin_button);
-	printf("ajout de %s a la liste (cb_add_item)\n", text);
+	gtk_widget_set_sensitive(parent_menu->main_window, TRUE);
+
+	if (p_shop_struct->shopping->List->first != NULL)
+		gtk_widget_set_sensitive(parent_menu->button_gosho, TRUE);
+	else
+		gtk_widget_set_sensitive(parent_menu->button_gosho, FALSE);
+
+	gtk_widget_show_all(parent_menu->main_window);
+
+	itemPointerList_delete(p_shop_struct->tmp_list);
+	free(p_shop_struct);
+
+	return FALSE;
 }
 
-void cb_end_list(GtkWidget *p_button, GtkWidget *p_window){
-	gtk_widget_destroy(GTK_WIDGET(window));
-	gtk_widget_set_sensitive(p_window, TRUE);
-}
+gboolean cb_end_list(GtkWidget *p_button, shop_struct * p_shop_struct){
 
-void cb_list_quit(GtkWidget *p_button, shopping * p_shopping){
-	printf("cb_list_quit");
-	itemPointerList_set_on_first(p_shopping->List);
-	char * text;
-	/*On parcours la liste pour remplir les items avec leur caractéristiques à partir de leur nom
-	(oui je sais c'est moche mais on a plus le temps)*/
-	while (!itemPointerList_is_out_of(p_shopping->List))
+	display_list(p_shop_struct);
+
+	itemList *tmp_list = p_shop_struct->tmp_list;
+	itemList *list = shopping_get_list(p_shop_struct->shopping);
+
+	itemPointerList_set_on_first(list);
+	while (!itemPointerList_is_empty(list))
 	{
-		text = item_get_name(p_shopping->List->current->i);
-		/*On parcours maintenant le shop pour trouver l'item correspondant :'(*/
-		itemPointerList_set_on_first(p_shopping->Store->allocatedStock);
-		while (!itemPointerList_is_out_of(p_shopping->Store->allocatedStock))
-		{
-			if (strcmp(text, item_get_name(p_shopping->Store->allocatedStock->current->i)) == 0)
-			{
-				p_shopping->List->current->i = p_shopping->Store->allocatedStock->current->i;
-			}
-
-			itemPointerList_next(p_shopping->Store->allocatedStock);
-		}
-
-		itemPointerList_next(p_shopping->List);
+		itemPointerList_delete_first(list);
 	}
-}
 
-static void open_file(const gchar *file_name, GtkTextView *p_text_view)
-{
-	g_return_if_fail(file_name && p_text_view);
+	itemPointerList_set_on_first(tmp_list);
+	while (!itemPointerList_is_out_of(tmp_list))
 	{
-		gchar *contents = NULL;
-
-		if (g_file_get_contents(file_name, &contents, NULL, NULL))
-		{
-			/* Copie de contents dans le GtkTextView */
-		}
-		else
-		{
-			print_warning("Impossible d'ouvrir le fichier %s\n", file_name);
-		}
+		itemPointerList_insert_last(list, itemPointerList_get_current(tmp_list));
+		itemPointerList_next(tmp_list);
 	}
-}
 
-//Function that opens the tab with the same label as the menu_item cliqued
-void cb_open_tab(GtkWidget *p_menu_item, gpointer p_notebook){
-	gint i = 0;
-	const gchar *label;
-	label = gtk_menu_item_get_label(GTK_MENU_ITEM(p_menu_item));
-	for (i; i < gtk_notebook_get_n_pages(GTK_NOTEBOOK(p_notebook)); i++){
-		if (g_strcmp0(gtk_label_get_label(GTK_LABEL(gtk_notebook_get_tab_label(GTK_NOTEBOOK(p_notebook), gtk_notebook_get_nth_page(GTK_NOTEBOOK(p_notebook), i)))), label) == 0){
-			gtk_notebook_set_current_page(GTK_NOTEBOOK(p_notebook), i);
-			return;
-		}
-	}
-	printf("WARNING : YOUR NOTEBOOKS TAB_LABEL AND MENU_ITEMS HAVE DIFFERENT NAMES");
+	gtk_widget_destroy(window);
+	return FALSE;
 }
-

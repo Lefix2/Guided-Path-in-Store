@@ -73,7 +73,8 @@ void itemPointerList_set_on_last(itemList * l)
 
 void itemPointerList_next(itemList * l)
 {
-	l->current = l->current->itemPointerList_next;
+	if (l->current != NULL)
+		l->current = l->current->itemPointerList_next;
 }
 
 void itemPointerList_print(itemList * l, gboolean minimal)

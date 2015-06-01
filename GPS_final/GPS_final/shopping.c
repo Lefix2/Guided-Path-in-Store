@@ -30,8 +30,13 @@ int shopping_delete(shopping *shopping)
 int shopping_set_store(shopping * shopping, store * store)
 {
 	if (shopping->Store != NULL)
+	{
+		printf("Unloading store %s ...\n", store_get_name(shopping->Store));
 		store_delete(shopping->Store);
+	}
 	shopping->Store = store;
+	if (shopping->Store != NULL)
+		printf("Store %s Loaded\n", store_get_name(shopping->Store));
 	return EXIT_SUCCESS;
 }
 
