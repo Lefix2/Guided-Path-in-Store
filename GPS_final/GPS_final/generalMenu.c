@@ -15,7 +15,6 @@ void call_main_menu()
 	gchar utf8_chain[MAX_ARRAY_OF_CHAR];
 	GtkImage *WelcomeImg = gtk_image_new_from_file(".\\ressources\\Images\\mainMenu.png");
 
-	printf("%d\n", myCheck());
 	main_menu->myShop = shopping_new();
 
 	/* Window Creation */
@@ -65,7 +64,7 @@ gboolean cb_quit(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	gtk_main_quit();
 	shopping_delete(main_menu->myShop);
 	g_free(main_menu);
-	printf("%d\n", myCheck());
+	printf("Allocated blocs : %d\n", myCheck());
 	getch();
 	return FALSE;
 }
@@ -76,7 +75,14 @@ gboolean cb_store_selection(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	if (main_menu->myShop->Store != NULL)
 		gtk_widget_set_sensitive(main_menu->button_makel, TRUE);
 	else
+	{
 		gtk_widget_set_sensitive(main_menu->button_makel, FALSE);
+	}
+
+	if (main_menu->myShop->List->first != NULL)
+		gtk_widget_set_sensitive(main_menu->button_gosho, TRUE);
+	else
+		gtk_widget_set_sensitive(main_menu->button_gosho, FALSE);
 
 	return FALSE;
 }

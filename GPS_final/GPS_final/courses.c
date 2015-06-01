@@ -299,7 +299,6 @@ void cb_activate_search_bar(GtkWidget *p_entry, shop_struct *p_shop_struct)
 			nbpages--;
 		}
 		/*We create the last tab only activated when the user is searching*/
-		printf("We create the last tab only activated when the user is searching\n");
 		p_onglet = gtk_label_new(text);
 		p_grid = gtk_grid_new();
 		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), p_grid, p_onglet);
