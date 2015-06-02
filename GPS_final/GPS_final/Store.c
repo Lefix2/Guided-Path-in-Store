@@ -460,6 +460,9 @@ int store_detect_collision(store * st_source, int x_pos, int y_pos, int x_size, 
 
 void testStore(void)
 {
+	typedef enum category_test{ c_none, fromage, pain, legumes_vert, alcool }category;
+	char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
+
 	int magsizex = 50;
 	int magsizey = 50;
 

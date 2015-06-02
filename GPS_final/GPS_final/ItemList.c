@@ -151,18 +151,18 @@ void itemPointerList_print(itemList * l, gboolean minimal)
 			{
 				tmp = l->current->i;
 				if (item_has_section(tmp))
-					printf("| %12d | %12s | %12s | %11.2fE | %12d |\n",
+					printf("| %12d | %12s | %12d | %11.2fE | %12d |\n",
 						item_get_id(tmp),
 						item_get_name(tmp),
-						item_get_category_string(tmp),
+						item_get_category(tmp),
 						item_get_cost(tmp),
 						item_get_section(tmp)->id
 						);
 				else
-					printf("| %12d | %12s | %12s | %11.2fE | %12s |\n",
+					printf("| %12d | %12s | %12d | %11.2fE | %12s |\n",
 						item_get_id(tmp),
 						item_get_name(tmp),
-						item_get_category_string(tmp),
+						item_get_category(tmp),
 						item_get_cost(tmp),
 						"No section"
 						);

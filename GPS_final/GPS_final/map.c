@@ -82,7 +82,11 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 
 	guint width, height, i;
 	GdkRGBA color;
-	GdkPixbuf *store_pixbuf = store_image_new_pixbuf_from_store(((shopping*)data)->Store);
+	static GdkPixbuf *store_pixbuf = NULL;
+
+	if (store_pixbuf != NULL)
+		g_object_unref(store_pixbuf);
+	store_pixbuf = store_image_new_pixbuf_from_store(((shopping*)data)->Store);
 
 	gdk_cairo_set_source_pixbuf(cr, store_pixbuf, 0, 0);
 	width = gdk_pixbuf_get_width(store_pixbuf);

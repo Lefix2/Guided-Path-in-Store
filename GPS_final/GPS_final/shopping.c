@@ -8,8 +8,8 @@ shopping *shopping_new()
 	s_new = (shopping*)malloc(sizeof(shopping));
 
 	s_new->Store = NULL;
-	s_new->start = item_new(-1, c_none, "start");
-	s_new->end = item_new(-1, c_none, "end");
+	s_new->start = item_new(-1, 0, "start");
+	s_new->end = item_new(-1, 0, "end");
 	s_new->List = itemPointerList_new();
 	return s_new;
 }

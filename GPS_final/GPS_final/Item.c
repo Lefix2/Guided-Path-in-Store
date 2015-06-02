@@ -21,7 +21,7 @@ item * item_init(item * item)
 {
 	item->id = 0;
 	item->name[0] = 0;
-	item->category = c_none;
+	item->category = 0;
 	item->fresh = FALSE;
 	item->fragility = 0;
 	item->cost = 0;
@@ -153,11 +153,6 @@ category item_get_category(item * item)
 {
 	return item->category;
 }
-//only for test
-char * item_get_category_string(item * item)
-{
-	return item_category[item->category];
-}
 
 int item_get_stock(item *item)
 {
@@ -222,7 +217,7 @@ void item_print(item * item, gboolean minimal)
 		printf("****** Item ******\n");
 		printf("ID               : %d\n", item_get_id(item));
 		printf("Name             : %s\n", item_get_name(item));
-		printf("Category         : %s\n", item_category[item_get_category(item)]);
+		printf("Category         : %d\n", item_get_category(item));
 		printf("Fresh product    : %s\n", i_fresh_string);
 		printf("Promotion        : %s\n", i_promo_string);
 		printf("Cost             : %.2f\n", item_get_cost(item));
@@ -240,6 +235,9 @@ void item_print(item * item, gboolean minimal)
 
 void testItem(void)
 {
+	typedef enum category_test{ c_none, fromage, pain, legumes_vert, alcool }category;
+	char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
+
 	section testSec;
 	testSec.id = 1;
 	testSec.size.x = 20;

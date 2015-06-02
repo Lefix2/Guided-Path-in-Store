@@ -35,6 +35,7 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 	
 	section *currentSection;
 	sectionList *sections = store_get_allocatedSections(src);
+	GdkPixbuf *currentSectionPixbuf;
 
 	//création du pixbuf
 	sectionPointerList_set_on_first(sections);
@@ -45,8 +46,10 @@ GdkPixbuf *store_image_new_pixbuf_from_store(store *src)
 		x = section_get_pos(currentSection).x;
 		y = section_get_pos(currentSection).y;
 
-		store_image_merge_pixbuf(store_image_new_pixbuf_from_section(currentSection, sprites), newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
+		currentSectionPixbuf = store_image_new_pixbuf_from_section(currentSection, sprites);
+		store_image_merge_pixbuf(currentSectionPixbuf, newGdkPixbuf, x*SPRITE_RES, y*SPRITE_RES);
 
+		g_object_unref(currentSectionPixbuf);
 		sectionPointerList_next(sections);
 	}
 
