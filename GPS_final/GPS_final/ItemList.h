@@ -1,3 +1,10 @@
+/*!
+* \file  ItemList.c
+* \brief Defines new chained list structures 
+* \author GPS team
+* \date 13/12/2014
+*/
+
 #ifndef ITEMLIST_H
 #define ITEMLIST_H
 
@@ -21,6 +28,7 @@ struct itemList{
 	nodeItemList *current;			/*!< current item of the list*/
 	nodeItemList *last;			/*!< last item of the list*/
 };
+
 
 nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n);
 

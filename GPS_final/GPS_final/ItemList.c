@@ -4,6 +4,13 @@
 #include "Item.h"
 #include "Section.h"
 
+/*!
+* \fn nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n);
+* \brief Create a new itemList node
+* \param[in] *i the item contained in the node
+* \param[in] *n the parent nodeItemList
+* \return the new allocated node
+*/
 nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n)
 {
 	nodeItemList * newn;
@@ -15,6 +22,12 @@ nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n)
 	return newn;
 }
 
+
+/*!
+* \fn itemList * itemPointerList_new(void)
+* \brief Create a new itemPointerList
+* \return the new allocated itemList
+*/
 itemList * itemPointerList_new(void)
 {
 	itemList * newl;
@@ -24,6 +37,12 @@ itemList * itemPointerList_new(void)
 	return newl;
 }
 
+/*!
+* \fn int itemPointerList_delete(itemList * l)
+* \brief Delete an itemPointerList
+* \param[in] *l pointer to the itemList
+* \return EXIT_SUCCES if OK
+*/
 int itemPointerList_delete(itemList * l)
 {
 	if (l == NULL)
@@ -36,47 +55,97 @@ int itemPointerList_delete(itemList * l)
 	return EXIT_SUCCESS;
 }
 
+/*! 
+* \fn void itemPointerList_init(itemList * l)
+* \brief Initializes all itemList parameters to NULL
+* \param[in] *l the itemList to initialize
+*/
 void itemPointerList_init(itemList * l)
 {
 	l->first = l->last = l->current = NULL;
 }
 
+/*!
+* \fn void itemPointerList_is_empty(itemList * l)
+* \brief Tells the user if the list is empty or not
+* \param[in] *l the itemList 
+* \return 1 if the list is empty, 0 otherwise
+*/
 int itemPointerList_is_empty(itemList * l)
 {
 	return l->first == NULL;
 }
 
+/*!
+* \fn void itemPointerList_is_on_first(itemList * l)
+* \brief Tells the user if the list current cursor is on the first item
+* \param[in] *l the itemList
+* \return 1 if the list is on the first item, 0 otherwise
+*/
 int itemPointerList_is_on_first(itemList * l)
 {
 	return l->current == l->first;
 }
 
+/*!
+* \fn void itemPointerList_is_on_last(itemList * l)
+* \brief Tells the user if the list current cursor is on the last item
+* \param[in] *l the itemList
+* \return 1 if the list is on the last item, 0 otherwise
+*/
 int itemPointerList_is_on_last(itemList * l)
 {
 	return l->current == l->last;
 }
 
+/*!
+* \fn void itemPointerList_is_out_of(itemList * l)
+* \brief Tells the user if the list current cursor is out of the list
+* \param[in] *l the itemList
+* \return 1 if the list cursor is out of the list, 0 otherwise
+*/
 int itemPointerList_is_out_of(itemList * l)
 {
 	return l->current == NULL;
 }
 
+/*!
+* \fn void itemPointerList_set_on_first(itemList * l)
+* \brief Set the current cursor of the list on the first item
+* \param[in] *l the itemList
+*/
 void itemPointerList_set_on_first(itemList * l)
 {
 	l->current = l->first;
 }
 
+/*!
+* \fn void itemPointerList_set_on_last(itemList * l)
+* \brief Set the current cursor of the list on the last item
+* \param[in] *l the itemList
+*/
 void itemPointerList_set_on_last(itemList * l)
 {
 	l->current = l->last;
 }
 
+/*!
+* \fn void itemPointerList_next(itemList * l)
+* \brief Set the current cursor of the list on the next item
+* \param[in] *l the itemList
+*/
 void itemPointerList_next(itemList * l)
 {
 	if (l->current != NULL)
 		l->current = l->current->itemPointerList_next;
 }
 
+/*!
+* \fn void itemPointerList_print(itemList * l, gboolean minimal)
+* \brief Prints the content of the itemPointerList
+* \param[in] *l the itemList
+* \param[in] minimal prints the list in a minimal way if set at true
+*/
 void itemPointerList_print(itemList * l, gboolean minimal)
 {
 	char* header[] = { "----------------------------------------------------------------------------",
@@ -174,6 +243,13 @@ void itemPointerList_print(itemList * l, gboolean minimal)
 	}
 }
 
+/*!
+* \fn int itemPointerList_insert_first(itemList * l, item * i)
+* \brief Insert the item i at the beginning of in the itemList l
+* \param[in] *l the list the node is in
+* \param[in] *i the item to insert 
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int itemPointerList_insert_first(itemList * l, item * i)
 {
 	nodeItemList* n = nodeItemPointerList_new(i, l->first);
@@ -188,6 +264,13 @@ int itemPointerList_insert_first(itemList * l, item * i)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn int itemPointerList_insert_last(itemList * l, item * i)
+* \brief Insert the item i at the end of the itemList l
+* \param[in] *l the list the node is in
+* \param[in] *i the item to insert 
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int itemPointerList_insert_last(itemList * l, item * i)
 {
 	nodeItemList* n = nodeItemPointerList_new(i, NULL);
@@ -204,6 +287,13 @@ int itemPointerList_insert_last(itemList * l, item * i)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn int itemPointerList_insert_before_current(itemList * l, item * i)
+* \brief Insert the item i in the itemList l just before the current cursor
+* \param[in] *l the list the node is in
+* \param[in] *i the item to insert 
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int itemPointerList_insert_before_current(itemList * l, item * i)
 {
 	if (itemPointerList_is_empty(l) || itemPointerList_is_on_first(l))
@@ -230,6 +320,13 @@ int itemPointerList_insert_before_current(itemList * l, item * i)
 	return EXIT_FAILURE;
 }
 
+/*!
+* \fn int itemPointerList_insert_after_current(itemList * l, item * i)
+* \brief Insert the item i in the itemList l just after the current cursor
+* \param[in] *l the list the node is in
+* \param[in] *i the item to insert
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int itemPointerList_insert_after_current(itemList * l, item * i)
 {
 
@@ -251,6 +348,13 @@ int itemPointerList_insert_after_current(itemList * l, item * i)
 	return EXIT_FAILURE;
 }
 
+/*!
+* \fn int itemPointerList_insert_sort(itemList * l, item * i)
+* \brief Insert the item i in the itemList l sorted by id
+* \param[in] *l the list the node is in
+* \param[in] *i the item to insert
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int itemPointerList_insert_sort(itemList * l, item * i)
 {
 	int ret;
@@ -283,6 +387,12 @@ int itemPointerList_insert_sort(itemList * l, item * i)
 	return itemPointerList_insert_last(l, i);
 }
 
+/*!
+* \fn item * itemPointerList_delete_first(itemList * l)
+* \brief deletes the first item in the itemList and free the memory
+* \param[in] *l the itemList
+* \return the item deleted
+*/
 item * itemPointerList_delete_first(itemList * l)
 {
 	if (itemPointerList_is_empty(l)){
@@ -303,6 +413,12 @@ item * itemPointerList_delete_first(itemList * l)
 	return NULL;
 }
 
+/*!
+* \fn item * itemPointerList_delete_last(itemList * l)
+* \brief deletes the last item in the itemList and free the memory
+* \param[in] *l the itemList
+* \return the item deleted
+*/
 item * itemPointerList_delete_last(itemList * l)
 {
 	if (itemPointerList_is_empty(l)){
@@ -329,6 +445,12 @@ item * itemPointerList_delete_last(itemList * l)
 	return NULL;
 }
 
+/*!
+* \fn item * itemPointerList_delete_current(itemList * l)
+* \brief deletes the current item in the itemList and free the memory
+* \param[in] *l the itemList
+* \return the item deleted
+*/
 item * itemPointerList_delete_current(itemList * l)
 {
 	if (itemPointerList_is_empty(l)){
@@ -360,6 +482,13 @@ item * itemPointerList_delete_current(itemList * l)
 	return NULL;
 }
 
+/*!
+* \fn item * itemPointerList_delete_single(itemList * l, item * i)
+* \brief deletes the item i in the itemList and free the memory
+* \param[in] *l the itemList
+* \param[in] *i the item
+* \return the item deleted
+*/
 item * itemPointerList_delete_single(itemList * l, item * i)
 {
 	item * tmp = itemPointerList_find(l, i);
@@ -368,21 +497,46 @@ item * itemPointerList_delete_single(itemList * l, item * i)
 	return tmp;
 }
 
+/*!
+* \fn item * itemPointerList_get_first(itemList * l)
+* \brief Get the first item of the itemList
+* \param[in] *l the itemList
+* \return the first item of the itemList
+*/
 item * itemPointerList_get_first(itemList * l)
 {
 	return l->first->i;
 }
 
+/*!
+* \fn item * itemPointerList_get_current(itemList * l)
+* \brief Get the current item of the itemList
+* \param[in] *l the itemList
+* \return the current item of the itemList
+*/
 item * itemPointerList_get_current(itemList * l)
 {
 	return l->current->i;
 }
 
+/*!
+* \fn item * itemPointerList_get_last(itemList * l)
+* \brief Get the last item of the itemList
+* \param[in] *l the itemList
+* \return the last item of the itemList
+*/
 item * itemPointerList_get_last(itemList * l)
 {
 	return l->last->i;
 }
 
+/*!
+* \fn item * itemPointerList_find(itemList * l, item * i)
+* \brief Get the item i of the itemList
+* \param[in] *l the itemList
+* \param[in] *i the item to search
+* \return the item i if contained in the itemList
+*/
 item * itemPointerList_find(itemList * l, item * i)
 {
 	itemPointerList_set_on_first(l);
@@ -395,6 +549,13 @@ item * itemPointerList_find(itemList * l, item * i)
 	return NULL;
 }
 
+/*!
+* \fn item * itemPointerList_find(itemList * l, int id)
+* \brief Get the item with the id id of the itemList
+* \param[in] *l the itemList
+* \param[in] id the if of the item to search
+* \return the item with the id id if contained in the itemList
+*/
 item * itemPointerList_find_id(itemList * l, int id)
 {
 	itemPointerList_set_on_first(l);
