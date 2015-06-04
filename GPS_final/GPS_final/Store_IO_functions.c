@@ -1,3 +1,10 @@
+/*!
+* \file  Store_IO_functions.c
+* \brief Make link between our programm and the database 
+* \author GPS team
+* \date 04/06/2015
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> //Fonctions strcpy, strcat
@@ -8,7 +15,11 @@
 #include "Section.h"
 #include "Item.h"
 
-//Open database
+/*!
+* \ static sqlite3 *openDb(char *dbName)
+* \brief Open the database in parameter
+* \param[in] *dbName the name of the database
+*/
 static sqlite3 *openDb(char *dbName)
 {
 	sqlite3 *db = NULL;
@@ -26,14 +37,24 @@ static sqlite3 *openDb(char *dbName)
 	return db;
 }
 
-//Close database
+/*!
+* \ static void closeDb(sqlite3 *db)
+* \brief Close database in parameter
+* \param[in] *db name of the database
+*/
 static void closeDb(sqlite3 *db)
 {
 	sqlite3_close(db);
 	//printf("Database closed\n");
 }
 
-//return the number of row in a store's query
+/*!
+* \ int sqlite_get_row(char *DataBaseName, char *DataBaseTab)
+* \brief return the number of row in the class in parameter
+* \param[in] *DataBaseName name of the database
+* \param[in] *DataBaseTab name of the class 
+* \return the row's number
+*/
 int sqlite_get_row(char *DataBaseName, char *DataBaseTab)
 {
 	//SQLITE3
@@ -73,7 +94,12 @@ int sqlite_get_row(char *DataBaseName, char *DataBaseTab)
 	return ret;
 }
 
-//create a new store from a SQLITE database
+/*!
+* \ store* sqlite_new_store_from_database(char *DataBaseName)
+* \brief Create a new store
+* \param[in] *DataBaseName name of the database
+* \return a pointer of store
+*/
 store* sqlite_new_store_from_database(char *DataBaseName)
 {
 	int i = 0;
@@ -89,7 +115,12 @@ store* sqlite_new_store_from_database(char *DataBaseName)
 	return newstore;
 }
 
-//create and initialise a new store
+/*!
+* \ store* sqlite_get_store(char *DataBaseName)
+* \brief Enter differents parameters from the store
+* \param[in] *DataBaseName
+* \return a pointer of store
+*/
 store* sqlite_get_store(char *DataBaseName)
 {
 	//SQLITE3
@@ -137,6 +168,12 @@ store* sqlite_get_store(char *DataBaseName)
 	return newstore;
 }
 
+/*!
+* \ void sqlite_get_store_sections(char *DataBaseName, store *st_source)
+* \brief Put sections in store
+* \param[in] *DataBaseName name of the database
+* \param[in] *st_source pointer of store modified
+*/
 void sqlite_get_store_sections(char *DataBaseName, store *st_source)
 {
 	sqlite3_stmt *stmt;
@@ -192,6 +229,12 @@ void sqlite_get_store_sections(char *DataBaseName, store *st_source)
 	closeDb(db);
 }
 
+/*!
+* \ void sqlite_get_store_items(char *DataBaseName, store *st_source)
+* \brief Put items in store
+* \param[in] *DataBaseName name of the database
+* \param[in] *st_source pointer of store modified
+*/
 void sqlite_get_store_items(char *DataBaseName, store *st_source)
 {
 	//SQLITE3 et initialisation des variables
@@ -259,7 +302,13 @@ void sqlite_get_store_items(char *DataBaseName, store *st_source)
 	closeDb(db);
 }
 
-// return all elements of category's table
+/*!
+* \ char **sqlite_get_category(char *DataBaseName, int *nb_category)
+* \brief get the table of category
+* \param[in] *DataBaseName name of the database
+* \param[in] *nb_category number of categories
+* \return a pointer of table corresponding to category's table
+*/
 char **sqlite_get_category(char *DataBaseName, int *nb_category)
 {
 	//SQLITE3
@@ -300,7 +349,15 @@ char **sqlite_get_category(char *DataBaseName, int *nb_category)
 	return category_table;
 }
 
-// return in C comments of SQlite
+/*!
+* \ int callback(void *NotUsed, int argc, char **argv, char **azColName)
+* \brief Allow to give to database informations given in the programm
+* \param[in] *NotUsed 
+* \param[in] argc
+* \param[in] **argv
+* \param[in] **azColName
+* \return 0 
+*/
 int callback(void *NotUsed, int argc, char **argv, char **azColName) {
 
 	NotUsed = 0;
@@ -314,7 +371,12 @@ int callback(void *NotUsed, int argc, char **argv, char **azColName) {
 
 	return 0;
 }
-// add value in section
+
+/*!
+* \ void sqlite_add_section_value(char *DataBaseName)
+* \brief Create a new section
+* \param[in] *DataBaseName name of the database
+*/
 void sqlite_add_section_value(char *DataBaseName)
 {
 	sqlite3 *db;
@@ -361,7 +423,13 @@ void sqlite_add_section_value(char *DataBaseName)
 	closeDb(db);
 
 }
-// add item in section
+
+
+/*!
+* \ void sqlite_add_item_value(char *DataBaseName)
+* \brief Create a new item
+* \param[in] *DataBaseName name of the database
+*/
 void sqlite_add_item_value(char *DataBaseName)
 {
 	sqlite3 *db;
@@ -424,7 +492,12 @@ void sqlite_add_item_value(char *DataBaseName)
 	}
 	closeDb(db);
 }
-// add value in class
+
+/*!
+* \ void sqlite_add_value(char *DataBaseName)
+* \brief add item or section to database
+* \param[in] *DataBaseName name of the database
+*/
 void sqlite_add_value(char *DataBaseName)
 {
 	char *DbName = DataBaseName;
@@ -445,7 +518,12 @@ void sqlite_add_value(char *DataBaseName)
 		sqlite_add_value(DbName);
 	}
 }
-// delete value in section
+
+/*!
+* \ void sqlite_delete_section_value(char *DataBaseName)
+* \brief Instructions to delete a section's value
+* \param[in] *DataBaseName name of the database
+*/
 void sqlite_delete_section_value(char *DataBaseName)
 {
 	sqlite3 *db;
@@ -494,7 +572,12 @@ void sqlite_delete_section_value(char *DataBaseName)
 	closeDb(db);
 
 }
-// delete value in item
+
+/*!
+* \ void sqlite_delete_item_value(char *DataBaseName)
+* \brief Instructions to delete an item's value
+* \param[in] *DataBaseName name of the database
+*/
 void sqlite_delete_item_value(char *DataBaseName)
 {
 	sqlite3 *db;
@@ -543,7 +626,12 @@ void sqlite_delete_item_value(char *DataBaseName)
 	closeDb(db);
 
 }
-// delete value in class
+
+/*!
+* \ void sqlite_delete_value(char *DataBaseName)
+* \brief Delete value from database
+* \param[in] *DataBaseName name of the database
+*/
 void sqlite_delete_value(char *DataBaseName)
 {
 	char *DbName = DataBaseName;
