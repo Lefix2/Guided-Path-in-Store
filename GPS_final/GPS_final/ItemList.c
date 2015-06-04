@@ -1,3 +1,10 @@
+/*!
+* \file  ItemList.c
+* \brief Defines new chained list structures
+* \author GPS team
+* \date 13/12/2014
+*/
+
 #include <string.h>
 
 #include "Itemlist.h"
