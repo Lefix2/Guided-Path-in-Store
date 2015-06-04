@@ -10,8 +10,12 @@
 #include "StoreImage.h"
 #include <time.h>
 
+
 store *my_test_store_new()
 {
+	typedef enum category_test{ c_none, fromage, pain, legumes_vert, alcool }category;
+	char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
+
 	int magsizex = 50;//min 28
 	int magsizey = 48;//min 40
 	int i;

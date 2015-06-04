@@ -7,22 +7,22 @@
 #include "tests.h"
 #include "Store_IO_functions.h"
 
-void call_main_menu()
+void call_main_menu(GtkApplication *app)
 {
 	generalmenu_struct *main_menu;
 
 	main_menu = g_new(generalmenu_struct, 1);
-	gchar utf8_chain[MAX_ARRAY_OF_CHAR];
 	GtkImage *WelcomeImg = gtk_image_new_from_file(".\\ressources\\Images\\mainMenu.png");
 
 	main_menu->myShop = shopping_new();
 
 	/* Window Creation */
-	main_menu->main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	main_menu->main_window = gtk_application_window_new(app);
 
 	gtk_window_set_position(GTK_WINDOW(main_menu->main_window), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(main_menu->main_window), "Guided Path in Store");
 	gtk_window_set_resizable(main_menu->main_window, FALSE);
+	gtk_window_set_icon_from_file(GTK_WINDOW(main_menu->main_window), "ressources\\Images\\icon.png", NULL);
 	g_signal_connect(G_OBJECT(main_menu->main_window), "destroy", G_CALLBACK(cb_quit), main_menu);
 	
 	/*The window contain a grid that contains all of our widgets*/
@@ -31,10 +31,6 @@ void call_main_menu()
 	gtk_container_add(GTK_CONTAINER(main_menu->main_window), v_box);
 
 	/*add a title*/
-	GtkWidget *title;
-	sprintf(utf8_chain, "<span face = \"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>Guided Path in Store</b></span>");
-	title = gtk_label_new(g_locale_from_utf8(utf8_chain,-1,NULL,NULL,NULL));
-	gtk_label_set_use_markup(GTK_LABEL(title), TRUE);
 	gtk_box_pack_start(GTK_BOX(v_box), WelcomeImg, TRUE, TRUE, 0);
 
 	/*The first button is used to open the database to choose a store*/
@@ -65,7 +61,6 @@ gboolean cb_quit(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	shopping_delete(main_menu->myShop);
 	g_free(main_menu);
 	printf("Allocated blocs : %d\n", myCheck());
-	getch();
 	return FALSE;
 }
 

@@ -192,6 +192,9 @@ void section_print(section * s_source, gboolean minimal)
 
 void testSect(void)
 {
+	typedef enum category_test{ c_none, fromage, pain, legumes_vert, alcool }category;
+	char* item_category[] = { "none", "fromage", "pain", "legumes vert", "alcool" };
+
 	item * itest1 = item_new(1, legumes_vert, "haricots");
 	item_set_cost(itest1, 3.50);
 

@@ -1,15 +1,20 @@
 #include "Common.h"
 #include "generalMenu.h"
 
+static void activate(GtkApplication *app, gpointer user_data)
+{
+	call_main_menu(app);
+}
+
 int main(int argc, char **argv)
 {
-	/*Initialize GTK*/
-	gtk_init(&argc, &argv);
+	GtkApplication *app;
+	int status;
 
-	/*Start main window (menu)*/
-	call_main_menu();
+	app = gtk_application_new("org.GPS.dev", G_APPLICATION_FLAGS_NONE);
+	g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
+	status = g_application_run(G_APPLICATION(app), argc, argv);
+	g_object_unref(app);
 
-	/*launch GTK*/
-	gtk_main();
-	return 0;
+	return status;
 }

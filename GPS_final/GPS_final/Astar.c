@@ -1,20 +1,40 @@
+/*!
+* \file  Astar.c
+* \brief Used to compute astar algorithm between two points in a store
+* \author GPS team
+* \date 16/12/2013
+*/
+
 #include "Astar.h"
 #include "AstarList.h"
 #include "Store.h"
 
+/*!
+* \fn nodeAstar * nodeAstar_new(coord pos, nodeAstar *parent)
+* \brief Create a new astar node
+* \param[in] pos the pos of the node
+* \param[in] *parent the parent node
+* \return the new allocated node
+*/
 nodeAstar * nodeAstar_new(coord pos, nodeAstar *parent)
 {
 	nodeAstar *newn = (nodeAstar*)malloc(sizeof(nodeAstar));
 
-	newn->pos = pos;
-	newn->h = 0;
-	newn->g = 0;
-	newn->f = 0;
-	newn->parent = parent;
+	newn->pos = pos;		/*!<the pos in the cartesien domain*/
+	newn->h = 0;			/*!<the cost from start*/
+	newn->g = 0;			/*!<the estimated distance to end*/
+	newn->f = 0;			/*!<the sum of g and h*/
+	newn->parent = parent;	/*!<is the parent node*/
 
 	return newn;
 }
 
+/*!
+* \fn int nodeAstar_delete(nodeAstar * nodeAstar)
+* \brief Delete an astar node
+* \param[in] nodeAstar pointer to the node
+* \return EXIT_SUCCES if OK
+*/
 int nodeAstar_delete(nodeAstar * nodeAstar)
 {
 	if (nodeAstar == NULL)
@@ -23,6 +43,11 @@ int nodeAstar_delete(nodeAstar * nodeAstar)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn path * path_new()
+* \brief Allocate memory for a path
+* \return a pointer to the new path
+*/
 path * path_new()
 {
 	path * newpath = (path*)malloc(sizeof(path));
@@ -33,6 +58,12 @@ path * path_new()
 	return newpath;
 }
 
+/*!
+* \fn int path_delete(path *path)
+* \brief free memory of a path
+* \param[in] path pointer to the path
+* \return EXIT_SUCCESS if OK
+*/
 int path_delete(path *path)
 {
 	if (path == NULL)
@@ -43,6 +74,12 @@ int path_delete(path *path)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn path_reset(path *path)
+* \brief set a path to a single value of 0
+* \param[in] path the path to reset
+* \return EXIT_SUCCESS if OK
+*/
 int path_reset(path *path)
 {
 	if (path == NULL)
@@ -53,6 +90,13 @@ int path_reset(path *path)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn path_add_node(path *path, coord newcoord)
+* \brief add a node to the path
+* \param[in] path the path to expand
+* \param[in] the coordinate of the new pathpoint
+* \return EXIT_SUCCESS if OK
+*/
 int path_add_node(path *path, coord newcoord)
 {
 	path->nb_coord++;
@@ -61,6 +105,13 @@ int path_add_node(path *path, coord newcoord)
 	return path->nb_coord;
 }
 
+/*!
+* \fn nodeAstar_set_pos(nodeAstar *nodeAstar, coord pos)
+* \brief Set position of an astar node
+* \param[in] nodeAstar the node to modify
+* \param[in] the position
+* \return EXIT_SUCCESS if OK
+*/
 int nodeAstar_set_pos(nodeAstar *nodeAstar, coord pos)
 {
 	if (nodeAstar == NULL)
@@ -69,6 +120,13 @@ int nodeAstar_set_pos(nodeAstar *nodeAstar, coord pos)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn nodeAstar_set_h(nodeAstar *nodeAstar, int h)
+* \brief Set h value of an astar node
+* \param[in] nodeAstar the node to modify
+* \param[in] h the h value
+* \return EXIT_SUCCESS if OK
+*/
 int nodeAstar_set_h(nodeAstar *nodeAstar, int h)
 {
 	if (nodeAstar == NULL)
@@ -77,6 +135,13 @@ int nodeAstar_set_h(nodeAstar *nodeAstar, int h)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn nodeAstar_set_g(nodeAstar *nodeAstar, int g)
+* \brief Set g value of an astar node
+* \param[in] nodeAstar the node to modify
+* \param[in] g the g value
+* \return EXIT_SUCCESS if OK
+*/
 int nodeAstar_set_g(nodeAstar *nodeAstar, int g)
 {
 	if (nodeAstar == NULL)
@@ -85,6 +150,13 @@ int nodeAstar_set_g(nodeAstar *nodeAstar, int g)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn nodeAstar_set_f(nodeAstar *nodeAstar, int f)
+* \brief Set f value of an astar node
+* \param[in] nodeAstar the node to modify
+* \param[in] f the f value
+* \return EXIT_SUCCESS if OK
+*/
 int nodeAstar_set_f(nodeAstar *nodeAstar, int f)
 {
 	if (nodeAstar == NULL)
@@ -93,26 +165,57 @@ int nodeAstar_set_f(nodeAstar *nodeAstar, int f)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn coord nodeAstar_get_pos(nodeAstar *nodeAstar)
+* \brief Get the pos of an astar node
+* \param[in] nodeAstar the astar node
+* \return the coordinates of the node
+*/
 coord nodeAstar_get_pos(nodeAstar *nodeAstar)
 {
 	return nodeAstar->pos;
 }
 
+/*!
+* \fn int nodeAstar_get_h(nodeAstar *nodeAstar)
+* \brief Get the h value of an astar node
+* \param[in] nodeAstar the astar node
+* \return the h value of the node
+*/
 int nodeAstar_get_h(nodeAstar *nodeAstar)
 {
 	return nodeAstar->h;
 }
 
+/*!
+* \fn int nodeAstar_get_g(nodeAstar *nodeAstar)
+* \brief Get the g value of an astar node
+* \param[in] nodeAstar the astar node
+* \return the g value of the node
+*/
 int nodeAstar_get_g(nodeAstar *nodeAstar)
 {
 	return nodeAstar->g;
 }
 
+/*!
+* \fn int nodeAstar_get_f(nodeAstar *nodeAstar)
+* \brief Get the f value of an astar node
+* \param[in] nodeAstar the astar node
+* \return the f value of the node
+*/
 int nodeAstar_get_f(nodeAstar *nodeAstar)
 {
 	return nodeAstar->f;
 }
 
+/*!
+* \fn nodeAstar *nodeAstar_find_pos(astarList *l, coord pos)
+* \brief Find an astar node in a astar nodelist giving his coordinate
+* \param[in] l the pointer to the astarlist
+* \param[in] pos the pos to search for
+* \return A pointer to node if found, NULL else
+*/
 nodeAstar *nodeAstar_find_pos(astarList *l, coord pos)
 {
 	astarList_set_on_first(l);
@@ -125,6 +228,16 @@ nodeAstar *nodeAstar_find_pos(astarList *l, coord pos)
 	return NULL;
 }
 
+/*!
+* \fn void update_neighbours(nodeAstar *n, coord end, store *st_source, int **nodeControl, astarList *opened, astarList *closed)
+* \brief A big part of the algorithm, update neighbours of a node
+* \param[in] nodeAstar *n
+* \param[in] end the end position
+* \param[in] *st_source the store (environement) to compute astar
+* \param[in] **nodeControl control the state of each node(for perf)
+* \param[in] *opened the opened nodelist
+* \param[in] *closed the closed nodelist
+*/
 void update_neighbours(nodeAstar *n, coord end, store *st_source, int **nodeControl, astarList *opened, astarList *closed)
 {
 	//x and y variation for each 8 neighbours
@@ -181,11 +294,25 @@ void update_neighbours(nodeAstar *n, coord end, store *st_source, int **nodeCont
 	
 }
 
+/*!
+* \fn nodeAstar *best_node(astarList *l)
+* \brief get the best node in a list
+* \param[in] *l the list to search in
+* \return the best node of the list
+*/
 nodeAstar *best_node(astarList *l)
 {
 	return astarList_get_first(l);
 }
 
+/*!
+* \fn int update_node(astarList *l, nodeAstar *nNew, nodeAstar *nOld)
+* \brief replace a node in a list
+* \param[in] *l the list the node is in
+* \param[in] *nNew the new node
+* \param[in] *nOld the node to replace
+* \return EXIT_SUCCES if OK
+*/
 int update_node(astarList *l, nodeAstar *nNew, nodeAstar *nOld)
 {
 	if (nodeAstar_delete(astarList_delete_single(l, nOld)) == EXIT_FAILURE)
@@ -193,6 +320,14 @@ int update_node(astarList *l, nodeAstar *nNew, nodeAstar *nOld)
 	return astarList_insert_sort(l, nNew);
 }
 
+/*!
+* \fn int open_node(int **nodeControl, nodeAstar *n, astarList *opened)
+* \brief put a node in the opened list
+* \param[in] **nodeControl the indicator table
+* \param[in] *n the node to open
+* \param[in] *opened the opened list
+* \return EXIT_SUCCES if OK
+*/
 int open_node(int **nodeControl, nodeAstar *n, astarList *opened)
 {
 	int ret = astarList_insert_last(opened, n);
@@ -206,6 +341,15 @@ int open_node(int **nodeControl, nodeAstar *n, astarList *opened)
 	return ret;
 }
 
+/*!
+* \fn int close_node(int **nodeControl, nodeAstar *n, astarList *opened, astarList *closed)
+* \brief put a node in closed list
+* \param[in] **nodeControl the indicator table
+* \param[in] *n the node to close
+* \param[in] *opened the ckosed list
+* \param[in] *closed the closed list
+* \return EXIT_SUCCES if OK
+*/
 int close_node(int **nodeControl, nodeAstar *n, astarList *opened, astarList *closed)
 {
 	if (astarList_delete_single(opened, n) == NULL)
@@ -222,6 +366,13 @@ int close_node(int **nodeControl, nodeAstar *n, astarList *opened, astarList *cl
 	return ret;
 }
 
+/*!
+* \fn int findpath(path * path, astarList *closed)
+* \brief find the path after astar was computed
+* \param[in] *path the path found by astar
+* \param[in] *closed the closed list
+* \return EXIT_SUCCES if OK
+*/
 int findpath(path * path, astarList *closed)
 {
 	if (closed == NULL)
@@ -253,6 +404,15 @@ int findpath(path * path, astarList *closed)
 	return pathLenght;
 }
 
+/*!
+* \fn int astar(store *st_source, coord start, coord end, path *path)
+* \brief main function of astar
+* \param[in] *st_source the store (environement)
+* \param[in] start the start point
+* \param[in] end the end point
+* \param[in] *path the path found
+* \return
+*/
 int astar(store *st_source, coord start, coord end, path *path)
 {
 	/*--------------------------------------------------------*/
@@ -334,6 +494,7 @@ int astar(store *st_source, coord start, coord end, path *path)
 
 	return ret;
 }
+
 
 void testAstar(void)
 {

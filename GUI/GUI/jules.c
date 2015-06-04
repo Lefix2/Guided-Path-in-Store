@@ -51,7 +51,7 @@ int init_window(){
 	return EXIT_SUCCESS;
 }
 
-int main(int argc, char **argv){
+int my_main(int argc, char **argv){
 	/* GTK Initialisation */
 	gtk_init(&argc, &argv);
 	itemList * user_list = NULL;

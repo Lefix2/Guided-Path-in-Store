@@ -14,7 +14,7 @@ struct generalmenu_struct{
 	GtkWidget * button_gosho;
 };
 
-void call_main_menu();
+void call_main_menu(GtkApplication *app);
 gboolean cb_quit(GtkWidget *p_widget, generalmenu_struct *main_menu);
 gboolean cb_store_selection(GtkWidget *p_widget, generalmenu_struct *main_menu);
 gboolean cb_make_list(GtkWidget *p_widget, generalmenu_struct *main_menu);

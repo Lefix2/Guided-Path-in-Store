@@ -13,7 +13,7 @@
 
 #include "Common.h"
 
-/*!<All costs to go  to another node*/
+/*!<All costs to go to another node*/
 #define MY_INFINITY 9999
 #define GENERAL_COST 0
 #define LOW_COST 1
@@ -31,7 +31,7 @@
 * \struct nodeAstar
 * \brief node representing a path point
 */
-struct nodeAstar
+typedef struct nodeAstar
 {
 	coord pos;				/*!< position in graph*/
 
@@ -42,13 +42,17 @@ struct nodeAstar
 	nodeAstar * parent;		/*!<parent node in path*/
 };
 
-typedef struct nodeAstarList nodeAstarList;
-struct nodeAstarList
+/**
+* \struct nodeAstarList
+* \brief linked list of astar node
+*/
+typedef struct nodeAstarList
 {
-	nodeAstar * a;
-	nodeAstarList * next;
+	nodeAstar * a;			/*!< pointer to the node*/
+	nodeAstarList * next;	/*!< pointer to the next node*/
 };
 
+/*! Prototypes*/
 nodeAstar * nodeAstar_new(coord pos, nodeAstar *parent);
 int nodeAstar_delete(nodeAstar * nodeAstar);
 path * path_new();

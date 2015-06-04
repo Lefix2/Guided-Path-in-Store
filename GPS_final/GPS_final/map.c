@@ -82,7 +82,11 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 
 	guint width, height, i;
 	GdkRGBA color;
-	GdkPixbuf *store_pixbuf = store_image_new_pixbuf_from_store(((shopping*)data)->Store);
+	static GdkPixbuf *store_pixbuf = NULL;
+
+	if (store_pixbuf != NULL)
+		g_object_unref(store_pixbuf);
+	store_pixbuf = store_image_new_pixbuf_from_store(((shopping*)data)->Store);
 
 	gdk_cairo_set_source_pixbuf(cr, store_pixbuf, 0, 0);
 	width = gdk_pixbuf_get_width(store_pixbuf);
@@ -92,6 +96,7 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 	cairo_fill(cr);
 
 	store_image_draw_shopping(cr, (shopping*)data);
+	gtk_widget_set_size_request(drawing_area, gdk_pixbuf_get_width(store_pixbuf), gdk_pixbuf_get_height(store_pixbuf));
 
 	return FALSE;
 }
@@ -99,7 +104,7 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, gpointer data)
 void init_map(GtkWidget *p_window, shopping *shopping)
 {
 	/* déclaration des variables */
-	GtkWidget *label, *h_box, *b_box, *v_box, *button, *button1, *button2, *button3, *button4, *button5;
+	GtkWidget *label, *h_box, *b_box, *v_box, *l_box, *button, *button1, *button2, *button3, *button4, *button5;
 	gchar *txtSchema, *utfstring = NULL;
 
 	/* créer la fenêtre avec son titre */
@@ -108,33 +113,35 @@ void init_map(GtkWidget *p_window, shopping *shopping)
 	gtk_window_set_default_size(GTK_WINDOW(window), MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 500);
-	gtk_window_set_icon_from_file(GTK_WINDOW(window), "ressources\\Images\\caddie.jpg", NULL);
 	//gtk_window_set_keep_above(window, TRUE);
 
 	/* créer les widgets */
 	h_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	b_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	v_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	l_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	txtSchema = (char*)calloc(MAX_ARRAY_OF_CHAR, sizeof(char));
 
-	sprintf(txtSchema, "<span face=\"Verdana\" foreground=\"#73b5ff\" size=\"xx-large\"><b>%s</b></span>", store_get_name(shopping_get_store(shopping)));
+	sprintf(txtSchema, "<span face=\"Verdana\" foreground=\"#C0504D\" size=\"xx-large\"><b>%s</b></span>", store_get_name(shopping_get_store(shopping)));
 	utfstring = g_locale_to_utf8(txtSchema, -1, NULL, NULL, NULL);
 	label = gtk_label_new(utfstring);
 	gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
 
 	free(txtSchema);
 	g_free(utfstring);
+	
 	button = gtk_button_new_with_label("Pimp my text");
 	button1 = gtk_button_new_with_label("Test Item");
 	button2 = gtk_button_new_with_label("Test Section");
 	button3 = gtk_button_new_with_label("Test Store");
 	button4 = gtk_button_new_with_label("Test Astar");
 	button5 = gtk_button_new_with_label("Test Cairo");
-
+	
 	/* positionner les widgets */
-	gtk_box_pack_start(GTK_BOX(h_box), b_box, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(h_box), v_box, TRUE, TRUE, 0);
-	gtk_container_add(GTK_CONTAINER(window), h_box);
+	gtk_container_add(GTK_CONTAINER(window), v_box);
+	//gtk_box_pack_start(GTK_BOX(h_box), b_box, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(v_box), label, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(v_box), h_box, TRUE, TRUE, 0);
 
 	gtk_box_pack_start(GTK_BOX(b_box), button, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(b_box), button1, FALSE, FALSE, 5);
@@ -143,8 +150,6 @@ void init_map(GtkWidget *p_window, shopping *shopping)
 	gtk_box_pack_start(GTK_BOX(b_box), button4, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(b_box), button5, FALSE, FALSE, 5);
 
-	gtk_box_pack_start(GTK_BOX(v_box), label, FALSE, FALSE, 0);
-
 	/* connecter le bouton à une fonction de callback */
 	g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), p_window);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(changer_texte), label);
@@ -152,7 +157,7 @@ void init_map(GtkWidget *p_window, shopping *shopping)
 	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button2_callback), NULL);
 	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button3_callback), NULL);
 	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(button4_callback), NULL);
-
+	
 	GtkImage *imtest = gtk_image_new();
 	GtkWidget *event_box = gtk_event_box_new();
 	GtkWidget *scrollmenuV = gtk_scrolled_window_new(NULL, NULL);
@@ -161,12 +166,31 @@ void init_map(GtkWidget *p_window, shopping *shopping)
 	store_set_sprites(shopping->Store, gdk_pixbuf_new_from_file(".\\ressources\\images\\sprites.png", NULL));
 	drawing_area = gtk_drawing_area_new();
 
-	gtk_box_pack_start(GTK_BOX(v_box), scrollmenuV, TRUE, TRUE, 0);
-
+	gtk_box_pack_start(GTK_BOX(h_box), scrollmenuV, TRUE, TRUE, 0);
+	//gtk_box_pack_start(GTK_BOX(v_box), drawing_area, TRUE, TRUE, 0);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrollmenuV), drawing_area);
 
 	g_signal_connect(G_OBJECT(drawing_area), "draw", G_CALLBACK(draw_callback), shopping);
 	g_signal_connect(G_OBJECT(button5), "clicked", G_CALLBACK(button5_callback), shopping);
+
+	/* afficher la liste*/
+	gtk_box_pack_start(GTK_BOX(h_box), l_box, FALSE, TRUE, 5);
+	int i = 1;
+	gchar txtitem[MAX_ARRAY_OF_CHAR];
+	GtkWidget *align;
+
+	itemPointerList_set_on_first(shopping->List);
+	while (!itemPointerList_is_out_of(shopping->List))
+	{
+		sprintf(txtitem, "%i - %s", i, item_get_name(itemPointerList_get_current(shopping->List)));
+		label = gtk_label_new(txtitem);
+		gtk_label_set_justify(label, GTK_JUSTIFY_LEFT);
+		align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
+		gtk_container_add(GTK_CONTAINER(align), label);
+		gtk_box_pack_start(GTK_BOX(l_box), align, FALSE, FALSE, 5);
+		itemPointerList_next(shopping->List);
+		i++;
+	}
 
 	/* afficher la fenêtre */
 	gtk_widget_show_all(window);

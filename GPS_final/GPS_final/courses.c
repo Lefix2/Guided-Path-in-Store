@@ -245,6 +245,7 @@ void display_list(shop_struct *p_shop_struct)
 gboolean cb_update_spin_button(GtkWidget *p_widget, gpointer *associated_item)
 {
 	item_set_stock((item*)associated_item, (int)gtk_spin_button_get_value(p_widget));
+	gtk_widget_queue_draw(window);
 	return FALSE;
 }
 
@@ -315,8 +316,9 @@ void cb_activate_search_bar(GtkWidget *p_entry, shop_struct *p_shop_struct)
 			if (g_str_has_prefix(item_name, sText) != 0)
 			{//The item matched with the research, we create a new button
 				p_button = gtk_button_new_with_label(item_name);
-				gtk_grid_attach(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
+				gtk_grid_attach_next_to(GTK_GRID(gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook), nbpages - 1)), p_button, 0, 0, 1, 1);
 				g_signal_connect(G_OBJECT(p_button), "clicked", G_CALLBACK(cb_shopping_list), p_shop_struct);
+				gtk_widget_show(p_button);
 			}
 			itemPointerList_next(a_stock);
 		}
