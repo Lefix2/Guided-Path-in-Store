@@ -44,7 +44,7 @@ int init_courses(generalmenu_struct *parent, shopping *myshop){
 	gtk_container_add(GTK_CONTAINER(window), main_grid);
 	gtk_grid_set_column_spacing(GTK_GRID(main_grid), 0);
 	gtk_grid_set_row_spacing(GTK_GRID(main_grid), 2);
-	gtk_grid_set_column_homogeneous(GTK_GRID(main_grid), TRUE);
+	gtk_grid_set_column_homogeneous(GTK_GRID(main_grid), FALSE);
 	gtk_grid_set_row_homogeneous(GTK_GRID(main_grid), FALSE);
 
 	/*We create now a grid that contains the shopping list created by the user*/
