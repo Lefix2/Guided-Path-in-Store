@@ -1,4 +1,4 @@
-/**
+/*!
 * \file Common.h
 * \brief Header of Common.c
 * \author GPSTeam
@@ -20,10 +20,11 @@
 #include "myAlloc.h"
 
 /****usefull define ****/
+#define M_PI 3.14159265358979323846
 #define MAX_ARRAY_OF_CHAR 256
 #define max(a,b) ((a) > (b) ? (a) : (b))
 
-/**
+/*!
 * \enum type
 * \brief enum of all section's type
 */
@@ -33,7 +34,7 @@ typedef enum type{ t_floor, t_wall, t_section, t_promo, t_checkout, t_entrance, 
 char* sec_type[] = {"none", "wall", "section", "promo", "checkout", "entrance", "reception" };
 #endif
 
-/**
+/*!
 * \enum category
 * \brief enum of all product's category
 */

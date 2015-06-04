@@ -26,7 +26,7 @@ static void activate(GtkApplication *app, gpointer user_data)
 	gtk_widget_show_all(window);
 }
 
-int my_main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	GtkApplication *app;
 	int status;

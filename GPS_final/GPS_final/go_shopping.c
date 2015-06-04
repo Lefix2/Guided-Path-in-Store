@@ -14,9 +14,8 @@
 
 void go_shopping_window(GtkWidget *p_window, shopping *myShop)
 {
-
-	init_map(p_window, myShop);
-
 	merchant_optimise_shopping(myShop);
 	merchant_connect_paths(myShop);
+
+	init_map(p_window, myShop);
 }

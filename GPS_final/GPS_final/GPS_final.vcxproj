@@ -139,7 +139,7 @@
     <Library Include="..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\GTK+-Bundle-3.6.1\lib\gtk-win32-3.0.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ressources\Images\caddie.jpg" />
+    <Image Include="..\Debug\ressources\Images\icon.png" />
     <Image Include="ressources\Images\mainMenu.png" />
     <Image Include="ressources\Images\sprites.png" />
     <Image Include="ressources\Images\spritesDebug.png" />

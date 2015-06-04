@@ -180,9 +180,6 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ressources\Images\caddie.jpg">
-      <Filter>Fichiers de ressources</Filter>
-    </Image>
     <Image Include="ressources\Images\sprites.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
@@ -190,6 +187,9 @@
       <Filter>Fichiers de ressources</Filter>
     </Image>
     <Image Include="ressources\Images\mainMenu.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="..\Debug\ressources\Images\icon.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
   </ItemGroup>

@@ -201,19 +201,29 @@ int store_image_draw_shopping(cairo_t *cr, shopping *shopping)
 {
 	if (shopping == NULL)
 		return EXIT_FAILURE;
+	int i = 1;
+	char number[MAX_ARRAY_OF_CHAR];
 	itemList *list = shopping->List;
+
 	itemPointerList_set_on_first(list);
 	while (!itemPointerList_is_out_of(list))
 	{
 		store_image_draw_path(cr, item_get_pathTo(itemPointerList_get_current(list)));
 		int x = itemPointerList_get_current(list)->posInSec.x + itemPointerList_get_current(list)->section->pos.x;
 		int y = itemPointerList_get_current(list)->posInSec.y + itemPointerList_get_current(list)->section->pos.y;
-		cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
+
+		cairo_set_source_rgba(cr, 0.9, 0.1, 0.2, 1.0);
+		cairo_arc(cr, (x+0.25)*SPRITE_RES, (y)*SPRITE_RES, 10, 0, 2 * M_PI);
+		cairo_fill(cr);
+
+		cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
 		cairo_select_font_face(cr, "Georgia",CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
 		cairo_set_font_size(cr, 15);
-		cairo_move_to(cr,( x )*SPRITE_RES, (y)*SPRITE_RES);
-		cairo_show_text(cr, itemPointerList_get_current(list)->name);
+		cairo_move_to(cr, (x)*SPRITE_RES, (y+0.125)*SPRITE_RES);
+		sprintf(number, "%d", i);
+		cairo_show_text(cr, number);
 		itemPointerList_next(list);
+		i++;
 	}
 	store_image_draw_path(cr, item_get_pathTo(shopping->end));
 }
