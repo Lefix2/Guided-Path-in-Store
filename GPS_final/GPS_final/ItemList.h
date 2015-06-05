@@ -1,6 +1,6 @@
 /*!
 * \file  ItemList.h
-* \brief Header ItemList.c
+* \brief Header of ItemList.c
 * \author GPS team
 * \date 13/12/2014
 *
