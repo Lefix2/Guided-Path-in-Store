@@ -278,6 +278,12 @@ gboolean cb_update_spin_button(GtkWidget *p_widget, gpointer *associated_item)
 	return FALSE;
 }
 
+
+/**
+*\brief Callback called when the user press the enter button
+* \param[in] *p_entry the entry
+* \param[in] *p_shop_struct the shop structure containing everything in the shop and the window
+*/
 void cb_activate_search_bar(GtkWidget *p_entry, shop_struct *p_shop_struct)
 {
 	GtkWidget * p_button = NULL;
@@ -357,6 +363,11 @@ void cb_activate_search_bar(GtkWidget *p_entry, shop_struct *p_shop_struct)
 	}
 }
 
+/**
+*\brief Callback called when the user press the clear button
+* \param[in] *p_button the clear button
+* \param[in] *p_shop_struct the shop structure containing everything in the shop and the window
+*/
 void cb_search_clear_button(GtkWidget *p_button, shop_struct *p_shop_struct){
 	
 	gint nbpages;
@@ -382,6 +393,11 @@ void cb_search_clear_button(GtkWidget *p_button, shop_struct *p_shop_struct){
 	gtk_entry_set_text(p_shop_struct->entry, "");
 }
 
+/**
+*\brief Callback called when the quit the window
+* \param[in] *p_button the button
+* \param[in] *p_shop_struct the shop structure containing everything in the shop and the window
+*/
 gboolean cb_course_quit(GtkWidget *p_button, shop_struct * p_shop_struct){
 
 
@@ -400,6 +416,11 @@ gboolean cb_course_quit(GtkWidget *p_button, shop_struct * p_shop_struct){
 	return FALSE;
 }
 
+/**
+*\brief Callback called when the user press the end list button
+* \param[in] *p_button the end button
+* \param[in] *p_shop_struct the shop structure containing everything in the shop and the window
+*/
 gboolean cb_end_list(GtkWidget *p_button, shop_struct * p_shop_struct){
 
 	display_list(p_shop_struct);
