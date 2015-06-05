@@ -1,14 +1,28 @@
+/*!
+* \file  AstarList.h
+* \brief Header of ItemList.c
+* \author GPS team
+* \date 13/12/2014
+*
+* Contain prototype of astarlist
+*/
+
 #ifndef ASTARLIST_H
 #define ASTARLIST_H
 
 #include "Common.h"
 
+/**
+* \struct astarlist
+* \brief Structure for an astarlist
+*/
 struct astarList{
 	nodeAstarList *first;
 	nodeAstarList *current;
 	nodeAstarList *last;
 };
 
+/*! Prototypes */
 nodeAstar * nodeAstarList_new(nodeAstar * a, nodeAstarList *n);
 
 astarList * astarList_new(void);

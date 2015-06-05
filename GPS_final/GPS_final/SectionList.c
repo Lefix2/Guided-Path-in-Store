@@ -1,7 +1,21 @@
+/*!
+* \file  sectionList.c
+* \brief Defines new chained list structures
+* \author GPS team
+* \date 13/12/2014
+*/
+
 #include "sectionList.h"
 #include "Section.h"
 #include "ItemList.h"
 
+/*!
+* \fn nodesectionList * nodesectionPointerList_new(section *i, nodesectionList *n);
+* \brief Create a new sectionList node
+* \param[in] *i the section contained in the node
+* \param[in] *n the parent nodesectionList
+* \return the new allocated node
+*/
 nodeSectionList * nodeSectionPointerList_new(section * s, nodeSectionList *n)
 {
 	nodeSectionList * newn;
@@ -13,6 +27,11 @@ nodeSectionList * nodeSectionPointerList_new(section * s, nodeSectionList *n)
 	return newn;
 }
 
+/*!
+* \fn sectionList * sectionPointerList_new(void)
+* \brief Create a new sectionPointerList
+* \return the new allocated sectionList
+*/
 sectionList * sectionPointerList_new(void)
 {
 	sectionList * newl;
@@ -22,6 +41,13 @@ sectionList * sectionPointerList_new(void)
 	return newl;
 }
 
+
+/*!
+* \fn int sectionPointerList_delete(sectionList * l)
+* \brief Delete an sectionPointerList
+* \param[in] *l pointer to the sectionList
+* \return EXIT_SUCCES if OK
+*/
 int sectionPointerList_delete(sectionList * l)
 {
 	if (l == NULL)
@@ -34,46 +60,101 @@ int sectionPointerList_delete(sectionList * l)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn void sectionPointerList_init(sectionList * l)
+* \brief Initializes all sectionList parameters to NULL
+* \param[in] *l the sectionList to initialize
+*/
 void sectionPointerList_init(sectionList * l)
 {
 	l->first = l->last = l->current = NULL;
 }
 
+
+/*!
+* \fn int sectionPointerList_is_empty(sectionList * l)
+* \brief Tells the user if the list is empty or not
+* \param[in] *l the sectionList
+* \return 1 if the list is empty, 0 otherwise
+*/
 int sectionPointerList_is_empty(sectionList * l)
 {
 	return l->first == NULL;
 }
 
+/*!
+* \fn void sectionPointerList_is_on_first(sectionList * l)
+* \brief Tells the user if the list current cursor is on the first section
+* \param[in] *l the sectionList
+* \return 1 if the list is on the first section, 0 otherwise
+*/
 int sectionPointerList_is_on_first(sectionList * l)
 {
 	return l->current == l->first;
 }
 
+/*!
+* \fn void sectionPointerList_is_on_last(sectionList * l)
+* \brief Tells the user if the list current cursor is on the last section
+* \param[in] *l the sectionList
+* \return 1 if the list is on the last section, 0 otherwise
+*/
 int sectionPointerList_is_on_last(sectionList * l)
 {
 	return l->current == l->last;
 }
 
+/*!
+* \fn void sectionPointerList_is_out_of(sectionList * l)
+* \brief Tells the user if the list current cursor is out of the list
+* \param[in] *l the sectionList
+* \return 1 if the list cursor is out of the list, 0 otherwise
+*/
 int sectionPointerList_is_out_of(sectionList * l)
 {
 	return l->current == NULL;
 }
 
+
+/*!
+* \fn void sectionPointerList_set_on_first(sectionList * l)
+* \brief Set the current cursor of the list on the first section
+* \param[in] *l the sectionList
+*/
 void sectionPointerList_set_on_first(sectionList * l)
 {
 	l->current = l->first;
 }
 
+
+/*!
+* \fn void sectionPointerList_set_on_last(sectionList * l)
+* \brief Set the current cursor of the list on the last section
+* \param[in] *l the sectionList
+*/
 void sectionPointerList_set_on_last(sectionList * l)
 {
 	l->current = l->last;
 }
 
+
+/*!
+* \fn void sectionPointerList_next(sectionList * l)
+* \brief Set the current cursor of the list on the next section
+* \param[in] *l the sectionList
+*/
 void sectionPointerList_next(sectionList * l)
 {
 	l->current = l->current->sectionPointerList_next;
 }
 
+
+/*!
+* \fn void sectionPointerList_print(sectionList * l, gboolean minimal)
+* \brief Prints the content of the sectionPointerList
+* \param[in] *l the sectionList
+* \param[in] minimal prints the list in a minimal way if set at true
+*/
 void sectionPointerList_print(sectionList * l)
 {
 	char* header[] = { ".--------------------------------------------------------------------------.",
@@ -113,6 +194,14 @@ void sectionPointerList_print(sectionList * l)
 
 }
 
+
+/*!
+* \fn int sectionPointerList_insert_first(sectionList * l, section * i)
+* \brief Insert the section i at the beginning of in the sectionList l
+* \param[in] *l the list the node is in
+* \param[in] *i the section to insert
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int sectionPointerList_insert_first(sectionList * l, section * s)
 {
 	nodeSectionList* n = nodeSectionPointerList_new(s, l->first);
@@ -127,6 +216,14 @@ int sectionPointerList_insert_first(sectionList * l, section * s)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int sectionPointerList_insert_last(sectionList * l, section * i)
+* \brief Insert the section i at the end of the sectionList l
+* \param[in] *l the list the node is in
+* \param[in] *i the section to insert
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int sectionPointerList_insert_last(sectionList * l, section * s)
 {
 	nodeSectionList* n = nodeSectionPointerList_new(s, NULL);
@@ -143,6 +240,14 @@ int sectionPointerList_insert_last(sectionList * l, section * s)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int sectionPointerList_insert_before_current(sectionList * l, section * i)
+* \brief Insert the section i in the sectionList l just before the current cursor
+* \param[in] *l the list the node is in
+* \param[in] *i the section to insert
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int sectionPointerList_insert_before_current(sectionList * l, section * s)
 {
 	if (sectionPointerList_is_empty(l) || sectionPointerList_is_on_first(l))
@@ -169,6 +274,14 @@ int sectionPointerList_insert_before_current(sectionList * l, section * s)
 	return EXIT_FAILURE;
 }
 
+
+/*!
+* \fn int sectionPointerList_insert_after_current(sectionList * l, section * i)
+* \brief Insert the section i in the sectionList l just after the current cursor
+* \param[in] *l the list the node is in
+* \param[in] *i the section to insert
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int sectionPointerList_insert_after_current(sectionList * l, section * s)
 {
 
@@ -190,6 +303,14 @@ int sectionPointerList_insert_after_current(sectionList * l, section * s)
 	return EXIT_FAILURE;
 }
 
+
+/*!
+* \fn int sectionPointerList_insert_sort(sectionList * l, section * i)
+* \brief Insert the section i in the sectionList l sorted by id
+* \param[in] *l the list the node is in
+* \param[in] *i the section to insert
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int sectionPointerList_insert_sort(sectionList * l, section * s)
 {
 	nodeSectionList * tmp = l->current;
@@ -218,6 +339,13 @@ int sectionPointerList_insert_sort(sectionList * l, section * s)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn section * sectionPointerList_delete_first(sectionList * l)
+* \brief deletes the first section in the sectionList and free the memory
+* \param[in] *l the sectionList
+* \return the section deleted
+*/
 section * sectionPointerList_delete_first(sectionList * l)
 {
 	if (sectionPointerList_is_empty(l)){
@@ -238,6 +366,13 @@ section * sectionPointerList_delete_first(sectionList * l)
 	return NULL;
 }
 
+
+/*!
+* \fn section * sectionPointerList_delete_last(sectionList * l)
+* \brief deletes the last section in the sectionList and free the memory
+* \param[in] *l the sectionList
+* \return the section deleted
+*/
 section * sectionPointerList_delete_last(sectionList * l)
 {
 	if (sectionPointerList_is_empty(l)){						//no node
@@ -264,6 +399,13 @@ section * sectionPointerList_delete_last(sectionList * l)
 	return NULL;
 }
 
+
+/*!
+* \fn section * sectionPointerList_delete_current(sectionList * l)
+* \brief deletes the current section in the sectionList and free the memory
+* \param[in] *l the sectionList
+* \return the section deleted
+*/
 section * sectionPointerList_delete_current(sectionList * l)
 {
 	if (sectionPointerList_is_empty(l)){
@@ -295,6 +437,14 @@ section * sectionPointerList_delete_current(sectionList * l)
 	return NULL;
 }
 
+
+/*!
+* \fn section * sectionPointerList_delete_single(sectionList * l, section * i)
+* \brief deletes the section i in the sectionList and free the memory
+* \param[in] *l the sectionList
+* \param[in] *i the section
+* \return the section deleted
+*/
 section * sectionPointerList_delete_single(sectionList * l, section * s)
 {
 	section * tmp = sectionPointerList_find(l, s);
@@ -303,11 +453,26 @@ section * sectionPointerList_delete_single(sectionList * l, section * s)
 	return tmp;
 }
 
+
+/*!
+* \fn section * sectionPointerList_get_current(sectionList * l)
+* \brief Get the current section of the sectionList
+* \param[in] *l the sectionList
+* \return the current section of the sectionList
+*/
 section * sectionPointerList_get_current(sectionList * l)
 {
 	return l->current->s;
 }
 
+
+/*!
+* \fn section * sectionPointerList_find(sectionList * l, section * i)
+* \brief Get the section i of the sectionList
+* \param[in] *l the sectionList
+* \param[in] *i the section to search
+* \return the section i if contained in the sectionList
+*/
 section * sectionPointerList_find(sectionList * l, section * s)
 {
 	sectionPointerList_set_on_first(l);
@@ -320,6 +485,14 @@ section * sectionPointerList_find(sectionList * l, section * s)
 	return NULL;
 }
 
+
+/*!
+* \fn section * sectionPointerList_find(sectionList * l, int id)
+* \brief Get the section with the id id of the sectionList
+* \param[in] *l the sectionList
+* \param[in] id the if of the section to search
+* \return the section with the id id if contained in the sectionList
+*/
 section * sectionPointerList_find_id(sectionList * l, int id)
 {
 	sectionPointerList_set_on_first(l);

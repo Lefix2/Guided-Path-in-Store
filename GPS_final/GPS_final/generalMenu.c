@@ -1,3 +1,9 @@
+/*!
+* \file  generalMenu.c
+* \brief functions to displain the main menu
+* \author GPS team
+* \date 13/12/2014
+*/
 #include "Common.h"
 #include "Shopping.h"
 #include "courses.h"
@@ -7,6 +13,12 @@
 #include "tests.h"
 #include "Store_IO_functions.h"
 
+/*!
+* \fn void call_main_menu(GtkApplication *app)
+* \brief call gtk elements to display menu
+* \param[in] app the gtk application associed
+* \return the new allocated node
+*/
 void call_main_menu(GtkApplication *app)
 {
 	generalmenu_struct *main_menu;
@@ -56,6 +68,13 @@ void call_main_menu(GtkApplication *app)
 
 }
 
+/*!
+* \fn gboolean cb_quit(GtkWidget *p_widget, generalmenu_struct *main_menu)
+* \brief callback to quit main menu and application
+* \param[in] p_widget callback widget
+* \param[in] main_menu the main menu structure
+* \return FALSE
+*/
 gboolean cb_quit(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	gtk_main_quit();
 	shopping_delete(main_menu->myShop);
@@ -64,6 +83,13 @@ gboolean cb_quit(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	return FALSE;
 }
 
+/*!
+* \fn gboolean cb_store_selection(GtkWidget *p_widget, generalmenu_struct *main_menu)
+* \brief callback to select a file
+* \param[in] p_widget callback widget
+* \param[in] main_menu the main menu structure
+* \return FALSE
+*/
 gboolean cb_store_selection(GtkWidget *p_widget, generalmenu_struct *main_menu){
 
 	select_file(main_menu->main_window, main_menu->myShop);
@@ -82,6 +108,13 @@ gboolean cb_store_selection(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	return FALSE;
 }
 
+/*!
+* \fn gboolean cb_make_list(GtkWidget *p_widget, generalmenu_struct *main_menu)
+* \brief callback to call the shopping list menu
+* \param[in] p_widget callback widget
+* \param[in] main_menu the main menu structure
+* \return FALSE
+*/
 gboolean cb_make_list(GtkWidget *p_widget, generalmenu_struct *main_menu){
 
 	gtk_widget_set_sensitive(main_menu->main_window, FALSE);
@@ -90,6 +123,13 @@ gboolean cb_make_list(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	return FALSE;
 }
 
+/*!
+* \fn gboolean cb_go_shopping(GtkWidget *p_widget, generalmenu_struct *main_menu)
+* \brief callback to call the shopping display menu
+* \param[in] p_widget callback widget
+* \param[in] main_menu the main menu structure
+* \return FALSE
+*/
 gboolean cb_go_shopping(GtkWidget *p_widget, generalmenu_struct *main_menu){
 	gtk_widget_set_sensitive(main_menu->main_window, FALSE);
 	go_shopping_window(main_menu->main_window, main_menu->myShop);
