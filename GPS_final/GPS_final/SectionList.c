@@ -72,7 +72,7 @@ void sectionPointerList_init(sectionList * l)
 
 
 /*!
-* \fn void sectionPointerList_is_empty(sectionList * l)
+* \fn int sectionPointerList_is_empty(sectionList * l)
 * \brief Tells the user if the list is empty or not
 * \param[in] *l the sectionList
 * \return 1 if the list is empty, 0 otherwise

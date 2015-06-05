@@ -1,9 +1,24 @@
+/*!
+* \file  Section.c
+* \brief Defines new Section structures
+* \author GPS team
+* \date 13/12/2014
+*/
+
 #include <string.h>
 
 #include "Section.h"
 #include "Item.h"
 #include "ItemList.h"
 
+
+/*!
+* \fn section * section_new(int id, type s_type)
+* \brief Create a new section
+* \param[in] id the section id
+* \param[in] s_type the section type
+* \return the new allocated section
+*/
 section * section_new(int id, type s_type)
 {
 	section * s_new;
@@ -21,6 +36,12 @@ section * section_new(int id, type s_type)
 	return s_new;
 }
 
+/*!
+* \fn section * section_init(section * s_source)
+* \brief Initializes all section parameters to zero, and the type to floor
+* \param[in] *s_source the section to initialize
+* \return the new allocated section
+*/
 section * section_init(section * s_source)
 {
 	s_source->id = 0;
@@ -35,6 +56,13 @@ section * section_init(section * s_source)
 	return s_source;
 }
 
+
+/*!
+* \fn int section_delete(section * s_source)
+* \brief Delete a section
+* \param[in] *s_source pointer to the section
+* \return EXIT_SUCCES if OK
+*/
 int section_delete(section * s_source)
 {
 	if (s_source == NULL)
@@ -44,16 +72,37 @@ int section_delete(section * s_source)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int section_is_empty(section * s_source)
+* \brief Tells the user if the section is empty or not
+* \param[in] *s_source the section
+* \return 1 if the list is empty, 0 otherwise
+*/
 int section_is_empty(section * s_source)
 {
 	return (s_source->nb_items == 0);
 }
 
+/*!
+* \fn int section_has_stock(section * s_source)
+* \brief Tells the user if the section has stock or not
+* \param[in] *s_source the section
+* \return 1 if the list has stock, 0 otherwise
+*/
 int section_has_stock(section * s_source)
 {
 	return(s_source->s_type == t_section || s_source->s_type == t_promo);
 }
 
+
+/*!
+* \fn int section_set_id(section * s_source, int id)
+* \brief Sets the section id to id
+* \param[in] *s_source the section
+* \param[in] id the id
+* \return EXIT_SUCCES if OK
+*/
 int section_set_id(section * s_source, int id)
 {
 	if (s_source == NULL)
@@ -64,6 +113,14 @@ int section_set_id(section * s_source, int id)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int section_set_type(section * s_source, type s_type)
+* \brief Sets the section type to s_type
+* \param[in] *s_source the section
+* \param[in] s_type the type
+* \return EXIT_SUCCES if OK
+*/
 int section_set_type(section * s_source, type s_type)
 {
 	if (s_source == NULL)
@@ -74,6 +131,15 @@ int section_set_type(section * s_source, type s_type)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int section_set_pos(section * s_source, int x_pos, int y_pos)
+* \brief Sets the section position to [x_pos,y_pos]
+* \param[in] *s_source the section
+* \param[in] x_pos the position on the x axis
+* \param[in] y_pos the position on the y axis
+* \return EXIT_SUCCES if OK
+*/
 int section_set_pos(section * s_source, int x_pos, int y_pos)
 {
 	if (s_source == NULL)
@@ -83,6 +149,15 @@ int section_set_pos(section * s_source, int x_pos, int y_pos)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int section_set_size(section * s_source, int x_size, int y_size)
+* \brief Sets the section position to [x_size,y_size]
+* \param[in] *s_source the section
+* \param[in] x_size the size on the x axis
+* \param[in] y_size the size on the y axis
+* \return EXIT_SUCCES if OK
+*/
 int section_set_size(section * s_source, int x_size, int y_size)
 {
 	if (s_source == NULL)
@@ -92,6 +167,16 @@ int section_set_size(section * s_source, int x_size, int y_size)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int section_add_item(section * s_source, item * item, int x_pos, int y_pos)
+* \brief Add the item i to the section at the [x_pos,y_pos] position
+* \param[in] *s_source the section
+* \param[in] *item the item
+* \param[in] x_pos the position on the x axis
+* \param[in] y_pos the position on the y axis
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int section_add_item(section * s_source, item * item, int x_pos, int y_pos)
 {
 	if (s_source == NULL || item == NULL)
@@ -120,6 +205,13 @@ int section_add_item(section * s_source, item * item, int x_pos, int y_pos)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int section_remove_item(item * item)
+* \brief removes the item item from the list
+* \param[in] *item the item
+* \return EXIT_SUCCES if OK EXIT_FAILURE otherwise
+*/
 int section_remove_item(item * item)
 {
 	if (item == NULL)
@@ -138,36 +230,84 @@ int section_remove_item(item * item)
 	return EXIT_SUCCESS;
 }
 
+
+/*!
+* \fn int section_get_id(section * s_source)
+* \brief Get the id section of the section
+* \param[in] *s_source the section
+* \return the id section of the section
+*/
 int section_get_id(section * s_source)
 {
 	return s_source->id;
 }
 
+
+/*!
+* \fn int section_get_type(section * s_source)
+* \brief Get the type of the section
+* \param[in] *s_source the section
+* \return the type of the section
+*/
 type section_get_type(section * s_source)
 {
 	return s_source->s_type;
 }
 
+
+/*!
+* \fn int section_get_type_string(section * s_source)
+* \brief Get the type of the section as string
+* \param[in] *s_source the section
+* \return the type of the section as string
+*/
 char * section_get_type_string(section * s_source)
 {
 	return sec_type[s_source->s_type];
 }
 
+/*!
+* \fn int section_get_pos(section * s_source)
+* \brief Get the pos of the section
+* \param[in] *s_source the section
+* \return the pos of the section
+*/
 coord section_get_pos(section * s_source)
 {
 	return s_source->pos;
 }
 
+
+/*!
+* \fn int section_get_size(section * s_source)
+* \brief Get the size of the section
+* \param[in] *s_source the section
+* \return the size of the section
+*/
 coord section_get_size(section * s_source)
 {
 	return s_source->size;
 }
 
+
+/*!
+* \fn int section_get_nb_items(section * s_source)
+* \brief Get the number of items in the section
+* \param[in] *s_source the section
+* \return the number of items in the section
+*/
 int section_get_nb_items(section * s_source)
 {
 	return s_source->nb_items;
 }
 
+
+/*!
+* \fn void section_print(section * s_source, gboolean minimal)
+* \brief Prints the content of the section
+* \param[in] *s_source the section
+* \param[in] minimal prints the list in a minimal way if set at true
+*/
 void section_print(section * s_source, gboolean minimal)
 {
 	if (minimal)
@@ -190,6 +330,11 @@ void section_print(section * s_source, gboolean minimal)
 
 }
 
+
+/*!
+* \fn void testSect(void)
+* \brief Does tests on a section
+*/
 void testSect(void)
 {
 	typedef enum category_test{ c_none, fromage, pain, legumes_vert, alcool }category;
