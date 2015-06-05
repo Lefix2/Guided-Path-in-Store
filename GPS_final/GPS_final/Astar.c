@@ -411,7 +411,7 @@ int findpath(path * path, astarList *closed)
 * \param[in] start the start point
 * \param[in] end the end point
 * \param[in] *path the path found
-* \return
+* \return the length of the path found
 */
 int astar(store *st_source, coord start, coord end, path *path)
 {
