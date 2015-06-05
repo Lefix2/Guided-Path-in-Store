@@ -1,9 +1,23 @@
-#include <string.h>
+/*!
+* \file  Item.c
+* \brief All fonctions to manage items
+* \author GPS team
+* \date 04/06/2015
+*/
 
+#include <string.h>
 #include "Item.h"
 #include "Section.h"
 #include "astar.h"
 
+/*!
+* \ item * item_new(int id, category category, char * name)
+* \ create a new item
+* \param[in] id id of the item
+* \param[in]  category category of the item
+* \param[in]  *name name of the item
+* \return a pointer of item
+*/
 item * item_new(int id, category category, char * name)
 {
 	item * i_new;
@@ -17,6 +31,12 @@ item * item_new(int id, category category, char * name)
 	return i_new;
 }
 
+/*!
+* \ item * item_init(item * item)
+* \ init an item
+* \param[in] *item pointer of item
+* \return a pointer of item
+*/
 item * item_init(item * item)
 {
 	item->id = 0;
@@ -35,6 +55,12 @@ item * item_init(item * item)
 	return item;
 }
 
+/*!
+* \ int item_delete(item * item)
+* \ delete an item
+* \param[in] *item pointer of item
+* \return an int
+*/
 int item_delete(item * item)
 {
 	if (item == NULL)
@@ -45,11 +71,24 @@ int item_delete(item * item)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ gboolean item_has_section(item * item)
+* \ look if the item has already a section
+* \param[in] *item pointer of item
+* \return a boolean
+*/
 gboolean item_has_section(item * item)
 {
 	return (item->section != NULL);
 }
 
+/*!
+* \ int item_set_Id(item * item, int id)
+* \  set the Id of the item
+* \param[in] *item pointer of item
+* \param[in] id id of the item
+* \return an int
+*/
 int item_set_Id(item * item, int id)
 {
 	if (item == NULL)
@@ -60,6 +99,13 @@ int item_set_Id(item * item, int id)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_name(item * item, char * name)
+* \ set the name of the item
+* \param[in] *item pointer of item
+* \param[in] *name pointer on the name of the item
+* \return int
+*/
 int item_set_name(item * item, char * name)
 {
 	if (item == NULL)
@@ -68,6 +114,13 @@ int item_set_name(item * item, char * name)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_category(item * item, category category)
+* \ set the category of the item
+* \param[in] *item pointer of item
+* \param[in] *category pointer on category of the item
+* \return an int
+*/
 int item_set_category(item * item, category category)
 {
 	if (item == NULL)
@@ -78,6 +131,13 @@ int item_set_category(item * item, category category)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_stock(item *item, int stock)
+* \ set the stock of the item
+* \param[in] *item pointer of item
+* \param[in] *stock pointer on the stock of the item
+* \return int
+*/
 int item_set_stock(item *item, int stock)
 {
 	if (item == NULL)
@@ -88,6 +148,13 @@ int item_set_stock(item *item, int stock)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_fresh(item * item, gboolean fresh)
+* \ set the fresh of the item
+* \param[in] *item pointer of item
+* \param[in] fresh frsh of the item
+* \return an int 
+*/
 int item_set_fresh(item * item, gboolean fresh)
 {
 	if (item == NULL)
@@ -96,6 +163,13 @@ int item_set_fresh(item * item, gboolean fresh)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_fragility(item * item, int fragility)
+* \  set fragility of an item
+* \param[in] *item pointer of item
+* \param[in] fragility fragility of the item
+* \return an int
+*/
 int item_set_fragility(item * item, int fragility)
 {
 	if (item == NULL)
@@ -106,6 +180,13 @@ int item_set_fragility(item * item, int fragility)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_cost(item * item, double cost)
+* \ set cost of an item
+* \param[in] *item pointer of item
+* \param[in] cost 
+* \return an int
+*/
 int item_set_cost(item * item, double cost)
 {
 	if (item == NULL)
@@ -114,6 +195,13 @@ int item_set_cost(item * item, double cost)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_promotion(item * item, gboolean promotion)
+* \ set promotion of an item
+* \param[in] *item pointer of item
+* \param[in] promotion
+* \return an int
+*/
 int item_set_promotion(item * item, gboolean promotion)
 {
 	if (item == NULL)
@@ -122,6 +210,14 @@ int item_set_promotion(item * item, gboolean promotion)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_pos(item * item, int x_pos, int y_pos)
+* \  set positions of an item
+* \param[in] *item pointer of item
+* \param[in] x_pos pos x
+* \param[in] y_pos pos y
+* \return an int
+*/
 int item_set_pos(item * item, int x_pos, int y_pos)
 {
 	if (item == NULL)
@@ -131,6 +227,13 @@ int item_set_pos(item * item, int x_pos, int y_pos)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_set_section(item * item, section * section)
+* \ set section of an item
+* \param[in] *item pointer of item
+* \param[in] *section pointer of section
+* \return an int
+*/
 int item_set_section(item * item, section * section)
 {
 	if (item == NULL)
@@ -139,65 +242,147 @@ int item_set_section(item * item, section * section)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \ int item_get_id(item * item)
+* \ set section of an item
+* \param[in] *item pointer of item
+* \return an int
+*/
 int item_get_id(item * item)
 {
 	 return item->id;
 }
 
+/*!
+* \ char * item_get_name(item * item)
+* \  get Id of an item
+* \param[in] *item pointer of item
+* \return a pointer of char
+*/
 char * item_get_name(item * item)
 {
 	return item->name;
 }
 
+/*!
+* \ category item_get_category(item * item)
+* \  get the name of an item
+* \param[in] *item pointer of item
+* \param[in]
+* \return a category
+*/
 category item_get_category(item * item)
 {
 	return item->category;
 }
 
+/*!
+* \ int item_get_stock(item *item)
+* \ set the name of an item
+* \param[in] *item pointer of item
+* \return an int
+*/
 int item_get_stock(item *item)
 {
 	return item->stock;
 }
 
+/*!
+* \ gboolean item_is_fresh(item * item)
+* \ set the category of an item
+* \param[in] *item pointer of item
+* \return a boolean
+*/
 gboolean item_is_fresh(item * item)
 {
 	return item->fresh;
 }
 
+/*!
+* \ int item_get_fragility(item * item)
+* \  get stock of an item
+* \param[in] *item pointer of item
+* \return an int
+*/
 int item_get_fragility(item * item)
 {
 	return item->fragility;
 }
 
+/*!
+* \ double item_get_cost(item * item)
+* \ get fresh of an item
+* \param[in] *item pointer of item
+* \return a double
+*/
 double item_get_cost(item * item)
 {
 	return item->cost;
 }
 
+/*!
+* \ gboolean item_is_in_promotion(item * item)
+* \ get fragility of an item
+* \param[in] *item pointer of item
+* \param[in]
+* \return a boolean
+*/
 gboolean item_is_in_promotion(item * item)
 {
 	return item->promotion;
 }
 
+/*!
+* \ coord item_get_pos(item * item)
+* \ get cost of an item
+* \param[in] *item pointer of item
+* \return a coord
+*/
 coord item_get_pos(item * item)
 {
 	return item->posInSec;
 }
 
+/*!
+* \ section * item_get_section(item * item)
+* \ get promotion of an item
+* \param[in] *item pointer of item
+* \return a pointer of section
+*/
 section * item_get_section(item * item)
 {
 	return item->section;
 }
 
+/*!
+* \ path * item_get_pathTo(item * item)
+* \  get position of an item
+* \param[in] *item pointer of item
+* \return a path
+*/
 path * item_get_pathTo(item * item)
 {
 	return item->pathTo;
 }
+
+/*!
+* \ int item_compare_id(void *element1, void *element2)
+* \  get section of an item
+* \param[in] *element 
+* \param[in] *element
+* \return an int
+*/
 int item_compare_id(void *element1, void *element2)
 {
 	return (((item*)element2)->id - ((item*)element1)->id);
 }
 
+/*!
+* \ void item_print(item * item, gboolean minimal)
+* \  get path to an item
+* \param[in] *item pointer of item
+* \param[in] minimal if minimal information request
+*/
 void item_print(item * item, gboolean minimal)
 {
 	if (minimal)
@@ -233,6 +418,10 @@ void item_print(item * item, gboolean minimal)
 	}
 }
 
+/*!
+* \ void testItem(void)
+* \compare two items 
+*/
 void testItem(void)
 {
 	typedef enum category_test{ c_none, fromage, pain, legumes_vert, alcool }category;
