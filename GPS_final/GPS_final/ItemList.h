@@ -1,3 +1,12 @@
+/*!
+* \file  ItemList.h
+* \brief Header ItemList.c
+* \author GPS team
+* \date 13/12/2014
+*
+* Contain prototype of itemList
+*/
+
 #ifndef ITEMLIST_H
 #define ITEMLIST_H
 
@@ -22,6 +31,7 @@ struct itemList{
 	nodeItemList *last;			/*!< last item of the list*/
 };
 
+/*! Prototypes */
 nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n);
 
 itemList * itemPointerList_new(void);

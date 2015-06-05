@@ -1,3 +1,10 @@
+/*!
+* \file  courses.c
+* \brief Generates the shopping window
+* \author GPS team
+* \date 06/01/2015
+*/
+
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +19,13 @@
 GtkWidget *window;
 generalmenu_struct *parent_menu;
 
-
+/*!
+* \fn int init_courses(generalmenu_struct *parent, shopping *myshop)
+* \brief Creates a window to allow the user to create his shopping list
+* \param[in] *parent the general menu
+* \param[in] *myshop a structure containing the shop and an itemList to full with the users choices
+* \return EXIT_SUCCES if OK
+*/
 int init_courses(generalmenu_struct *parent, shopping *myshop){
 	parent_menu = parent;
 	/*Widgets creation */
@@ -44,7 +57,7 @@ int init_courses(generalmenu_struct *parent, shopping *myshop){
 	gtk_container_add(GTK_CONTAINER(window), main_grid);
 	gtk_grid_set_column_spacing(GTK_GRID(main_grid), 0);
 	gtk_grid_set_row_spacing(GTK_GRID(main_grid), 2);
-	gtk_grid_set_column_homogeneous(GTK_GRID(main_grid), TRUE);
+	gtk_grid_set_column_homogeneous(GTK_GRID(main_grid), FALSE);
 	gtk_grid_set_row_homogeneous(GTK_GRID(main_grid), FALSE);
 
 	/*We create now a grid that contains the shopping list created by the user*/
@@ -101,7 +114,7 @@ int init_courses(generalmenu_struct *parent, shopping *myshop){
 
 /**
 *\brief that function returns a notebook created from a store in parameters
-*\param[in] a store
+*\param[in] *p_shop_structure a store structure
 *\param[out] a notebook (GtkWidget)
 */
 GtkWidget * notebook_new_from_shopping(shop_struct * p_shop_struct){
@@ -141,6 +154,8 @@ GtkWidget * notebook_new_from_shopping(shop_struct * p_shop_struct){
 }
 /**
 *\brief Function that returns the number of the tab with the same name as category_name
+* \param[in] * category_name the name of the category
+* \param[in] * p_notebook a pointer on the notebook
 *\param[out] returns -1 if there is no tab with the same name as category_name, the number of pages otherwise
 */ 
 GtkWidget * grid_find_category(char * category_name, GtkWidget * p_notebook){
@@ -159,6 +174,11 @@ GtkWidget * grid_find_category(char * category_name, GtkWidget * p_notebook){
 /*callbacks*/
 
 
+/**
+*\brief Callback that add the product the user clicked to the shopping list
+* \param[in] *p_widget the button on which he just clicked
+* \param[in] *p_shop_struct the structure containing the shopping list
+*/
 void cb_shopping_list(GtkWidget *p_widget, shop_struct *p_shop_struct){
 
 	itemList * list = store_get_allocatedStock(shopping_get_store(p_shop_struct->shopping));
@@ -184,6 +204,10 @@ void cb_shopping_list(GtkWidget *p_widget, shop_struct *p_shop_struct){
 	display_list(p_shop_struct);
 }
 
+/**
+*\brief function that displays the list 
+* \param[in] *p_shop_struct the shop structure containing everything in the shop and the window
+*/
 void display_list(shop_struct *p_shop_struct)
 {
 	itemList *tmp_list = p_shop_struct->tmp_list;
@@ -242,6 +266,11 @@ void display_list(shop_struct *p_shop_struct)
 	gtk_widget_show_all(list_grid);
 }
 
+/**
+*\brief Callback that updates the spin button
+* \param[in] *p_widget the button on which he just clicked
+* \param[in] *associated_item a pointer on the item concerned by the spin button
+*/
 gboolean cb_update_spin_button(GtkWidget *p_widget, gpointer *associated_item)
 {
 	item_set_stock((item*)associated_item, (int)gtk_spin_button_get_value(p_widget));

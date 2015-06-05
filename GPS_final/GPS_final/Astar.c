@@ -2,7 +2,7 @@
 * \file  Astar.c
 * \brief Used to compute astar algorithm between two points in a store
 * \author GPS team
-* \date 16/12/2013
+* \date 04/06/2015
 */
 
 #include "Astar.h"
