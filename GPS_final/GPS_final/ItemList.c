@@ -1,6 +1,6 @@
 /*!
 * \file  ItemList.c
-* \brief Defines new chained list structures
+* \brief functions to manage linked list of item pointer
 * \author GPS team
 * \date 13/12/2014
 */
@@ -15,7 +15,7 @@
 * \fn nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n);
 * \brief Create a new itemList node
 * \param[in] *i the item contained in the node
-* \param[in] *n the parent nodeItemList
+* \param[in] *n the next item pointer
 * \return the new allocated node
 */
 nodeItemList * nodeItemPointerList_new(item *i, nodeItemList *n)
@@ -64,7 +64,7 @@ int itemPointerList_delete(itemList * l)
 
 /*! 
 * \fn void itemPointerList_init(itemList * l)
-* \brief Initializes all itemList parameters to NULL
+* \brief Initializes itempointerlist
 * \param[in] *l the itemList to initialize
 */
 void itemPointerList_init(itemList * l)
@@ -73,7 +73,7 @@ void itemPointerList_init(itemList * l)
 }
 
 /*!
-* \fn void itemPointerList_is_empty(itemList * l)
+* \fn int itemPointerList_is_empty(itemList * l)
 * \brief Tells the user if the list is empty or not
 * \param[in] *l the itemList 
 * \return 1 if the list is empty, 0 otherwise
