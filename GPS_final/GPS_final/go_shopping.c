@@ -1,3 +1,11 @@
+/*!
+* \file  go_shopping.c
+* \brief Call properly an window shopping
+* \author GPS team
+* \date 13/12/2014
+*
+* Contain prototype of itemList
+*/
 #include "Common.h"
 
 #include "go_shopping.h"

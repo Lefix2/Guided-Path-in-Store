@@ -1,3 +1,10 @@
+/*!
+* \file  merchant.c
+* \brief functions to compute merchant algorithm in a store
+* \author GPS team
+* \date 13/12/2014
+*/
+
 #include "merchant.h"
 #include "Astar.h"
 #include "Shopping.h"
@@ -13,6 +20,12 @@
 #define PUNISH_START_END TRUE /*force the algo to keep the first and last item given at first and last position*/
 #define MERCHANT_ITERATION 10 /*number of merchant algorithm to get better path possible*/
 
+/*!
+* \fn int merchant_optimise_shopping(shopping *shopping)
+* \brief sort in best order the list of the shopping to take a small path
+* \param[in] *shopping the shopping
+* \return EXIT_SUCCES if OK, EXIT_FAILURE otherwise
+*/
 int merchant_optimise_shopping(shopping *shopping)
 {
 
@@ -196,6 +209,12 @@ int merchant_optimise_shopping(shopping *shopping)
 	return EXIT_SUCCESS;
 }
 
+/*!
+* \fn int merchant_connect_paths(shopping *shopping)
+* \brief compute the paths between each items of the list
+* \param[in] *shopping the shopping
+* \return EXIT_SUCCES if OK, EXIT_FAILURE otherwise
+*/
 int merchant_connect_paths(shopping *shopping)
 {
 	//to enter this function merchant algorithm must be done
@@ -243,7 +262,14 @@ int merchant_connect_paths(shopping *shopping)
 
 }
 
-//main function of tsp
+/*!
+* \fn int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
+* \brief main function of tsp
+* \param[in] nbr the number of points
+* \param[in] **pathlen the tab of teb lenghts
+* \param[in] *bestfx the best path found value
+* \return EXIT_SUCCES if OK, EXIT_FAILURE otherwise
+*/
 int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 {
 	int i;
@@ -296,6 +322,13 @@ int* merchant_find_path(int nbr, int **pathlen, int *bestfx)
 	return ret;
 }
 
+/*!
+* \fn void merchant_init_population(int nbr, int **pathlen, int **path)
+* \brief initialize population
+* \param[in] nbr the number of points
+* \param[in] **pathlen the tab of teb lenghts
+* \param[in] **path population
+*/
 void merchant_init_population(int nbr, int **pathlen, int **path)
 {
 	int i, j, k;
@@ -318,6 +351,15 @@ void merchant_init_population(int nbr, int **pathlen, int **path)
 	}
 }
 
+/*!
+* \fn void merchant_evaluate(int nbr, int **pathlen, int **path, int *fx, int maxpath)
+* \brief evaluate the population
+* \param[in] nbr the number of points
+* \param[in] **pathlen the tab of teb lenghts
+* \param[in] **path population
+* \param[in] *fx the score value tab
+* \param[in] maxpath punish coeeficient
+*/
 void merchant_evaluate(int nbr, int **pathlen, int **path, int *fx, int maxpath)
 {
 	int i, j;
@@ -342,6 +384,13 @@ void merchant_evaluate(int nbr, int **pathlen, int **path, int *fx, int maxpath)
 	}
 }
 
+/*!
+* \fn void merchant_selection(int *fx, int posmin[2], int posmax[2])
+* \brief select the two best and two worst individual
+* \param[in] *fx the score value tab
+* \param[in] posmin[2] the two position in population of bests
+* \param[in] posmax[2] the two position in population of worsts
+*/
 void merchant_selection(int *fx, int posmin[2], int posmax[2])
 {
 	int i;
@@ -396,6 +445,14 @@ void merchant_selection(int *fx, int posmin[2], int posmax[2])
 	}
 }
 
+/*!
+* \fn void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
+* \brief central function of tsp, crossover the best individual and born childs
+* \param[in] nbr the number of points
+* \param[in] posmin[2] the two position in population of bests
+* \param[in] **path population
+* \param[in] **child the new childs
+*/
 void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 {
 	int i, j;
@@ -517,7 +574,14 @@ void merchant_crossover(int nbr, int posmin[2], int **path, int **child)
 	free_double_int_pointer(temp, 2, nbr);
 }
 
-//inserting the paths in population removing those having maximum fx
+/*!
+* \fn void merchant_insert(int nbr, int **child, int posmax[2], int **path)
+* \brief inserting the paths in population removing those having maximum fx
+* \param[in] nbr the number of points
+* \param[in] **child the childs
+* \param[in] posmax[2] the position in population of the worsts
+* \param[in] **path the population
+*/
 void merchant_insert(int nbr, int **child, int posmax[2], int **path)
 {
 	for (int j = 0; j < nbr; j++)
@@ -527,7 +591,13 @@ void merchant_insert(int nbr, int **child, int posmax[2], int **path)
 	}
 }
 
-//performing mutation
+
+/*!
+* \fn void merchant_mutation(int nbr, int **child)
+* \brief performing mutation
+* \param[in] nbr the number of points
+* \param[in] **child the childs
+*/
 void merchant_mutation(int nbr, int **child)
 {
 	int sel = random(2);
@@ -538,7 +608,12 @@ void merchant_mutation(int nbr, int **child)
 	child[sel][pos2] = temp;
 }
 
-//find the longest path
+/*!
+* \fn void merchant_insert(int nbr, int **child, int posmax[2], int **path)
+* \brief find the longest path
+* \param[in] nbr the number of points
+* \param[in] **pathlen tab of all pathlen
+*/
 int merchant_find_longest(int nbr, int **pathlen)
 {
 	int s, e, maxlen = 0;
@@ -552,6 +627,12 @@ int merchant_find_longest(int nbr, int **pathlen)
 	return maxlen;
 }
 
+/*!
+* \fn void merchant_print_paths(int nbr, int **paths)
+* \brief print paths of the population
+* \param[in] nbr the number of points
+* \param[in] **paths the population
+*/
 void merchant_print_paths(int nbr, int **paths)
 {
 	for (int i = 0; i < nbr; i++)

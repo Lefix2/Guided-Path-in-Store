@@ -1,3 +1,12 @@
+/*!
+* \file  merchant.h
+* \brief Header of merchant.c
+* \author GPS team
+* \date 13/12/2014
+*
+* Contain prototype of itemList
+*/
+
 #ifndef MERCHANT_H
 #define MERCHANT_H
 
